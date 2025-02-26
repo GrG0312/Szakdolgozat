@@ -3,11 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags:
-  - UI - Main Menu
-  - UI - Lobby
-  - UI - Join
-  - UI - Profile Viewer
+  tags: []
   layers:
   - Default
   - TransparentFX

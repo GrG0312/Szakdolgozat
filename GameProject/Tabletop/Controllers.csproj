@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Controllers\SessionController.cs" />
-    <Compile Include="Assets\Controllers\MenuController.cs" />
+    <Compile Include="Assets\Controllers\UIController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Controllers\Controllers.asmdef" />
@@ -1069,6 +1069,14 @@
       <HintPath>D:\Unity\Editor\6000.0.24f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.Serialization.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.Networking.Transport">
+      <HintPath>Library\ScriptAssemblies\Unity.Networking.Transport.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Netcode.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Netcode.Editor.dll</HintPath>
       <Private>False</Private>
@@ -1090,6 +1098,10 @@
     <ProjectReference Include="Model.csproj">
       <Project>{4309F30A-7EDF-3087-5ABF-1664370B1B54}</Project>
       <Name>Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="View.csproj">
+      <Project>{B6236E10-CD54-1883-0F38-EDCC826E7E4A}</Project>
+      <Name>View</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -62,6 +62,7 @@
     <Analyzer Include="D:\Unity\Editor\6000.0.24f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\View\MenuElement.cs" />
     <Compile Include="Assets\View\Camera\CameraPivot.cs" />
   </ItemGroup>
   <ItemGroup>
