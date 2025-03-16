@@ -62,28 +62,31 @@
     <Analyzer Include="D:\Unity\Editor\6000.0.24f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Model\Units\UnitStat.cs" />
-    <Compile Include="Assets\Model\UnityDependant\PlayerObject.cs" />
-    <Compile Include="Assets\Model\ArmorType.cs" />
-    <Compile Include="Assets\Model\Weapons\Weapon.cs" />
-    <Compile Include="Assets\Model\Units\DeckUnitCard.cs" />
+    <Compile Include="Assets\Model\GameModel\Units\Interfaces\IUnit.cs" />
+    <Compile Include="Assets\Model\GameModel\Weapons\WeaponMelee.cs" />
+    <Compile Include="Assets\Model\GameModel\IPlayer.cs" />
+    <Compile Include="Assets\Model\GameModel\Commands\MoveCommand.cs" />
+    <Compile Include="Assets\Model\GameModel\ArmorType.cs" />
+    <Compile Include="Assets\Model\GameModel\UnityDependant\Units\ControllableUnit.cs" />
     <Compile Include="Assets\Model\Side.cs" />
-    <Compile Include="Assets\Model\Commands\MoveCommand.cs" />
-    <Compile Include="Assets\Model\Commands\Command.cs" />
-    <Compile Include="Assets\Model\Units\Interfaces\ISelectable.cs" />
-    <Compile Include="Assets\Model\Units\Interfaces\IWeaponUser.cs" />
-    <Compile Include="Assets\Model\SessionData.cs" />
-    <Compile Include="Assets\Model\Units\Interfaces\IMovable.cs" />
-    <Compile Include="Assets\Model\Phase.cs" />
-    <Compile Include="Assets\Model\Units\Interfaces\IUnit.cs" />
-    <Compile Include="Assets\Model\Weapons\WeaponMelee.cs" />
-    <Compile Include="Assets\Model\UnityDependant\Units\ControllableUnit.cs" />
-    <Compile Include="Assets\Model\SessionSettings.cs" />
-    <Compile Include="Assets\Model\Commands\AttackCommand.cs" />
-    <Compile Include="Assets\Model\IPlayer.cs" />
-    <Compile Include="Assets\Model\History.cs" />
-    <Compile Include="Assets\Model\SessionModel.cs" />
-    <Compile Include="Assets\Model\Units\Interfaces\IDamagable.cs" />
+    <Compile Include="Assets\Model\GameModel\Phase.cs" />
+    <Compile Include="Assets\Model\GameModel\Commands\AttackCommand.cs" />
+    <Compile Include="Assets\Model\LobbyModel\LobbyModel.cs" />
+    <Compile Include="Assets\Model\GameModel\SessionData.cs" />
+    <Compile Include="Assets\Model\GameModel\SessionSettings.cs" />
+    <Compile Include="Assets\Model\GameModel\SessionModel.cs" />
+    <Compile Include="Assets\Model\GameModel\Commands\Command.cs" />
+    <Compile Include="Assets\Model\GameModel\Units\DeckUnitCard.cs" />
+    <Compile Include="Assets\Model\LobbyModel\LobbySlot.cs" />
+    <Compile Include="Assets\Model\GameModel\Weapons\Weapon.cs" />
+    <Compile Include="Assets\Model\GameModel\Units\Interfaces\IWeaponUser.cs" />
+    <Compile Include="Assets\Model\LobbyModel\LobbyPlayerData.cs" />
+    <Compile Include="Assets\Model\GameModel\Units\Interfaces\ISelectable.cs" />
+    <Compile Include="Assets\Model\GameModel\Units\Interfaces\IDamagable.cs" />
+    <Compile Include="Assets\Model\GameModel\Units\Interfaces\IMovable.cs" />
+    <Compile Include="Assets\Model\GameModel\History.cs" />
+    <Compile Include="Assets\Model\GameModel\Units\UnitStat.cs" />
+    <Compile Include="Assets\Model\GameModel\UnityDependant\PlayerObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Model\Model.asmdef" />

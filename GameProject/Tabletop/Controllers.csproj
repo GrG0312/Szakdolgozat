@@ -9,7 +9,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>Controller</RootNamespace>
+    <RootNamespace>Controllers</RootNamespace>
     <ProjectGuid>{D0D3B118-9B45-1B8F-446C-21069B9EEAF2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -62,8 +62,20 @@
     <Analyzer Include="D:\Unity\Editor\6000.0.24f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Controllers\SessionController.cs" />
-    <Compile Include="Assets\Controllers\UIController.cs" />
+    <Compile Include="Assets\Controllers\DataObjects\Messenger.cs" />
+    <Compile Include="Assets\Controllers\LobbyController.cs" />
+    <Compile Include="Assets\Controllers\BaseController.cs" />
+    <Compile Include="Assets\Controllers\Data\InterSceneData.cs" />
+    <Compile Include="Assets\Controllers\DataObjects\LobbyPlayerObject.cs" />
+    <Compile Include="Assets\Controllers\GameController.cs" />
+    <Compile Include="Assets\Controllers\Data\LobbyPlayerStatus.cs" />
+    <Compile Include="Assets\Controllers\DataObjects\MenuElement.cs" />
+    <Compile Include="Assets\Controllers\ProfileController.cs" />
+    <Compile Include="Assets\Controllers\DataObjects\ProfileDisplayer.cs" />
+    <Compile Include="Assets\Controllers\MainMenuController.cs" />
+    <Compile Include="Assets\Controllers\Data\ScreenType.cs" />
+    <Compile Include="Assets\Controllers\Data\LobbySlotStatus.cs" />
+    <Compile Include="Assets\Controllers\MenuControllerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Controllers\Controllers.asmdef" />
@@ -1099,9 +1111,9 @@
       <Project>{4309F30A-7EDF-3087-5ABF-1664370B1B54}</Project>
       <Name>Model</Name>
     </ProjectReference>
-    <ProjectReference Include="View.csproj">
-      <Project>{B6236E10-CD54-1883-0F38-EDCC826E7E4A}</Project>
-      <Name>View</Name>
+    <ProjectReference Include="Persistence.csproj">
+      <Project>{FCDDB7FA-5174-9546-4B0F-AE563E67BE8E}</Project>
+      <Name>Persistence</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
