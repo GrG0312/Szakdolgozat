@@ -70,6 +70,7 @@
     <Compile Include="Assets\Model\GameModel\UnityDependant\Units\ControllableUnit.cs" />
     <Compile Include="Assets\Model\Side.cs" />
     <Compile Include="Assets\Model\GameModel\Phase.cs" />
+    <Compile Include="Assets\Model\LobbyModel\SlotOccupantStatus.cs" />
     <Compile Include="Assets\Model\GameModel\Commands\AttackCommand.cs" />
     <Compile Include="Assets\Model\LobbyModel\LobbyModel.cs" />
     <Compile Include="Assets\Model\GameModel\SessionData.cs" />

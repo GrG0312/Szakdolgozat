@@ -8,7 +8,7 @@ namespace Model.Lobby
 {
     public class LobbyPlayerData<TypeId>
     {
-        private LobbySlot slot;
+        public LobbySlot slot { get; private set; }
         public TypeId ID { get; }
         public string Name { get; }
         public bool IsReady
@@ -25,7 +25,6 @@ namespace Model.Lobby
             ID = id;
             Name = name;
             this.slot = slot;
-            slot.SetDisplayName(Name);
         }
     }
 }

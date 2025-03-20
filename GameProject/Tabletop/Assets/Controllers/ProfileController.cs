@@ -6,6 +6,7 @@ namespace Controllers
 {
     public class ProfileController : BaseController<ProfileController>
     {
+
         private IDataManager<Profile> profileDataManager;
         private Profile UserProfile { get; set; }
 
@@ -37,7 +38,7 @@ namespace Controllers
 
         public void Awake()
         {
-            if (Instance is null)
+            if (Instance == null)
             {
                 Instance = this;
             } else

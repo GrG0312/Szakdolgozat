@@ -5,7 +5,7 @@ namespace Model.Lobby
 {
     public class LobbyModel<TypeId>
     {
-        public List<LobbyPlayerData<TypeId>> ConnectedClients;
+        public List<LobbyPlayerData<TypeId>> ConnectedClients { get; private set; }
 
         public LobbyModel()
         {

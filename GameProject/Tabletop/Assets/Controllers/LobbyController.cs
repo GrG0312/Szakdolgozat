@@ -1,16 +1,14 @@
 ﻿using Unity.Netcode;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
-using System;
 using System.Collections.Generic;
 using Controllers.DataObjects;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine.SceneManagement;
 using System.Text;
 using Model.Lobby;
-using System.Linq;
 using Controllers.Data;
+using System.Linq;
 
 namespace Controllers
 {
@@ -20,7 +18,6 @@ namespace Controllers
 
         [SerializeField] private GameObject clientViewBlocker;
         [SerializeField] private TMP_Text hostNameDisplay;
-        [SerializeField] private Button exitButton;
         [SerializeField] private List<LobbyPlayerObject> clientSlots;
 
         private LobbyModel<ulong> lobbyModel;
@@ -47,6 +44,7 @@ namespace Controllers
         }
         public void JoinSession(string ipAddress)
         {
+            Debug.Log($"<color=magenta>Connecting to address {ipAddress}...</color>");
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(ipAddress, 35420);
             if (!NetworkManager.Singleton.StartClient())
             {
@@ -62,18 +60,16 @@ namespace Controllers
                 NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
                 NetworkManager.Singleton.ConnectionApprovalCallback -= ClientApproval;
             }
-            NetworkManager.Singleton.Shutdown();
+
+            NetworkManager.Singleton.Shutdown(true);
             SceneManager.LoadScene("MenuScene", LoadSceneMode.Single);
         }
 
         #region Event Handlers
         private void OnClientConnected(ulong clientId)
         {
-            Debug.Log($"[ClientConnected] A client has successfully connected: {clientId}");
-
             // Send hostname
             string hosterName = ProfileController.Instance.DisplayName;
-            Debug.Log($"Sending hoster name: {hosterName}");
             GetHosterName_ClientRpc(hosterName, RpcTarget.Single(clientId, RpcTargetUse.Temp));
         }
 
@@ -85,8 +81,7 @@ namespace Controllers
         private void OnClientStopped(bool wasHost)
         {
             SetClientViewBlocker(false);
-            Debug.LogError("<color=red>Could not connect to the IP. Navigating back to Main Menu</color>");
-            SceneManager.LoadScene("MenuScene", LoadSceneMode.Single);
+            DestroySession();
         }
         #endregion
 
@@ -97,6 +92,7 @@ namespace Controllers
         private void GetHosterName_ClientRpc(string hostname, RpcParams rpcParams)
         {
             // This all happens client-side:
+            // Turn off blocker screen
             SetClientViewBlocker(false);
             hostNameDisplay.text = hostname + "'s Lobby";
             // Send client name to server
@@ -109,44 +105,72 @@ namespace Controllers
         private void SendClientName_ServerRpc(ulong clientId, string clientName)
         {
             // This all happens server-side:
-            LobbyPlayerObject? obj = FindEmptySlot();
-            if (obj != null)
+            LobbyPlayerObject? reserved = FindReservedSlot();
+            if (reserved != null)
             {
-                lobbyModel.ConnectedClients.Add(new LobbyPlayerData<ulong>(clientId, clientName, obj.SlotModel));
-                Debug.Log($"[Server] Added a new client: {clientId} | {clientName} on position {obj.SlotId}");
+                lobbyModel.ConnectedClients.Add(new LobbyPlayerData<ulong>(clientId, clientName, reserved.SlotModel));
+                reserved.SlotModel.ChangeDisplayedData(clientName, SlotOccupantStatus.OccupiedModel);
+                Debug.Log($"<color=green>[Server] Added a new client: {clientId} | {clientName} on position {reserved.SlotId}</color>");
                 PrintClientNames("[Server] Client names");
             }
+            foreach (LobbyPlayerObject obj in clientSlots)
+            {
+                Debug.Log($"<color=orange>[Server] Sending slot update {obj.SlotId}: \nName: {clientName} \nStatus: {obj.SlotModel.OccupantStatus.ToString()}</color>");
+                int id = obj.SlotId;
+                string name = obj.SlotModel.DisplayName;
+                string slotstatus = obj.SlotModel.OccupantStatus.ToString();
+                UpdateSlotData_Rpc(id, name, slotstatus);
+            }
+        }
 
+        [Rpc(SendTo.NotServer)]
+        private void UpdateSlotData_Rpc(int slotId, string clientName, string slotstatus)
+        {
+            LobbyPlayerObject obj = clientSlots.Single(slot => slot.SlotId == slotId);
+            Debug.Log($"<color=magenta>[Client] Updating slot {slotId}: \nName: {clientName} \nStatus: {slotstatus}</color>");
+            obj.SlotModel.ChangeDisplayedData(name, SlotOccupantStatus.ConvertFromString(slotstatus));
         }
         #endregion
 
         #region Other methods
-
-        private LobbyPlayerObject? FindEmptySlot()
+        private LobbyPlayerObject? FindReservedSlot()
         {
             foreach (LobbyPlayerObject slot in clientSlots)
             {
-                if (slot.SlotModel.IsOpen)
+                if (slot.SlotModel.OccupantStatus == SlotOccupantStatus.ReservedModel)
                 {
                     return slot;
                 }
             }
             return null;
         }
-
+        private bool IsThereEmptySlot()
+        {
+            foreach (LobbyPlayerObject slot in clientSlots)
+            {
+                if (slot.SlotModel.OccupantStatus == SlotOccupantStatus.OpenModel)
+                {
+                    slot.SlotModel.ChangeDisplayedData("", SlotOccupantStatus.ReservedModel);
+                    return true;
+                }
+            }
+            return false;
+        }
         private void ClientApproval(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
         {
-            if (FindEmptySlot() != null)
+            Debug.Log("<color=yellow>Searching for empty slot...</color>");
+            if (IsThereEmptySlot())
             {
                 response.CreatePlayerObject = false;
                 response.Approved = true;
+                Debug.Log("<color=green>Found empty slot. Approving connection.</color>");
             } else
             {
                 response.Reason = "There are no open slots left in the lobby";
                 response.Approved = false;
+                Debug.Log("<color=red>Couldn't find empty spot. Connection refused.</color>");
             }
         }
-
         private void SetClientViewBlocker(bool assign)
         {
             if (assign)
@@ -162,17 +186,17 @@ namespace Controllers
 
         private void Awake()
         {
-            if (Instance is null)
+            if (Instance != null)
             {
-                Instance = this;
+                Debug.LogWarning($"Multiple {nameof(LobbyController)} instances found. Deleting duplicate...");
+                Destroy(Instance.gameObject);
             }
             else
             {
-                Debug.LogWarning($"Multiple {nameof(GameController)} instances found. Deleting duplicate...");
-                Destroy(this.gameObject);
+                Instance = this;
             }
 
-            if (NetworkManager.Singleton is null)
+            if (NetworkManager.Singleton == null)
             {
                 Debug.LogWarning("<color=yellow>NetworkManager object's instance is null!</color>");
                 Instantiate(networkManagerPrefab);
@@ -181,7 +205,6 @@ namespace Controllers
         }
         private void Start()
         {
-            clientSlots = new List<LobbyPlayerObject>();
             if (InterSceneData.ShouldHost)
             {
                 CreateSession();
@@ -189,6 +212,7 @@ namespace Controllers
             {
                 JoinSession(InterSceneData.ConnectionAddress);
             }
+            InterSceneData.Reset();
         }
 
         // Temporary
