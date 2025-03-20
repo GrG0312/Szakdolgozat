@@ -20,42 +20,62 @@ namespace Controllers.DataObjects
 
         private void OnReadinessChange(int value)
         {
-            SlotModel.IsReady = value == 1;
+            //SlotModel.SetReadiness(value == 1);
+            // LobbyController instance
         }
         private void OnOccupantChange(int value)
         {
-            Debug.LogWarning("Not implemented yet");
+            // 0 : open
+            // 1 : switch
+            // 2 : closed
+            switch (value)
+            {
+                case 0:
+                case 2:
+                    Debug.Log($"<color=orange>Trying to set Slot#{SlotId} status to {value}</color>");
+                    try
+                    {
+                        int slotId = SlotId;
+                        LobbyController.Instance.SetSlotStatus(slotId, value);
+                    }
+                    catch (Exception) { /* If exception, then caller was not host. Dont need to do anything. */ Debug.Log("<color=yellow>Tried to change slot occupant.</color>"); }
+                    break;
+                case 1:
+                    LobbyController.Instance.SwitchToSlot(SlotId);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void Awake()
         {
             SlotModel = new LobbySlot(slotSide);
             SlotModel.SlotDataChanged += SlotModel_SlotDataChanged;
-            SlotModel.SlotReadinessChanged += SlotModel_SlotReadinessChanged;
 
             readinessDropdown.onValueChanged.AddListener(OnReadinessChange);
             emptyDropdown.onValueChanged.AddListener(OnOccupantChange);
         }
 
-        private void SlotModel_SlotReadinessChanged(object sender, EventArgs e)
-        {
-            readinessDropdown.value = SlotModel.IsReady ? 1 : 0;
-        }
-
         private void SlotModel_SlotDataChanged(object sender, EventArgs e)
         {
             nameField.text = SlotModel.DisplayName;
-            if (SlotModel.OccupantStatus.ToString() == "Open")
+            Debug.Log($"<color=magenta>[Client] Slot#{SlotId} Occupant status: {SlotModel.OccupantStatus}");
+            if (SlotModel.OccupantStatus.ToString() == "OpenModel")
             {
                 // The slot is open
-                emptyDropdown.value = 0;
+                emptyDropdown.SetValueWithoutNotify(0);
                 SwitchDropdowns(true);
             } else
             {
                 // The slot is closed
-                emptyDropdown.value = 2;
-                SwitchDropdowns(false);
+                emptyDropdown.SetValueWithoutNotify(2);
+                if (SlotModel.DisplayName != string.Empty) // Only switch if a player is assigned
+                {
+                    SwitchDropdowns(false);
+                }
             }
+            readinessDropdown.SetValueWithoutNotify(SlotModel.IsReady ? 1 : 0);
         }
 
         private void SwitchDropdowns(bool param)

@@ -36,6 +36,22 @@ namespace Model.Lobby
                     throw new ArgumentException("Invalid parameter provided!");
             }
         }
+        public static SlotOccupantStatus ConvertFromInt(int value)
+        {
+            switch (value)
+            {
+                case 0:
+                    return OpenModel;
+                case 1:
+                    return ReservedModel;
+                case 2:
+                    return ClosedModel;
+                case 3:
+                    return OccupiedModel;
+                default:
+                    throw new ArgumentException("Invalid parameter provided!");
+            }
+        }
 
         public static SlotOccupantStatus OpenModel = new SlotOccupantStatus(
             new SlotOccupantStatus[]

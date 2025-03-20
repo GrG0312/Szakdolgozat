@@ -100,35 +100,50 @@ namespace Controllers
             SendClientName_ServerRpc(NetworkManager.Singleton.LocalClientId, clientName);
         }
 
-
         [Rpc(SendTo.Server, RequireOwnership = false)]
         private void SendClientName_ServerRpc(ulong clientId, string clientName)
         {
             // This all happens server-side:
             LobbyPlayerObject? reserved = FindReservedSlot();
-            if (reserved != null)
+            if (reserved != null) // which it shouldnt be, under no circumstances
             {
                 lobbyModel.ConnectedClients.Add(new LobbyPlayerData<ulong>(clientId, clientName, reserved.SlotModel));
-                reserved.SlotModel.ChangeDisplayedData(clientName, SlotOccupantStatus.OccupiedModel);
-                Debug.Log($"<color=green>[Server] Added a new client: {clientId} | {clientName} on position {reserved.SlotId}</color>");
-                PrintClientNames("[Server] Client names");
+                reserved.SlotModel.ChangeData(clientName, SlotOccupantStatus.OccupiedModel, false);
             }
-            foreach (LobbyPlayerObject obj in clientSlots)
+            for (int i = 0; i < clientSlots.Count; i++)
             {
-                Debug.Log($"<color=orange>[Server] Sending slot update {obj.SlotId}: \nName: {clientName} \nStatus: {obj.SlotModel.OccupantStatus.ToString()}</color>");
-                int id = obj.SlotId;
-                string name = obj.SlotModel.DisplayName;
-                string slotstatus = obj.SlotModel.OccupantStatus.ToString();
-                UpdateSlotData_Rpc(id, name, slotstatus);
+                int id = clientSlots[i].SlotId;
+                string name = clientSlots[i].SlotModel.DisplayName;
+                string slotstatus = clientSlots[i].SlotModel.OccupantStatus.ToString();
+                bool isReady = clientSlots[i].SlotModel.IsReady;
+                UpdateSlotData_ClientsRpc(id, name, slotstatus, isReady);
             }
         }
 
         [Rpc(SendTo.NotServer)]
-        private void UpdateSlotData_Rpc(int slotId, string clientName, string slotstatus)
+        private void UpdateSlotData_ClientsRpc(int slotId, string displayname, string slotstatus, bool isready)
         {
             LobbyPlayerObject obj = clientSlots.Single(slot => slot.SlotId == slotId);
-            Debug.Log($"<color=magenta>[Client] Updating slot {slotId}: \nName: {clientName} \nStatus: {slotstatus}</color>");
-            obj.SlotModel.ChangeDisplayedData(name, SlotOccupantStatus.ConvertFromString(slotstatus));
+            Debug.Log($"<color=magenta>" +
+                $"[Client] Updating slot {slotId}: " +
+                $"\nName: {displayname} " +
+                $"\nStatus: {slotstatus}" +
+                $"\nReadiness: {isready}</color>");
+            obj.SlotModel.ChangeData(displayname, SlotOccupantStatus.ConvertFromString(slotstatus), isready);
+        }
+
+        [Rpc(SendTo.Server, RequireOwnership = false)]
+        private void SwitchPlayer_ServerRpc()
+        {
+
+        }
+        [Rpc(SendTo.Server, RequireOwnership = false)]
+        private void SetSlotStatus_ServerRpc(int callerSlotId, int statusvalue)
+        {
+            LobbyPlayerObject obj = clientSlots.Single(slot => slot.SlotId == callerSlotId);
+            SlotOccupantStatus newStatus = SlotOccupantStatus.ConvertFromInt(statusvalue);
+            obj.SlotModel.ChangeData("", newStatus);
+            UpdateSlotData_ClientsRpc(obj.SlotId, obj.SlotModel.DisplayName, newStatus.ToString(), false);
         }
         #endregion
 
@@ -150,7 +165,7 @@ namespace Controllers
             {
                 if (slot.SlotModel.OccupantStatus == SlotOccupantStatus.OpenModel)
                 {
-                    slot.SlotModel.ChangeDisplayedData("", SlotOccupantStatus.ReservedModel);
+                    slot.SlotModel.ChangeData("", SlotOccupantStatus.ReservedModel);
                     return true;
                 }
             }
@@ -181,6 +196,17 @@ namespace Controllers
                 NetworkManager.Singleton.OnClientStopped -= OnClientStopped;
             }
             clientViewBlocker.SetActive(assign);
+        }
+        public void SwitchToSlot(int callerSlotId)
+        {
+
+        }
+        public void SetSlotStatus(int callerSlotId, int statusValue)
+        {
+            if (NetworkManager.Singleton.IsHost)
+            {
+                SetSlotStatus_ServerRpc(callerSlotId, statusValue);
+            }
         }
         #endregion
 
