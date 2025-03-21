@@ -5,45 +5,87 @@ using System.Collections.Generic;
 using Controllers.DataObjects;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine.SceneManagement;
-using System.Text;
 using Model.Lobby;
 using Controllers.Data;
 using System.Linq;
+using System;
+using Model;
 
 namespace Controllers
 {
     public class LobbyController : BaseController<LobbyController>
     {
-        [SerializeField] private GameObject networkManagerPrefab;
+        private const int LOBBY_SIZE = 4;
 
+        [SerializeField] private GameObject networkManagerPrefab;
+        [SerializeField] private LobbyPlayerObject playerObjectPrefab;
+
+        [SerializeField] private GameObject playerNamesParent;
         [SerializeField] private GameObject clientViewBlocker;
         [SerializeField] private TMP_Text hostNameDisplay;
-        [SerializeField] private List<LobbyPlayerObject> clientSlots;
+        
+        private List<LobbyPlayerObject> clientSlots;
 
         private LobbyModel<ulong> lobbyModel;
 
+        #region Lobby setup - Create, Join, Leave
         public void CreateSession()
         {
-            lobbyModel = new ();
             // The port 35420 is, by default, unassigned
             // By setting the listening port to 0.0.0.0, it will listen to every IP
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData("127.0.0.1", 35420, "0.0.0.0");
 
-            // Bind the connected handler only to the server
-            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-
-            // Assign an approval callback
-            NetworkManager.Singleton.ConnectionApprovalCallback += ClientApproval;
-            
             if (!NetworkManager.Singleton.StartHost())
             {
                 Debug.LogError("<color=red>Could not start a host. Navigating back to Main Menu</color>");
                 SceneManager.LoadScene("MenuScene", LoadSceneMode.Single);
             }
 
+            
+            clientSlots = new ();
+
+            for (int i = 0; i < LOBBY_SIZE; i++)
+            {
+                // 150 is the height
+                LobbyPlayerObject slotobj = Instantiate(playerObjectPrefab);
+                slotobj.NetworkObject.Spawn(true);
+                slotobj.transform.SetParent(playerNamesParent.transform);
+                // fhu te
+                // de nem szeretlek
+                // sokkal tovább tartott mint kellett volna .-.-,.mns9ugbsokfaijfazvf aijnf aofnbugdv D
+                slotobj.transform.localPosition = new Vector3(0, 225 - (i * 150), 0);
+                slotobj.transform.localScale = Vector3.one;
+                clientSlots.Add(slotobj);
+                slotobj.SetupInitialData(i, i % 2 == 0 ? Side.Blue : Side.Red);
+            }
+
+            lobbyModel = new();
+
+            foreach (LobbyPlayerObject obj in clientSlots)
+            {
+                // Add slot to model
+                lobbyModel.LobbySlots.Add(obj.SlotModel);
+                // Assign event handler to data changed
+                //obj.SlotModel.SlotDataChanged += UpdateSlotDataForConnectedClients;
+            }
+
+            LobbyPlayerData<ulong> hostData = new LobbyPlayerData<ulong>(NetworkManager.Singleton.LocalClientId, ProfileController.Instance.DisplayName);
+            lobbyModel.ConnectedClients.Add(hostData);
+            clientSlots.First().SlotModel.PlayerData = hostData;
+
+
+            // Bind the connected handler only to the server
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+
+            // Assign an approval callback
+            NetworkManager.Singleton.ConnectionApprovalCallback += ClientApproval;
         }
         public void JoinSession(string ipAddress)
         {
+            foreach (LobbyPlayerObject obj in clientSlots)
+            {
+                obj.SetHostDisplay(false);
+            }
             Debug.Log($"<color=magenta>Connecting to address {ipAddress}...</color>");
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(ipAddress, 35420);
             if (!NetworkManager.Singleton.StartClient())
@@ -75,7 +117,7 @@ namespace Controllers
 
         private void OnClientDisconnect(ulong clientId)
         {
-
+            // TODO clear slot of client
         }
 
         private void OnClientStopped(bool wasHost)
@@ -85,9 +127,40 @@ namespace Controllers
         }
         #endregion
 
+        #region For Connection
+        private void ClientApproval(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
+        {
+            if (lobbyModel.ReserveEmptySlot())
+            {
+                response.CreatePlayerObject = false;
+                response.Approved = true;
+                Debug.Log("<color=green>Found empty slot. Approving connection.</color>");
+            }
+            else
+            {
+                response.Reason = "There are no open slots left in the lobby";
+                response.Approved = false;
+                Debug.Log("<color=red>Couldn't find empty spot. Connection refused.</color>");
+            }
+        }
+        private void SetClientViewBlocker(bool assign)
+        {
+            if (assign)
+            {
+                NetworkManager.Singleton.OnClientStopped += OnClientStopped;
+            }
+            else
+            {
+                NetworkManager.Singleton.OnClientStopped -= OnClientStopped;
+            }
+            clientViewBlocker.SetActive(assign);
+        }
 
-        #region RPC
+        #region RPCs for connection
 
+        /// <summary>
+        /// Gets the Hoster's name from the server, then sends the LocalClientId and local client's clientName pair.
+        /// </summary>
         [Rpc(SendTo.SpecifiedInParams)]
         private void GetHosterName_ClientRpc(string hostname, RpcParams rpcParams)
         {
@@ -103,103 +176,78 @@ namespace Controllers
         [Rpc(SendTo.Server, RequireOwnership = false)]
         private void SendClientName_ServerRpc(ulong clientId, string clientName)
         {
-            // This all happens server-side:
-            LobbyPlayerObject? reserved = FindReservedSlot();
-            if (reserved != null) // which it shouldnt be, under no circumstances
+            // This happens server-side:
+            int id = lobbyModel.FindReservedSlot();
+            if (id != -1) // which it shouldnt be here, under no circumstances
             {
-                lobbyModel.ConnectedClients.Add(new LobbyPlayerData<ulong>(clientId, clientName, reserved.SlotModel));
-                reserved.SlotModel.ChangeData(clientName, SlotOccupantStatus.OccupiedModel, false);
+                LobbyPlayerObject reserved = clientSlots[id];
+                LobbyPlayerData<ulong> newlyJoinedData = new LobbyPlayerData<ulong>(clientId, clientName);
+
+                lobbyModel.ConnectedClients.Add(newlyJoinedData);
+                reserved.NetworkObject.ChangeOwnership(clientId);
+                reserved.SlotModel.PlayerData = newlyJoinedData;
             }
+            // Update every slot's data for the connected client
             for (int i = 0; i < clientSlots.Count; i++)
             {
-                int id = clientSlots[i].SlotId;
-                string name = clientSlots[i].SlotModel.DisplayName;
+                id = clientSlots[i].SlotModel.SlotId;
+                string name = clientSlots[i].SlotModel.GetName();
+                //ulong ownerId = clientSlots[i].SlotModel.GetPlayerId();
                 string slotstatus = clientSlots[i].SlotModel.OccupantStatus.ToString();
-                bool isReady = clientSlots[i].SlotModel.IsReady;
-                UpdateSlotData_ClientsRpc(id, name, slotstatus, isReady);
+                //bool isReady = clientSlots[i].SlotModel.IsReady;
+                //UpdateSlotData_ClientsRpc(id, name, slotstatus, isReady);
             }
         }
+        #endregion
+
+        #endregion
+
+        #endregion
+
+        #region RPC
 
         [Rpc(SendTo.NotServer)]
         private void UpdateSlotData_ClientsRpc(int slotId, string displayname, string slotstatus, bool isready)
         {
-            LobbyPlayerObject obj = clientSlots.Single(slot => slot.SlotId == slotId);
+            // This is for clientSide
+            LobbyPlayerObject obj = clientSlots[slotId];
             Debug.Log($"<color=magenta>" +
                 $"[Client] Updating slot {slotId}: " +
                 $"\nName: {displayname} " +
                 $"\nStatus: {slotstatus}" +
                 $"\nReadiness: {isready}</color>");
-            obj.SlotModel.ChangeData(displayname, SlotOccupantStatus.ConvertFromString(slotstatus), isready);
+            //obj.SlotModel.ChangeData(displayname, Enum.Parse<SlotOccupantStatus>(slotstatus), isready);
+            obj.SlotModel.OccupantStatus = Enum.Parse<SlotOccupantStatus>(slotstatus);
         }
 
         [Rpc(SendTo.Server, RequireOwnership = false)]
-        private void SwitchPlayer_ServerRpc()
+        private void SwitchPlayerSlot_ServerRpc(ulong callerClientId, int callerSlotId)
         {
-
+            LobbyPlayerObject obj = clientSlots[callerSlotId];
+            LobbyPlayerData<ulong> playerData = lobbyModel.ConnectedClients.Single(player => player.ID == callerClientId);
+            //playerData.ChangeToSlot(obj.SlotModel);
+            //UpdateEverySlotsData();
         }
         [Rpc(SendTo.Server, RequireOwnership = false)]
         private void SetSlotStatus_ServerRpc(int callerSlotId, int statusvalue)
         {
-            LobbyPlayerObject obj = clientSlots.Single(slot => slot.SlotId == callerSlotId);
-            SlotOccupantStatus newStatus = SlotOccupantStatus.ConvertFromInt(statusvalue);
-            obj.SlotModel.ChangeData("", newStatus);
-            UpdateSlotData_ClientsRpc(obj.SlotId, obj.SlotModel.DisplayName, newStatus.ToString(), false);
+            LobbyPlayerObject obj = clientSlots.Single(slot => slot.SlotModel.SlotId == callerSlotId);
+            SlotOccupantStatus newStatus = (SlotOccupantStatus)statusvalue;
+            //obj.SlotModel.ChangeData(newStatus, newStatus);
+            //UpdateSlotData_ClientsRpc(obj.SlotModel.SlotId, obj.SlotModel.DisplayName, newStatus.ToString(), false);
         }
         #endregion
 
-        #region Other methods
-        private LobbyPlayerObject? FindReservedSlot()
+        private void UpdateSlotDataForConnectedClients(object sender, EventArgs e)
         {
-            foreach (LobbyPlayerObject slot in clientSlots)
-            {
-                if (slot.SlotModel.OccupantStatus == SlotOccupantStatus.ReservedModel)
-                {
-                    return slot;
-                }
-            }
-            return null;
+            LobbySlot<ulong> slot = (LobbySlot<ulong>)sender;
         }
-        private bool IsThereEmptySlot()
-        {
-            foreach (LobbyPlayerObject slot in clientSlots)
-            {
-                if (slot.SlotModel.OccupantStatus == SlotOccupantStatus.OpenModel)
-                {
-                    slot.SlotModel.ChangeData("", SlotOccupantStatus.ReservedModel);
-                    return true;
-                }
-            }
-            return false;
-        }
-        private void ClientApproval(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
-        {
-            Debug.Log("<color=yellow>Searching for empty slot...</color>");
-            if (IsThereEmptySlot())
-            {
-                response.CreatePlayerObject = false;
-                response.Approved = true;
-                Debug.Log("<color=green>Found empty slot. Approving connection.</color>");
-            } else
-            {
-                response.Reason = "There are no open slots left in the lobby";
-                response.Approved = false;
-                Debug.Log("<color=red>Couldn't find empty spot. Connection refused.</color>");
-            }
-        }
-        private void SetClientViewBlocker(bool assign)
-        {
-            if (assign)
-            {
-                NetworkManager.Singleton.OnClientStopped += OnClientStopped;
-            } else
-            {
-                NetworkManager.Singleton.OnClientStopped -= OnClientStopped;
-            }
-            clientViewBlocker.SetActive(assign);
-        }
+
+        #region Actions - Switching, Ready up
         public void SwitchToSlot(int callerSlotId)
         {
-
+            ulong callerClientId = NetworkManager.Singleton.LocalClientId;
+            SwitchPlayerSlot_ServerRpc(callerClientId, callerSlotId);
         }
         public void SetSlotStatus(int callerSlotId, int statusValue)
         {
@@ -210,6 +258,7 @@ namespace Controllers
         }
         #endregion
 
+        #region Unity Messages
         private void Awake()
         {
             if (Instance != null)
@@ -240,19 +289,6 @@ namespace Controllers
             }
             InterSceneData.Reset();
         }
-
-        // Temporary
-        private void PrintClientNames(string header = "")
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append($"{header}:");
-            sb.Append("[ ");
-            foreach (var item in lobbyModel.ConnectedClients)
-            {
-                sb.Append($"({item.ID} : {item.Name}) ");
-            }
-            sb.Append("]");
-            Debug.Log(sb.ToString());
-        }
+        #endregion
     }
 }

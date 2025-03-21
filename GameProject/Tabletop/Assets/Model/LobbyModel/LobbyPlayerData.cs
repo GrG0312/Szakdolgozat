@@ -1,30 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Model.Lobby
 {
     public class LobbyPlayerData<TypeId>
     {
-        public LobbySlot slot { get; private set; }
-        public TypeId ID { get; }
-        public string Name { get; }
+        #region Readiness function
+        private bool ready;
         public bool IsReady
         {
-            get { return slot.IsReady; }
+            get { return ready; }
+            set
+            {
+                ready = value;
+                ReadyChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
-        public Side Side
-        {
-            get { return slot.Side; }
-        }
+        public event EventHandler? ReadyChanged;
+        #endregion
 
-        public LobbyPlayerData(TypeId id, string name, LobbySlot slot)
+        public TypeId ID { get; }
+        public string Name { get; }
+
+        public LobbyPlayerData(TypeId id, string name)
         {
             ID = id;
             Name = name;
-            this.slot = slot;
+            ready = false;
         }
     }
 }

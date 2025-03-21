@@ -1,37 +1,67 @@
 ﻿using System;
+using System.Security.Cryptography;
 
 namespace Model.Lobby
 {
-    public class LobbySlot
+    public class LobbySlot<PlayerIdType>
     {
         public event EventHandler? SlotDataChanged;
 
-        private bool isready;
+        #region Constant values
+        public int SlotId { get; }
+        public Side Side { get; }
+        #endregion
 
-        public string DisplayName { get; private set; }
-        public bool IsReady { get; private set; }
-        public SlotOccupantStatus OccupantStatus { get; private set; }
-        public Side Side { get; private set; }
-
-        public LobbySlot(Side side)
+        #region Status values
+        private SlotOccupantStatus occupantStatus;
+        private LobbyPlayerData<PlayerIdType>? playerData;
+        public SlotOccupantStatus OccupantStatus
         {
-            DisplayName = string.Empty;
-            IsReady = false;
-            OccupantStatus = SlotOccupantStatus.OpenModel;
+            get { return occupantStatus; }
+            set
+            {
+                occupantStatus = value;
+                SlotDataChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+        public LobbyPlayerData<PlayerIdType>? PlayerData
+        {
+            get { return playerData; }
+            set
+            {
+                playerData = value;
+                if (playerData != null)
+                {
+                    playerData.ReadyChanged += (o, ea) => SlotDataChanged?.Invoke(this, EventArgs.Empty);
+                }
+                SlotDataChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+        #endregion
+
+        public LobbySlot(int id, Side side)
+        {
+            SlotId = id;
+            OccupantStatus = SlotOccupantStatus.Open;
             Side = side;
+            playerData = null;
         }
 
-        public void ChangeData(string newName, SlotOccupantStatus newStatus, bool isReady = false)
+        #region Getting Player stuff
+        public string GetName()
         {
-            DisplayName = newName;
-            OccupantStatus = newStatus;
-            IsReady = isready;
-            SlotDataChanged?.Invoke(this, EventArgs.Empty);
+            return playerData == null ? string.Empty : playerData.Name;
         }
-        public void SetReadiness(bool value)
+        public bool GetPlayerId(out PlayerIdType id)
         {
-            IsReady = value;
+            id = PlayerData == null ? PlayerData.ID : default;
+            return PlayerData == null;
         }
+        public bool IsPlayerReady()
+        {
+            return playerData != null ? playerData.IsReady : false;
+        }
+        #endregion
     }
 }
 
