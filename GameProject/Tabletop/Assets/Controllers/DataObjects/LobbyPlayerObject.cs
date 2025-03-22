@@ -6,12 +6,16 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using Unity.Collections;
+using System.Xml;
 
 namespace Controllers.DataObjects
 {
     public class LobbyPlayerObject : NetworkBehaviour
     {
         #region Constants
+        private const string CLOSED_OPTION = "Closed";
+        private const string SWITCH_OPTION = "Switch";
+
         private const string READY_RICH_TEXT = "<color=green>Ready";
         private const string NOT_READY_RICH_TEXT = "<color=orange>Not Ready";
         private const string CLOSED_RICH_TEXT = "<color=red>Closed";
@@ -46,6 +50,12 @@ namespace Controllers.DataObjects
             SlotModel = new LobbySlot<ulong>(side);
             SlotModel.OccupantStatusChanged += OnOccupantChange;
             SlotModel.PlayerChanged += OnPlayerChanged;
+
+            if (IsServer)
+            {
+                // Add closing option only to server
+                emptyDropdown.options.Add(new TMP_Dropdown.OptionData(CLOSED_OPTION));
+            }
         }
         #endregion
 
@@ -59,29 +69,17 @@ namespace Controllers.DataObjects
             nameFieldNetworkVar.OnValueChanged += OnNameFieldValueChanged;
             emptyDropdownNetworkVar.OnValueChanged += OnEmptyDropdownValueChanged;
             readinessDropdownNetworkVar.OnValueChanged += OnReadyDropdownValueChanged;
+            statusLabelNetworkVar.OnValueChanged += OnStatusLabelValueChanged;
 
             readinessDropdown.onValueChanged.AddListener(OnReadinessChangeInput);
             emptyDropdown.onValueChanged.AddListener(OnOccupantChangeInput);
         }
-        #endregion
-
-        #region Display - Host options, Owned logic
-        private bool isHostDisplay;
-        public void SetHostDisplay(bool isDisplayedOnHost)
+        public override void OnNetworkSpawn()
         {
-            isHostDisplay = isDisplayedOnHost;
-            if (isDisplayedOnHost)
-            {
-                emptyDropdown.options.Add(new TMP_Dropdown.OptionData("Closed"));
-            } else
-            {
-                try
-                {
-                    TMP_Dropdown.OptionData data = emptyDropdown.options.Single(data => data.text == "Closed");
-                    emptyDropdown.options.Remove(data);
-                }
-                catch(InvalidOperationException) { /* No element was found with Close, no need to do anything */ }
-            }
+            // Updating the contents upon creation
+            OnNameFieldValueChanged(string.Empty, nameFieldNetworkVar.Value);
+            OnEmptyDropdownValueChanged(0, emptyDropdownNetworkVar.Value);
+            OnReadyDropdownValueChanged(0, readinessDropdownNetworkVar.Value);
         }
         #endregion
 
@@ -105,6 +103,10 @@ namespace Controllers.DataObjects
                     {
                         SlotModel.OccupantStatus = SlotOccupantStatus.Open;
                         emptyDropdownNetworkVar.Value = (int)SlotModel.OccupantStatus;
+                        RemoveDropdownOption(CLOSED_OPTION); // remove if possible, reason: random clicking, should be last option
+                        RemoveDropdownOption(SWITCH_OPTION); // remove if possible, reason: random clicking
+                        emptyDropdown.options.Add(new TMP_Dropdown.OptionData(SWITCH_OPTION));
+                        emptyDropdown.options.Add(new TMP_Dropdown.OptionData(CLOSED_OPTION));
                     }
                     break;
                 case 1: // SWITCH / RESERVE
@@ -115,6 +117,7 @@ namespace Controllers.DataObjects
                     {
                         SlotModel.OccupantStatus = SlotOccupantStatus.Closed;
                         emptyDropdownNetworkVar.Value = (int)SlotModel.OccupantStatus;
+                        RemoveDropdownOption(SWITCH_OPTION); // remove possibility of switching to a closed slot
                     }
                     break;
                 // OCCUPIED option doesnt exist
@@ -122,6 +125,16 @@ namespace Controllers.DataObjects
                     Debug.LogError($"LobbyPlayerObject #{SlotId} : What are you on about?");
                     break;
             }
+        }
+
+        private void RemoveDropdownOption(string text)
+        {
+            try
+            {
+                TMP_Dropdown.OptionData asd = emptyDropdown.options.Single(option => option.text == text);
+                emptyDropdown.options.Remove(asd);
+
+            } catch (Exception) { /* Couldn't find a matching option. No problem. */ }
         }
         #endregion
 
@@ -199,11 +212,13 @@ namespace Controllers.DataObjects
             if (IsOwner)
             {
                 readinessDropdown.SetValueWithoutNotify(newValue);
+                statusLabelNetworkVar.Value = newValue == 1 ? READY_RICH_TEXT : NOT_READY_RICH_TEXT;
             }
-            else
-            {
-                statusLabel.text = newValue == 1 ? READY_RICH_TEXT : NOT_READY_RICH_TEXT;
-            }
+        }
+
+        private void OnStatusLabelValueChanged(FixedString32Bytes oldValue, FixedString32Bytes newValue)
+        {
+            statusLabel.text = newValue.ToString();
         }
 
         #endregion
