@@ -5,10 +5,10 @@ namespace Model.Lobby
 {
     public class LobbySlot<PlayerIdType>
     {
-        public event EventHandler? SlotDataChanged;
+        public event EventHandler? OccupantStatusChanged;
+        public event EventHandler<bool>? PlayerChanged;
 
         #region Constant values
-        public int SlotId { get; }
         public Side Side { get; }
         #endregion
 
@@ -21,7 +21,7 @@ namespace Model.Lobby
             set
             {
                 occupantStatus = value;
-                SlotDataChanged?.Invoke(this, EventArgs.Empty);
+                OccupantStatusChanged?.Invoke(this, EventArgs.Empty);
             }
         }
         public LobbyPlayerData<PlayerIdType>? PlayerData
@@ -32,23 +32,25 @@ namespace Model.Lobby
                 playerData = value;
                 if (playerData != null)
                 {
-                    playerData.ReadyChanged += (o, ea) => SlotDataChanged?.Invoke(this, EventArgs.Empty);
+                    OccupantStatus = SlotOccupantStatus.Occupied;
+                } else
+                {
+                    OccupantStatus = SlotOccupantStatus.Open;
                 }
-                SlotDataChanged?.Invoke(this, EventArgs.Empty);
+                PlayerChanged?.Invoke(this, playerData != null);
             }
         }
         #endregion
 
-        public LobbySlot(int id, Side side)
+        public LobbySlot(Side side)
         {
-            SlotId = id;
             OccupantStatus = SlotOccupantStatus.Open;
             Side = side;
             playerData = null;
         }
 
         #region Getting Player stuff
-        public string GetName()
+        public string GetPlayerName()
         {
             return playerData == null ? string.Empty : playerData.Name;
         }

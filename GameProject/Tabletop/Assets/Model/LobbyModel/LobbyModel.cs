@@ -37,11 +37,11 @@ namespace Model.Lobby
         }
         public int FindReservedSlot()
         {
-            foreach (LobbySlot<PlayerIdType> slot in LobbySlots)
+            for (int i = 0; i < LobbySlots.Count; i++)
             {
-                if (slot.OccupantStatus == SlotOccupantStatus.Reserved)
+                if (LobbySlots[i].OccupantStatus == SlotOccupantStatus.Reserved)
                 {
-                    return slot.SlotId;
+                    return i;
                 }
             }
             return -1;

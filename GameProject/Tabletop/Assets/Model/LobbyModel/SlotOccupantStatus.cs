@@ -8,6 +8,6 @@ namespace Model.Lobby
         Open,
         Reserved,
         Closed,
-        Occupied
+        Occupied,
     }
 }

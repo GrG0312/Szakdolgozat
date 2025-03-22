@@ -12,48 +12,57 @@ namespace Controllers.DataObjects
     public class LobbyPlayerObject : NetworkBehaviour
     {
         #region Constants
-        private const string READY_RICH_TEXT = "<color=green>Ready</color>";
-        private const string NOT_READY_RICH_TEXT = "<color=orange>Not Ready</color>";
-        private const string CLOSED_RICH_TEXT = "<color=red>Closed</color>";
+        private const string READY_RICH_TEXT = "<color=green>Ready";
+        private const string NOT_READY_RICH_TEXT = "<color=orange>Not Ready";
+        private const string CLOSED_RICH_TEXT = "<color=red>Closed";
         #endregion
 
         #region Serializations and network variables
         [SerializeField] private TMP_Text nameField;
-        public NetworkVariable<FixedString32Bytes> nameFieldValue = 
+        private NetworkVariable<FixedString32Bytes> nameFieldNetworkVar = 
             new NetworkVariable<FixedString32Bytes>(string.Empty, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         [SerializeField] private TMP_Dropdown readinessDropdown;
-        public NetworkVariable<int> readinessDropDownValue =
+        private NetworkVariable<int> readinessDropdownNetworkVar =
             new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-        private NetworkVariable<bool> readinessDropDownVisibility =
-            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         [SerializeField] private TMP_Dropdown emptyDropdown;
-        public NetworkVariable<int> emptyDropDownValue =
+        private NetworkVariable<int> emptyDropdownNetworkVar =
             new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-        private NetworkVariable<bool> emptyDropDownVisibility =
-            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
         [SerializeField] private TMP_Text statusLabel;
-        public NetworkVariable<FixedString32Bytes> statusLabelValue =
+        private NetworkVariable<FixedString32Bytes> statusLabelNetworkVar =
             new NetworkVariable<FixedString32Bytes>(string.Empty, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-        private NetworkVariable<bool> statusLabelVisibility =
-            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+        public int SlotId { get { return slotIdNetworkVar.Value; } }
+        private NetworkVariable<int> slotIdNetworkVar =
+            new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
         #endregion
 
         #region Initial data setup
         public void SetupInitialData(int id, Side side)
         {
-            SlotModel = new LobbySlot<ulong>(id, side);
-            SlotModel.SlotDataChanged += SlotModel_SlotDataChanged;
-
-            readinessDropdown.onValueChanged.AddListener(OnReadinessChange);
-            emptyDropdown.onValueChanged.AddListener(OnOccupantChange);
+            slotIdNetworkVar.Value = id;
+            SlotModel = new LobbySlot<ulong>(side);
+            SlotModel.OccupantStatusChanged += OnOccupantChange;
+            SlotModel.PlayerChanged += OnPlayerChanged;
         }
         #endregion
 
         #region Model
         public LobbySlot<ulong> SlotModel { get; private set; }
+        #endregion
+
+        #region Unity Messages
+        private void Awake()
+        {
+            nameFieldNetworkVar.OnValueChanged += OnNameFieldValueChanged;
+            emptyDropdownNetworkVar.OnValueChanged += OnEmptyDropdownValueChanged;
+            readinessDropdownNetworkVar.OnValueChanged += OnReadyDropdownValueChanged;
+
+            readinessDropdown.onValueChanged.AddListener(OnReadinessChangeInput);
+            emptyDropdown.onValueChanged.AddListener(OnOccupantChangeInput);
+        }
         #endregion
 
         #region Display - Host options, Owned logic
@@ -77,64 +86,128 @@ namespace Controllers.DataObjects
         #endregion
 
         #region Startpoint - Calling controller methods
-        private void OnReadinessChange(int value)
+        public void OnReadinessChangeInput(int value)
         {
-            
+            if (IsServer)
+            {
+                readinessDropdownNetworkVar.Value = value; // 0 - not ready, 1 - ready
+            } else
+            {
+                LobbyController.Instance.ClientReadyChange(value);
+            }
         }
-        private void OnOccupantChange(int value)
+        private void OnOccupantChangeInput(int value)
         {
             switch (value)
             {
-                case 0: // open
-                case 2: // closed
-                    Debug.Log($"<color=orange>Trying to set Slot#{SlotModel.SlotId} status to {value}</color>");
-                    try
+                case 0: // OPEN
+                    if (IsServer)
                     {
-                        int slotId = SlotModel.SlotId;
-                        LobbyController.Instance.SetSlotStatus(slotId, value);
+                        SlotModel.OccupantStatus = SlotOccupantStatus.Open;
+                        emptyDropdownNetworkVar.Value = (int)SlotModel.OccupantStatus;
                     }
-                    catch (Exception) { /* If exception, then caller was not host. Dont need to do anything. */ Debug.Log("<color=yellow>Tried to change slot occupant.</color>"); }
                     break;
-                case 1: // switch
-                    LobbyController.Instance.SwitchToSlot(SlotModel.SlotId);
+                case 1: // SWITCH / RESERVE
+                    LobbyController.Instance.SwitchToSlot(SlotId);
+                    break;
+                case 2: // CLOSED
+                    if (IsServer)
+                    {
+                        SlotModel.OccupantStatus = SlotOccupantStatus.Closed;
+                        emptyDropdownNetworkVar.Value = (int)SlotModel.OccupantStatus;
+                    }
+                    break;
+                // OCCUPIED option doesnt exist
+                default:
+                    Debug.LogError($"LobbyPlayerObject #{SlotId} : What are you on about?");
+                    break;
+            }
+        }
+        #endregion
+
+        #region Endpoint - Recieving updates from model / network
+
+        #region SlotModel parts
+
+        private void OnPlayerChanged(object sender, bool isPlayerNotNull)
+        {
+            // This can only happen on server-side:
+            nameFieldNetworkVar.Value = SlotModel.GetPlayerName();
+            readinessDropdownNetworkVar.Value = SlotModel.IsPlayerReady() ? 1 : 0;
+            statusLabelNetworkVar.Value = SlotModel.IsPlayerReady() ? READY_RICH_TEXT : NOT_READY_RICH_TEXT;
+        }
+
+        private void OnOccupantChange(object sender, EventArgs e)
+        {
+            emptyDropdownNetworkVar.Value = (int)SlotModel.OccupantStatus;
+        }
+
+        #endregion
+
+        #region Network parts
+
+        private void OnNameFieldValueChanged(FixedString32Bytes oldvalue, FixedString32Bytes newvalue)
+        {
+            nameField.text = newvalue.ToString();
+        }
+
+        private void OnEmptyDropdownValueChanged(int oldValue, int newValue)
+        {
+            switch (newValue)
+            {
+                case 0: // OPEN
+                    emptyDropdown.SetValueWithoutNotify(0);
+                    emptyDropdown.gameObject.SetActive(true);
+                    readinessDropdown.gameObject.SetActive(false);
+                    statusLabel.gameObject.SetActive(false);
+                    break;
+                case 1: // RESERVED / SWITCH TO
+                    // no need to do anything because this is not an important change from a displaying viewpont
+                    break;
+                case 2: // CLOSED / !!!
+                    if (IsServer)
+                    {
+                        statusLabelNetworkVar.Value = CLOSED_RICH_TEXT;
+                        emptyDropdown.SetValueWithoutNotify(2);
+                    } else
+                    {
+                        emptyDropdown.gameObject.SetActive(false);
+                        statusLabel.gameObject.SetActive(true);
+                    }
+                    break;
+                case 3: // OCCUPIED / !!!
+                    emptyDropdown.gameObject.SetActive(false);
+                    if (IsOwner)
+                    {
+                        readinessDropdown.gameObject.SetActive(true);
+                    } else
+                    {
+                        statusLabel.gameObject.SetActive(true);
+                    }
                     break;
                 default:
-                    Debug.LogError($"LobbyPlayerObject #{SlotModel.SlotId} : What are you on about?");
                     break;
             }
         }
-        #endregion
 
-        #region Unity Messages
-
-        #endregion
-
-        #region Endpoint - Recieving updates from model / controller
-        private void SlotModel_SlotDataChanged(object sender, EventArgs e)
+        private void OnReadyDropdownValueChanged(int oldValue, int newValue)
         {
-            nameField.text = SlotModel.PlayerData.Name;
-            Debug.Log($"<color=orange>[Client] Slot#{SlotModel.SlotId} Occupant status: {SlotModel.OccupantStatus}");
-            if (SlotModel.OccupantStatus.ToString() == "Open")
+            if (IsServer)
             {
-                // The slot is open
-                emptyDropdown.SetValueWithoutNotify(0);
-                SwitchDropdowns(true);
-            } else
-            {
-                // The slot is closed
-                emptyDropdown.SetValueWithoutNotify(2);
-                if (SlotModel.PlayerData.Name != string.Empty) // Only switch if a player is assigned
-                {
-                    SwitchDropdowns(false);
-                }
+                SlotModel.PlayerData.IsReady = newValue == 1;
             }
-            readinessDropdown.SetValueWithoutNotify(SlotModel.IsPlayerReady() ? 1 : 0);
+            if (IsOwner)
+            {
+                readinessDropdown.SetValueWithoutNotify(newValue);
+            }
+            else
+            {
+                statusLabel.text = newValue == 1 ? READY_RICH_TEXT : NOT_READY_RICH_TEXT;
+            }
         }
-        private void SwitchDropdowns(bool param)
-        {
-            emptyDropdown.gameObject.SetActive(param);
-            readinessDropdown.gameObject.SetActive(!param);
-        }
+
+        #endregion
+
         #endregion
     }
 }

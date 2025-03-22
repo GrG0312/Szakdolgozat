@@ -17,13 +17,17 @@ namespace Controllers
     {
         private const int LOBBY_SIZE = 4;
 
+        #region Serializations
+
         [SerializeField] private GameObject networkManagerPrefab;
         [SerializeField] private LobbyPlayerObject playerObjectPrefab;
 
         [SerializeField] private GameObject playerNamesParent;
         [SerializeField] private GameObject clientViewBlocker;
         [SerializeField] private TMP_Text hostNameDisplay;
-        
+
+        #endregion
+
         private List<LobbyPlayerObject> clientSlots;
 
         private LobbyModel<ulong> lobbyModel;
@@ -52,7 +56,7 @@ namespace Controllers
                 slotobj.transform.SetParent(playerNamesParent.transform);
                 // fhu te
                 // de nem szeretlek
-                // sokkal tovább tartott mint kellett volna .-.-,.mns9ugbsokfaijfazvf aijnf aofnbugdv D
+                // sokkal tovább tartott mint kellett volna -.-
                 slotobj.transform.localPosition = new Vector3(0, 225 - (i * 150), 0);
                 slotobj.transform.localScale = Vector3.one;
                 clientSlots.Add(slotobj);
@@ -69,10 +73,11 @@ namespace Controllers
                 //obj.SlotModel.SlotDataChanged += UpdateSlotDataForConnectedClients;
             }
 
+            // Assign Host data to slot
             LobbyPlayerData<ulong> hostData = new LobbyPlayerData<ulong>(NetworkManager.Singleton.LocalClientId, ProfileController.Instance.DisplayName);
             lobbyModel.ConnectedClients.Add(hostData);
+            clientSlots.First().GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
             clientSlots.First().SlotModel.PlayerData = hostData;
-
 
             // Bind the connected handler only to the server
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
@@ -82,10 +87,6 @@ namespace Controllers
         }
         public void JoinSession(string ipAddress)
         {
-            foreach (LobbyPlayerObject obj in clientSlots)
-            {
-                obj.SetHostDisplay(false);
-            }
             Debug.Log($"<color=magenta>Connecting to address {ipAddress}...</color>");
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(ipAddress, 35420);
             if (!NetworkManager.Singleton.StartClient())
@@ -156,6 +157,14 @@ namespace Controllers
             clientViewBlocker.SetActive(assign);
         }
 
+        private void AssignPlayerToSlot(int slotid, ulong clientId, string clientName)
+        {
+            LobbyPlayerObject obj = clientSlots[slotid];
+            LobbyPlayerData<ulong> newPlayerData = new (clientId, clientName);
+            lobbyModel.ConnectedClients.Add(newPlayerData);
+            obj.SlotModel.PlayerData = newPlayerData;
+        }
+
         #region RPCs for connection
 
         /// <summary>
@@ -190,8 +199,8 @@ namespace Controllers
             // Update every slot's data for the connected client
             for (int i = 0; i < clientSlots.Count; i++)
             {
-                id = clientSlots[i].SlotModel.SlotId;
-                string name = clientSlots[i].SlotModel.GetName();
+                id = clientSlots[i].SlotId;
+                string name = clientSlots[i].SlotModel.GetPlayerName();
                 //ulong ownerId = clientSlots[i].SlotModel.GetPlayerId();
                 string slotstatus = clientSlots[i].SlotModel.OccupantStatus.ToString();
                 //bool isReady = clientSlots[i].SlotModel.IsReady;
@@ -204,57 +213,44 @@ namespace Controllers
 
         #endregion
 
-        #region RPC
-
-        [Rpc(SendTo.NotServer)]
-        private void UpdateSlotData_ClientsRpc(int slotId, string displayname, string slotstatus, bool isready)
-        {
-            // This is for clientSide
-            LobbyPlayerObject obj = clientSlots[slotId];
-            Debug.Log($"<color=magenta>" +
-                $"[Client] Updating slot {slotId}: " +
-                $"\nName: {displayname} " +
-                $"\nStatus: {slotstatus}" +
-                $"\nReadiness: {isready}</color>");
-            //obj.SlotModel.ChangeData(displayname, Enum.Parse<SlotOccupantStatus>(slotstatus), isready);
-            obj.SlotModel.OccupantStatus = Enum.Parse<SlotOccupantStatus>(slotstatus);
-        }
-
-        [Rpc(SendTo.Server, RequireOwnership = false)]
-        private void SwitchPlayerSlot_ServerRpc(ulong callerClientId, int callerSlotId)
-        {
-            LobbyPlayerObject obj = clientSlots[callerSlotId];
-            LobbyPlayerData<ulong> playerData = lobbyModel.ConnectedClients.Single(player => player.ID == callerClientId);
-            //playerData.ChangeToSlot(obj.SlotModel);
-            //UpdateEverySlotsData();
-        }
-        [Rpc(SendTo.Server, RequireOwnership = false)]
-        private void SetSlotStatus_ServerRpc(int callerSlotId, int statusvalue)
-        {
-            LobbyPlayerObject obj = clientSlots.Single(slot => slot.SlotModel.SlotId == callerSlotId);
-            SlotOccupantStatus newStatus = (SlotOccupantStatus)statusvalue;
-            //obj.SlotModel.ChangeData(newStatus, newStatus);
-            //UpdateSlotData_ClientsRpc(obj.SlotModel.SlotId, obj.SlotModel.DisplayName, newStatus.ToString(), false);
-        }
-        #endregion
-
-        private void UpdateSlotDataForConnectedClients(object sender, EventArgs e)
-        {
-            LobbySlot<ulong> slot = (LobbySlot<ulong>)sender;
-        }
-
-        #region Actions - Switching, Ready up
+        #region Switching Slots
         public void SwitchToSlot(int callerSlotId)
         {
             ulong callerClientId = NetworkManager.Singleton.LocalClientId;
             SwitchPlayerSlot_ServerRpc(callerClientId, callerSlotId);
         }
-        public void SetSlotStatus(int callerSlotId, int statusValue)
+
+        [Rpc(SendTo.Server, RequireOwnership = false)]
+        private void SwitchPlayerSlot_ServerRpc(ulong callerClientId, int callerSlotId)
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                SetSlotStatus_ServerRpc(callerSlotId, statusValue);
-            }
+            LobbyPlayerObject targetSlot = clientSlots[callerSlotId];
+            LobbyPlayerData<ulong> playerData = lobbyModel.ConnectedClients.Single(player => player.ID == callerClientId);
+            LobbyPlayerObject currentSlot = clientSlots.Single(obj => obj.SlotModel.PlayerData == playerData);
+
+            currentSlot.GetComponent<NetworkObject>().RemoveOwnership();
+            targetSlot.GetComponent<NetworkObject>().ChangeOwnership(callerClientId);
+
+            currentSlot.SlotModel.PlayerData = null;
+            targetSlot.SlotModel.PlayerData = playerData;
+
+        }
+
+        #endregion
+
+        #region Ready function for Clients
+        public void ClientReadyChange(int readyValue)
+        {
+            ulong clientId = NetworkManager.Singleton.LocalClientId;
+            ClientReady_ServerRpc(clientId, readyValue);
+        }
+        [Rpc(SendTo.Server, RequireOwnership = false)]
+        private void ClientReady_ServerRpc(ulong clientId, int readyValue)
+        {
+            LobbyPlayerObject obj = 
+                clientSlots
+                .Where(slot => slot.SlotModel.PlayerData != null)
+                .Single(slot => slot.SlotModel.PlayerData.ID == clientId);
+            obj.OnReadinessChangeInput(readyValue);
         }
         #endregion
 
