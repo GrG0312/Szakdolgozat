@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a689d91966dfb46499fb63f130d9b905, type: 3}
+  m_Name: Test 2 Editor
+  m_EditorClassIdentifier: 
+  m_Description: Playmode for testing with 2 instances, one of them is the Editor
+  m_EnableEditors: 1
+  m_MainEditorInstance:
+    Name: Main Editor
+    <CorrespondingNodeId>k__BackingField: Main Editor|0_run
+    m_Nodes:
+    - Main Editor|0_run
+    - Main Editor|0_deploy
+    m_PlayerTag: Host
+    m_InitialScene: {fileID: 102900000, guid: d27fa2a7058a22543aa0e2df3786019e, type: 3}
+  m_EditorInstances: []
+  m_LocalInstances:
+  - Name: Instance 1
+    <CorrespondingNodeId>k__BackingField: Instance 1 - Run
+    m_Nodes:
+    - Instance 1 - Build
+    - Instance 1 - Run
+    m_BuildProfile: {fileID: 11400000, guid: ff59a0595d947884cb465f4536eb2c89, type: 2}
+    advancedConfiguration:
+      m_StreamLogsToMainEditor: 0
+      m_LogsColor: {r: 0.75218964, g: 0, b: 1, a: 1}
+      m_Arguments: 
+  m_RemoteInstances: []
+  m_OverridePort: 0
+  m_Port: 0
+  m_MainEditorInstanceObsolete:
+    rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

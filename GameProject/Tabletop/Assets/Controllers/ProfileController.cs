@@ -1,11 +1,15 @@
+using Model.Units.Interfaces;
+using Model.Units;
 using Persistence;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Controllers
 {
     public class ProfileController : BaseController<ProfileController>
     {
+        #region Profiling
 
         private IDataManager<Profile> profileDataManager;
         private Profile UserProfile { get; set; }
@@ -35,7 +39,9 @@ namespace Controllers
             }
             ProfileUpdated?.Invoke(this, EventArgs.Empty);
         }
+        #endregion
 
+        #region Unity Messages
         public void Awake()
         {
             if (Instance == null)
@@ -55,5 +61,6 @@ namespace Controllers
         {
             profileDataManager.Save(UserProfile);
         }
+        #endregion
     }
 }

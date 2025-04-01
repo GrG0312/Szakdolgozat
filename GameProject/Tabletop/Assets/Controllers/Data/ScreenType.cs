@@ -6,6 +6,6 @@
         Profile,
         Lobby,
         Joining,
-        Decks
+        Deck
     }
 }

@@ -7,6 +7,7 @@ using Unity.Netcode;
 using UnityEngine;
 using Unity.Collections;
 using System.Xml;
+using Unity.Collections.LowLevel.Unsafe;
 
 namespace Controllers.DataObjects
 {
@@ -74,6 +75,11 @@ namespace Controllers.DataObjects
             readinessDropdown.onValueChanged.AddListener(OnReadinessChangeInput);
             emptyDropdown.onValueChanged.AddListener(OnOccupantChangeInput);
         }
+        private void Start()
+        {
+            transform.localPosition = new Vector3(0, 225 - (SlotId * this.gameObject.GetComponent<RectTransform>().sizeDelta.y), 0);
+            transform.localScale = Vector3.one;
+        }
         public override void OnNetworkSpawn()
         {
             // Updating the contents upon creation
@@ -89,6 +95,7 @@ namespace Controllers.DataObjects
             if (IsServer)
             {
                 readinessDropdownNetworkVar.Value = value; // 0 - not ready, 1 - ready
+                statusLabelNetworkVar.Value = value == 1 ? READY_RICH_TEXT : NOT_READY_RICH_TEXT;
             } else
             {
                 LobbyController.Instance.ClientReadyChange(value);
@@ -207,12 +214,16 @@ namespace Controllers.DataObjects
         {
             if (IsServer)
             {
-                SlotModel.PlayerData.IsReady = newValue == 1;
+                try
+                {
+                    SlotModel.PlayerData.IsReady = newValue == 1;
+                }
+                catch (Exception) 
+                { /* This is here because upon spawning, the host tries to set this value, but it is not possible to initialize PlayerData before spawning */ }
             }
             if (IsOwner)
             {
                 readinessDropdown.SetValueWithoutNotify(newValue);
-                statusLabelNetworkVar.Value = newValue == 1 ? READY_RICH_TEXT : NOT_READY_RICH_TEXT;
             }
         }
 

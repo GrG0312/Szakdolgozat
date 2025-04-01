@@ -1,6 +1,7 @@
 ﻿using Unity.Netcode;
 using UnityEngine;
 using TMPro;
+using System.Collections;
 using System.Collections.Generic;
 using Controllers.DataObjects;
 using Unity.Netcode.Transports.UTP;
@@ -8,29 +9,37 @@ using UnityEngine.SceneManagement;
 using Model.Lobby;
 using Controllers.Data;
 using System.Linq;
-using System;
 using Model;
+using Model.Deck;
+using Model.Units;
 
 namespace Controllers
 {
-    public class LobbyController : BaseController<LobbyController>
+    public class LobbyController : MenuControllerBase<LobbyController>
     {
+        #region Constant values
         private const int LOBBY_SIZE = 4;
+        private const float TEXT_FADE_RATE = 1.0f;
+        private const string DECK_TEXT_BASE = "Your side: ";
+        #endregion
 
         #region Serializations
-
         [SerializeField] private GameObject networkManagerPrefab;
         [SerializeField] private LobbyPlayerObject playerObjectPrefab;
 
         [SerializeField] private GameObject playerNamesParent;
         [SerializeField] private GameObject clientViewBlocker;
         [SerializeField] private TMP_Text hostNameDisplay;
+        [SerializeField] private TMP_Text messageBox;
 
+        [SerializeField] private GameObject deckParent;
+        [SerializeField] private TMP_Text deckSideText;
+        [SerializeField] private UnitAdder adderObject;
         #endregion
 
         private List<LobbyPlayerObject> clientSlots;
-
         private LobbyModel<ulong> lobbyModel;
+        private List<UnitAdder> unitAdders;
 
         #region Lobby setup - Create, Join, Leave
         public void CreateSession()
@@ -41,12 +50,12 @@ namespace Controllers
 
             if (!NetworkManager.Singleton.StartHost())
             {
-                Debug.LogError("<color=red>Could not start a host. Navigating back to Main Menu</color>");
                 SceneManager.LoadScene("MenuScene", LoadSceneMode.Single);
             }
 
             
             clientSlots = new ();
+            hostNameDisplay.text = ProfileController.Instance.DisplayName + "'s Lobby";
 
             for (int i = 0; i < LOBBY_SIZE; i++)
             {
@@ -54,11 +63,6 @@ namespace Controllers
                 LobbyPlayerObject slotobj = Instantiate(playerObjectPrefab);
                 slotobj.NetworkObject.Spawn(true);
                 slotobj.transform.SetParent(playerNamesParent.transform);
-                // fhu te
-                // de nem szeretlek
-                // sokkal tovább tartott mint kellett volna -.-
-                slotobj.transform.localPosition = new Vector3(0, 225 - (i * 150), 0);
-                slotobj.transform.localScale = Vector3.one;
                 clientSlots.Add(slotobj);
                 slotobj.SetupInitialData(i, i % 2 == 0 ? Side.Blue : Side.Red);
             }
@@ -69,29 +73,27 @@ namespace Controllers
             {
                 // Add slot to model
                 lobbyModel.LobbySlots.Add(obj.SlotModel);
-                // Assign event handler to data changed
-                //obj.SlotModel.SlotDataChanged += UpdateSlotDataForConnectedClients;
             }
 
             // Assign Host data to slot
             LobbyPlayerData<ulong> hostData = new LobbyPlayerData<ulong>(NetworkManager.Singleton.LocalClientId, ProfileController.Instance.DisplayName);
-            lobbyModel.ConnectedClients.Add(hostData);
+            lobbyModel.AddPlayer(hostData);
             clientSlots.First().GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
             clientSlots.First().SlotModel.PlayerData = hostData;
+            SideDataDelivery_ClientRpc(clientSlots.First().SlotModel.Side, RpcTarget.Single(NetworkManager.Singleton.LocalClientId, RpcTargetUse.Temp));
 
-            // Bind the connected handler only to the server
+            // Bind the connected and disconnected handler only to the server
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
 
             // Assign an approval callback
             NetworkManager.Singleton.ConnectionApprovalCallback += ClientApproval;
         }
         public void JoinSession(string ipAddress)
         {
-            Debug.Log($"<color=magenta>Connecting to address {ipAddress}...</color>");
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(ipAddress, 35420);
             if (!NetworkManager.Singleton.StartClient())
             {
-                Debug.LogError("<color=red>Could not start a client. Navigating back to Main Menu</color>");
                 SceneManager.LoadScene("MenuScene", LoadSceneMode.Single);
             }
             SetClientViewBlocker(true);
@@ -118,7 +120,9 @@ namespace Controllers
 
         private void OnClientDisconnect(ulong clientId)
         {
-            // TODO clear slot of client
+            LobbyPlayerObject obj = clientSlots.Single(slot => slot.SlotModel.GetPlayerId(out ulong id) && id == clientId);
+            obj.GetComponent<NetworkObject>().RemoveOwnership(); // give back ownership to host
+            obj.SlotModel.PlayerData = null;
         }
 
         private void OnClientStopped(bool wasHost)
@@ -157,15 +161,9 @@ namespace Controllers
             clientViewBlocker.SetActive(assign);
         }
 
-        private void AssignPlayerToSlot(int slotid, ulong clientId, string clientName)
-        {
-            LobbyPlayerObject obj = clientSlots[slotid];
-            LobbyPlayerData<ulong> newPlayerData = new (clientId, clientName);
-            lobbyModel.ConnectedClients.Add(newPlayerData);
-            obj.SlotModel.PlayerData = newPlayerData;
-        }
+        #endregion
 
-        #region RPCs for connection
+        #region RPCs
 
         /// <summary>
         /// Gets the Hoster's name from the server, then sends the LocalClientId and local client's clientName pair.
@@ -192,23 +190,12 @@ namespace Controllers
                 LobbyPlayerObject reserved = clientSlots[id];
                 LobbyPlayerData<ulong> newlyJoinedData = new LobbyPlayerData<ulong>(clientId, clientName);
 
-                lobbyModel.ConnectedClients.Add(newlyJoinedData);
+                lobbyModel.AddPlayer(newlyJoinedData);
                 reserved.NetworkObject.ChangeOwnership(clientId);
                 reserved.SlotModel.PlayerData = newlyJoinedData;
-            }
-            // Update every slot's data for the connected client
-            for (int i = 0; i < clientSlots.Count; i++)
-            {
-                id = clientSlots[i].SlotId;
-                string name = clientSlots[i].SlotModel.GetPlayerName();
-                //ulong ownerId = clientSlots[i].SlotModel.GetPlayerId();
-                string slotstatus = clientSlots[i].SlotModel.OccupantStatus.ToString();
-                //bool isReady = clientSlots[i].SlotModel.IsReady;
-                //UpdateSlotData_ClientsRpc(id, name, slotstatus, isReady);
+                SideDataDelivery_ClientRpc(reserved.SlotModel.Side, RpcTarget.Single(clientId, RpcTargetUse.Temp));
             }
         }
-        #endregion
-
         #endregion
 
         #endregion
@@ -232,7 +219,8 @@ namespace Controllers
 
             currentSlot.SlotModel.PlayerData = null;
             targetSlot.SlotModel.PlayerData = playerData;
-
+            lobbyModel.ResetDeckOfPlayer(callerClientId);
+            SideDataDelivery_ClientRpc(targetSlot.SlotModel.Side, RpcTarget.Single(callerClientId, RpcTargetUse.Temp));
         }
 
         #endregion
@@ -251,6 +239,120 @@ namespace Controllers
                 .Where(slot => slot.SlotModel.PlayerData != null)
                 .Single(slot => slot.SlotModel.PlayerData.ID == clientId);
             obj.OnReadinessChangeInput(readyValue);
+        }
+        #endregion
+
+        #region Deck functions
+        public void ViewDeck()
+        {
+            ChangeScreen(ScreenType.Deck);
+        }
+        private void ListUnitsForSide(Side current)
+        {
+            unitAdders.Clear();
+            foreach (Transform child in deckParent.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            foreach (var item in Defines.UnitValues)
+            {
+                UnitIdentifier target = item.Key;
+                if (Defines.UnitValues[target].Side == current)
+                {
+                    UnitAdder obj = Instantiate(adderObject);
+                    unitAdders.Add(obj);
+                    obj.transform.SetParent(deckParent.transform);
+                    obj.transform.position = Vector3.zero;
+                    obj.transform.rotation = Quaternion.identity;
+                    obj.transform.localScale = Vector3.one;
+                    obj.Setup(target);
+                    GetLimit_ServerRpc(NetworkManager.Singleton.LocalClientId, target);
+                }
+            }
+        }
+
+        [Rpc(SendTo.SpecifiedInParams)]
+        private void SideDataDelivery_ClientRpc(Side own, RpcParams rpcParams)
+        {
+            deckSideText.text = DECK_TEXT_BASE;
+            deckSideText.text += own == Side.Blue ? $"<color=#4242ff>{own.ToString()}</color>" : $"<color=#ff4242>{own.ToString()}</color>";
+            ListUnitsForSide(own);
+        }
+
+        [Rpc(SendTo.Server)]
+        private void GetLimit_ServerRpc(ulong clientId, UnitIdentifier identity)
+        {
+            int limit = Defines.UnitValues[identity].LimitInDeck;
+            LimitDelivery_ClientRpc(limit, identity, RpcTarget.Single(clientId, RpcTargetUse.Temp));
+        }
+
+        [Rpc(SendTo.SpecifiedInParams)]
+        private void LimitDelivery_ClientRpc(int limit, UnitIdentifier identity, RpcParams param)
+        {
+            UnitAdder adder = unitAdders.Single(ad => ad.Identity == identity);
+            adder.UnitLimit = limit;
+        }
+
+        [Rpc(SendTo.Server)]
+        public void AddUnitToDeck_ServerRpc(ulong clientId, UnitIdentifier identity)
+        {
+            // Server-side:
+            int amount = lobbyModel.PlayerDecks[clientId].Add(identity);
+            AmountDelivery_ClientRpc(amount, identity, RpcTarget.Single(clientId, RpcTargetUse.Temp));
+        }
+
+        [Rpc(SendTo.Server)]
+        public void RemoveUnitFromDeck_ServerRpc(ulong clientId, UnitIdentifier identity)
+        {
+            int remaining = lobbyModel.PlayerDecks[clientId].Remove(identity);
+            AmountDelivery_ClientRpc(remaining, identity, RpcTarget.Single(clientId, RpcTargetUse.Temp));
+        }
+        
+        [Rpc(SendTo.SpecifiedInParams)]
+        private void AmountDelivery_ClientRpc(int amount, UnitIdentifier identity, RpcParams param)
+        {
+            UnitAdder adder = unitAdders.Single(ad => ad.Identity == identity);
+            adder.UnitAmount = amount;
+        }
+        #endregion
+
+        #region Starting game / ending lobby
+        public void TryStartGame()
+        {
+            if (IsServer)
+            {
+                Debug.Log(lobbyModel.CanStart());
+                // TODO
+            } else
+            {
+                StartCoroutine(DisplayErrorMessage("Only the host can start the game"));
+            }
+        }
+        private IEnumerator DisplayErrorMessage(string message)
+        {
+            messageBox.text = message;
+            messageBox.alpha = 0;
+            messageBox.gameObject.SetActive(true);
+            while (messageBox.alpha < 1.0f)
+            {
+                messageBox.alpha = Mathf.Clamp(messageBox.alpha + (Time.deltaTime * TEXT_FADE_RATE), 0f, 1.0f);
+                yield return null;
+            }
+
+            float timePassed = 0;
+            while (timePassed < 4) // wait for 4 seconds
+            {
+                timePassed += Time.fixedDeltaTime;
+                yield return null;
+            }
+
+            while (messageBox.alpha > 0.0f)
+            {
+                messageBox.alpha = Mathf.Clamp(messageBox.alpha - (Time.deltaTime * TEXT_FADE_RATE), 0f, 1.0f);
+                yield return null;
+            }
+
+            messageBox.gameObject.SetActive(false);
         }
         #endregion
 
@@ -276,6 +378,7 @@ namespace Controllers
         }
         private void Start()
         {
+            unitAdders = new List<UnitAdder>();
             if (InterSceneData.ShouldHost)
             {
                 CreateSession();
@@ -284,6 +387,7 @@ namespace Controllers
                 JoinSession(InterSceneData.ConnectionAddress);
             }
             InterSceneData.Reset();
+            screenStack.Push(ScreenType.Lobby);
         }
         #endregion
     }

@@ -11,9 +11,9 @@ namespace Model
     /// GameModel class responsible for handling turn changes and checking whether the ending conditions fulfill.
     /// </summary>
 
-    public sealed class SessionModel
+    public sealed class SessionModel<PlayerIdType>
     {
-        public const int MAX_UNDO_COUNT = 5;
+
         #region Turn Variables
         /// <summary>
         /// If we enabled a turn limit or not
@@ -81,18 +81,18 @@ namespace Model
         /// <summary>
         /// List of players participating in the game.
         /// </summary>
-        private List<IPlayer> players;
+        private List<IPlayer<PlayerIdType>> players;
 
         /// <summary>
         /// A read-only list of players
         /// </summary>
-        public ReadOnlyCollection<IPlayer> Players { get; }
+        public IReadOnlyList<IPlayer<PlayerIdType>> Players { get; }
 
-        private IPlayer activePlayer;
+        private IPlayer<PlayerIdType> activePlayer;
         /// <summary>
         /// The currently active player. Setting this will also set the <see cref="ActiveSide"/>
         /// </summary>
-        public IPlayer ActivePlayer 
+        public IPlayer<PlayerIdType> ActivePlayer 
         {
             get
             {
@@ -122,9 +122,9 @@ namespace Model
                 // TurnChanged += SessionModel_TurnChanged;
             }
             
-            players = new List<IPlayer>();
+            players = new List<IPlayer<PlayerIdType>>();
             // TODO add players here
-            Players = new ReadOnlyCollection<IPlayer>(players);
+            Players = new ReadOnlyCollection<IPlayer<PlayerIdType>>(players);
             ActivePlayer = players.First();
         }
 
@@ -143,7 +143,7 @@ namespace Model
         /// <summary>
         /// Returns the next Player in line from <see cref="Players"/>. Returns the first if the current is the last one.
         /// </summary>
-        private IPlayer GetNextPlayer()
+        private IPlayer<PlayerIdType> GetNextPlayer()
         {
             if (IsLastPlayer())
             {

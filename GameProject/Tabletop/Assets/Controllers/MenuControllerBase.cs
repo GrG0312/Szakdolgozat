@@ -28,9 +28,8 @@ namespace Controllers
                     child.gameObject.SetActive(element.ScreenType == type);
                 }
             }
-            //StackDebug("Change");
         }
-        public void Back()
+        public void BackOrQuit()
         {
             try
             {
@@ -42,19 +41,6 @@ namespace Controllers
                 Debug.LogWarning("Quitting application because stack was empty...");
                 Application.Quit();
             }
-            //StackDebug("Back");
-        }
-        private void StackDebug(string message = "")
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(message + ": ");
-            sb.Append("[");
-            foreach (ScreenType type in screenStack)
-            {
-                sb.Append(" " + type);
-            }
-            sb.Append(" ]");
-            Debug.Log(sb.ToString());
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Controllers
     public sealed class GameController : BaseController<GameController>
     {
 
-        public SessionModel CurrentSession { get; private set; }
+        public SessionModel<ulong> CurrentSession { get; private set; }
 
         public void Awake()
         {

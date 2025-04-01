@@ -1,22 +1,22 @@
 ﻿using Model.Commands;
-using Model.Units;
+using Model.Deck;
 using Model.Units.Interfaces;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Model
 {
-    public interface IPlayer
+    public interface IPlayer<PlayerIdType>
     {
-        public int PlayerID { get; }
+        public PlayerIdType PlayerID { get; }
         public Side Side { get; }
         public int PointCurrency { get; }
 
         public History<Command> CommandHistory { get; }
 
-        public ReadOnlyCollection<DeckUnitCard> Deck { get; }
-        public ReadOnlyCollection<IUnit> UnitsInPlay { get; }
-        public ReadOnlyCollection<ISelectable> Selection { get; }
+        public IReadOnlyList<DeckEntry> Deck { get; }
+        public IReadOnlyList<IUnit> UnitsInPlay { get; }
+        public IReadOnlyList<ISelectable> Selection { get; }
 
         public void SelectNew(IEnumerable<ISelectable> units);
         public void SelectAdditive(IEnumerable<ISelectable> units);

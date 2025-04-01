@@ -56,8 +56,8 @@ namespace Model.Lobby
         }
         public bool GetPlayerId(out PlayerIdType id)
         {
-            id = PlayerData == null ? PlayerData.ID : default;
-            return PlayerData == null;
+            id = PlayerData == null ? default : PlayerData.ID;
+            return PlayerData != null;
         }
         public bool IsPlayerReady()
         {

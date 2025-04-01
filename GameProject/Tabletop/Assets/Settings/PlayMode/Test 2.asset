@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Test 2
   m_EditorClassIdentifier: 
   m_Description: Playmode for testing with 2 instances
-  m_EnableEditors: 1
+  m_EnableEditors: 0
   m_MainEditorInstance:
     Name: Main Editor
     <CorrespondingNodeId>k__BackingField: Main Editor|0_run
@@ -24,15 +24,25 @@ MonoBehaviour:
     m_InitialScene: {fileID: 102900000, guid: d27fa2a7058a22543aa0e2df3786019e, type: 3}
   m_EditorInstances: []
   m_LocalInstances:
-  - Name: Client Instance
-    <CorrespondingNodeId>k__BackingField: Client Instance - Run
+  - Name: Instance 1
+    <CorrespondingNodeId>k__BackingField: Instance 1 - Run
     m_Nodes:
-    - Client Instance - Build
-    - Client Instance - Run
+    - Instance 1 - Build
+    - Instance 1 - Run
     m_BuildProfile: {fileID: 11400000, guid: ff59a0595d947884cb465f4536eb2c89, type: 2}
     advancedConfiguration:
-      m_StreamLogsToMainEditor: 0
-      m_LogsColor: {r: 0, g: 1, b: 0.9725938, a: 1}
+      m_StreamLogsToMainEditor: 1
+      m_LogsColor: {r: 0.75218964, g: 0, b: 1, a: 1}
+      m_Arguments: 
+  - Name: Instance 2
+    <CorrespondingNodeId>k__BackingField: Instance 2 - Run
+    m_Nodes:
+    - Instance 2 - Build
+    - Instance 2 - Run
+    m_BuildProfile: {fileID: 11400000, guid: ff59a0595d947884cb465f4536eb2c89, type: 2}
+    advancedConfiguration:
+      m_StreamLogsToMainEditor: 1
+      m_LogsColor: {r: 0, g: 0.31618512, b: 0.735849, a: 1}
       m_Arguments: 
   m_RemoteInstances: []
   m_OverridePort: 0
