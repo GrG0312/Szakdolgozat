@@ -8,7 +8,20 @@ namespace Model.Weapons
 {
     public enum WeaponIdentifier
     {
-        PlasmaGun,
-        Powerfists,
+        Lasgun,
+        Boltgun,
+        HeavyBoltPistol,
+        HeavyBolter,
+        Lascannon,
+        HeavyFlamer,
+        StormBolter,
+        BallistusMissileLauncher_AP,
+        BallistusMissileLauncher_HE,
+
+        Autopistol,
+        Plasmagun,
+        PlasmaPistol,
+        HadesAutocannon,
+        EctoplasmaCannon
     }
 }

@@ -6,6 +6,8 @@
         Profile,
         Lobby,
         Joining,
-        Deck
+        Deck,
+        Game,
+        Throw,
     }
 }

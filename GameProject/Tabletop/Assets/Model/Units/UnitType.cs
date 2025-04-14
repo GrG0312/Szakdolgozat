@@ -10,9 +10,8 @@ namespace Model.Units
     {
         LightInfantry,
         HeavyInfantry,
-        Artillery,
         Tank,
-        Air,
-        SpecialCharacter
+        SpecialCharacter,
+        Warmachine,
     }
 }

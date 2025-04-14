@@ -62,39 +62,50 @@
     <Analyzer Include="D:\Unity\Editor\6000.0.24f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Model\UnityDependant\Defines.UnitVisuals.cs" />
     <Compile Include="Assets\Model\Units\ArmorType.cs" />
+    <Compile Include="Assets\Model\Interfaces\IOwned.cs" />
     <Compile Include="Assets\Model\Weapons\WeaponIdentifier.cs" />
+    <Compile Include="Assets\Model\Interfaces\IDamageDealer.cs" />
     <Compile Include="Assets\Model\Deck\DeckEntry.cs" />
-    <Compile Include="Assets\Model\GameModel\IPlayer.cs" />
-    <Compile Include="Assets\Model\UnityDependant\PlayerObject.cs" />
+    <Compile Include="Assets\Model\GameModel\GamePlayerData.cs" />
+    <Compile Include="Assets\Model\UnityDependant\UnityUnitFactory.cs" />
+    <Compile Include="Assets\Model\UnityDependant\UnityCommandFactory.cs" />
     <Compile Include="Assets\Model\GameModel\Commands\MoveCommand.cs" />
-    <Compile Include="Assets\Model\Weapons\Weapon.cs" />
+    <Compile Include="Assets\Model\Interfaces\IWeaponUser.cs" />
+    <Compile Include="Assets\Model\Interfaces\IMovable.cs" />
     <Compile Include="Assets\Model\Side.cs" />
     <Compile Include="Assets\Model\GameModel\Phase.cs" />
-    <Compile Include="Assets\Model\UnityDependant\ControllableUnit.cs" />
+    <Compile Include="Assets\Model\Interfaces\IDamagable.cs" />
     <Compile Include="Assets\Model\Defines.cs" />
-    <Compile Include="Assets\Model\Units\Interfaces\ISelectable.cs" />
+    <Compile Include="Assets\Model\Interfaces\IUnitFactory.cs" />
     <Compile Include="Assets\Model\Units\UnitVisualData.cs" />
     <Compile Include="Assets\Model\LobbyModel\SlotOccupantStatus.cs" />
     <Compile Include="Assets\Model\GameModel\Commands\AttackCommand.cs" />
-    <Compile Include="Assets\Model\Units\Interfaces\IWeaponUser.cs" />
+    <Compile Include="Assets\Model\Interfaces\IArmored.cs" />
     <Compile Include="Assets\Model\LobbyModel\LobbyModel.cs" />
-    <Compile Include="Assets\Model\GameModel\SessionData.cs" />
-    <Compile Include="Assets\Model\GameModel\SessionSettings.cs" />
-    <Compile Include="Assets\Model\GameModel\SessionModel.cs" />
-    <Compile Include="Assets\Model\GameModel\Commands\Command.cs" />
-    <Compile Include="Assets\Model\Units\Interfaces\IMovable.cs" />
-    <Compile Include="Assets\Model\Units\Interfaces\IUnit.cs" />
+    <Compile Include="Assets\Model\UnityDependant\UnitModel.cs" />
+    <Compile Include="Assets\Model\Interfaces\ISelectable.cs" />
+    <Compile Include="Assets\Model\Weapons\WeaponConstants.cs" />
+    <Compile Include="Assets\Model\Interfaces\IUndoableCommand.cs" />
+    <Compile Include="Assets\Model\GameModel\PlayerPointsChangedEventArgs.cs" />
+    <Compile Include="Assets\Model\Interfaces\IUnit.cs" />
+    <Compile Include="Assets\Model\UnityDependant\DiceRoller.cs" />
     <Compile Include="Assets\Model\LobbyModel\LobbySlot.cs" />
-    <Compile Include="Assets\Model\Units\Interfaces\IOwned.cs" />
+    <Compile Include="Assets\Model\Interfaces\IDiceRoller.cs" />
     <Compile Include="Assets\Model\LobbyModel\LobbyPlayerData.cs" />
+    <Compile Include="Assets\Model\Weapons\UsableWeapon.cs" />
+    <Compile Include="Assets\Model\Interfaces\ICommandFactory.cs" />
     <Compile Include="Assets\Model\Deck\DeckObject.cs" />
+    <Compile Include="Assets\Model\Interfaces\IUnitCommand.cs" />
+    <Compile Include="Assets\Model\Weapons\UnitWeapon.cs" />
     <Compile Include="Assets\Model\Units\UnitConstants.cs" />
+    <Compile Include="Assets\Model\UnityDependant\Defines.Unity.cs" />
+    <Compile Include="Assets\Model\GameModel\GameModel.cs" />
     <Compile Include="Assets\Model\GameModel\History.cs" />
-    <Compile Include="Assets\Model\Units\Interfaces\IDamagable.cs" />
+    <Compile Include="Assets\Model\Interfaces\IUsable.cs" />
     <Compile Include="Assets\Model\Units\UnitType.cs" />
     <Compile Include="Assets\Model\Units\UnitIdentifier.cs" />
+    <Compile Include="Assets\Model\CollectionHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Model\Model.asmdef" />
@@ -1098,6 +1109,10 @@
     </Reference>
     <Reference Include="System.Xml.Serialization">
       <HintPath>D:\Unity\Editor\6000.0.24f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.Serialization.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Netcode.Runtime">
+      <HintPath>Library\ScriptAssemblies\Unity.Netcode.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEditor.UI">

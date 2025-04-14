@@ -3,7 +3,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
-using Controllers.DataObjects;
+using Controllers.Objects;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine.SceneManagement;
 using Model.Lobby;
@@ -18,7 +18,6 @@ namespace Controllers
     public class LobbyController : MenuControllerBase<LobbyController>
     {
         #region Constant values
-        private const int LOBBY_SIZE = 4;
         private const float TEXT_FADE_RATE = 1.0f;
         private const string DECK_TEXT_BASE = "Your side: ";
         #endregion
@@ -41,6 +40,8 @@ namespace Controllers
         private LobbyModel<ulong> lobbyModel;
         private List<UnitAdder> unitAdders;
 
+        private Coroutine currentErrorMessage;
+
         #region Lobby setup - Create, Join, Leave
         public void CreateSession()
         {
@@ -57,14 +58,14 @@ namespace Controllers
             clientSlots = new ();
             hostNameDisplay.text = ProfileController.Instance.DisplayName + "'s Lobby";
 
-            for (int i = 0; i < LOBBY_SIZE; i++)
+            for (int i = 0; i < LobbyModel<ulong>.LOBBY_SIZE; i++)
             {
                 // 150 is the height
                 LobbyPlayerObject slotobj = Instantiate(playerObjectPrefab);
                 slotobj.NetworkObject.Spawn(true);
                 slotobj.transform.SetParent(playerNamesParent.transform);
                 clientSlots.Add(slotobj);
-                slotobj.SetupInitialData(i, i % 2 == 0 ? Side.Blue : Side.Red);
+                slotobj.SetupInitialData(i, i % 2 == 0 ? Side.Imperium : Side.Chaos);
             }
 
             lobbyModel = new();
@@ -76,15 +77,14 @@ namespace Controllers
             }
 
             // Assign Host data to slot
-            LobbyPlayerData<ulong> hostData = new LobbyPlayerData<ulong>(NetworkManager.Singleton.LocalClientId, ProfileController.Instance.DisplayName);
-            lobbyModel.AddPlayer(hostData);
+            // This adds the Player to the model and assigns it to the first slot
+            lobbyModel.AddNewPlayer(NetworkManager.Singleton.LocalClientId, ProfileController.Instance.DisplayName);
+            // Change ownership of the slot object, just in case. It can be source for problems
             clientSlots.First().GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
-            clientSlots.First().SlotModel.PlayerData = hostData;
             SideDataDelivery_ClientRpc(clientSlots.First().SlotModel.Side, RpcTarget.Single(NetworkManager.Singleton.LocalClientId, RpcTargetUse.Temp));
 
             // Bind the connected and disconnected handler only to the server
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
 
             // Assign an approval callback
             NetworkManager.Singleton.ConnectionApprovalCallback += ClientApproval;
@@ -98,16 +98,23 @@ namespace Controllers
             }
             SetClientViewBlocker(true);
         }
-        public void DestroySession()
+        public void StartLeaveProcess()
         {
             if (NetworkManager.Singleton.IsHost)
             {
                 NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
                 NetworkManager.Singleton.ConnectionApprovalCallback -= ClientApproval;
             }
+            if (NetworkManager.Singleton.IsConnectedClient)
+            {
+                Debug.Log("Starting disconnect");
+                ClientDisconnect_ServerRpc(NetworkManager.Singleton.LocalClientId);
+            } else
+            {
+                NetworkManager.Singleton.Shutdown(true);
+                SceneManager.LoadScene("MenuScene", LoadSceneMode.Single);
+            }
 
-            NetworkManager.Singleton.Shutdown(true);
-            SceneManager.LoadScene("MenuScene", LoadSceneMode.Single);
         }
 
         #region Event Handlers
@@ -115,20 +122,13 @@ namespace Controllers
         {
             // Send hostname
             string hosterName = ProfileController.Instance.DisplayName;
-            GetHosterName_ClientRpc(hosterName, RpcTarget.Single(clientId, RpcTargetUse.Temp));
-        }
-
-        private void OnClientDisconnect(ulong clientId)
-        {
-            LobbyPlayerObject obj = clientSlots.Single(slot => slot.SlotModel.GetPlayerId(out ulong id) && id == clientId);
-            obj.GetComponent<NetworkObject>().RemoveOwnership(); // give back ownership to host
-            obj.SlotModel.PlayerData = null;
+            HosterNameDelivery_ClientRpc(hosterName, RpcTarget.Single(clientId, RpcTargetUse.Temp));
         }
 
         private void OnClientStopped(bool wasHost)
         {
             SetClientViewBlocker(false);
-            DestroySession();
+            StartLeaveProcess();
         }
         #endregion
 
@@ -139,13 +139,11 @@ namespace Controllers
             {
                 response.CreatePlayerObject = false;
                 response.Approved = true;
-                Debug.Log("<color=green>Found empty slot. Approving connection.</color>");
             }
             else
             {
                 response.Reason = "There are no open slots left in the lobby";
                 response.Approved = false;
-                Debug.Log("<color=red>Couldn't find empty spot. Connection refused.</color>");
             }
         }
         private void SetClientViewBlocker(bool assign)
@@ -165,11 +163,34 @@ namespace Controllers
 
         #region RPCs
 
+        [Rpc(SendTo.Server)]
+        private void ClientDisconnect_ServerRpc(ulong clientId)
+        {
+            // Server side:
+            Debug.Log("A client wants to disconnect");
+            LobbySlot slotOfClient = lobbyModel.GetSlotOfPlayer(clientId);
+            if (slotOfClient != null) // which shouldnt be
+            {
+                LobbyPlayerObject obj = clientSlots.Single(slot => slot.SlotModel == slotOfClient);
+                obj.GetComponent<NetworkObject>().RemoveOwnership(); // give back ownership to host
+                lobbyModel.RemovePlayer(clientId);
+                ClientDisconnectFinish_ClientRpc(RpcTarget.Single(clientId, RpcTargetUse.Temp));
+            }
+        }
+
+        [Rpc(SendTo.SpecifiedInParams)]
+        private void ClientDisconnectFinish_ClientRpc(RpcParams param)
+        {
+            // Client side:
+            NetworkManager.Singleton.Shutdown(true);
+            SceneManager.LoadScene("MenuScene", LoadSceneMode.Single);
+        }
+
         /// <summary>
         /// Gets the Hoster's name from the server, then sends the LocalClientId and local client's clientName pair.
         /// </summary>
         [Rpc(SendTo.SpecifiedInParams)]
-        private void GetHosterName_ClientRpc(string hostname, RpcParams rpcParams)
+        private void HosterNameDelivery_ClientRpc(string hostname, RpcParams rpcParams)
         {
             // This all happens client-side:
             // Turn off blocker screen
@@ -184,15 +205,15 @@ namespace Controllers
         private void SendClientName_ServerRpc(ulong clientId, string clientName)
         {
             // This happens server-side:
-            int id = lobbyModel.FindReservedSlot();
-            if (id != -1) // which it shouldnt be here, under no circumstances
+            int slotIndex = lobbyModel.FindReservedSlot();
+            if (slotIndex != -1) // which it shouldnt be here, under no circumstances
             {
-                LobbyPlayerObject reserved = clientSlots[id];
-                LobbyPlayerData<ulong> newlyJoinedData = new LobbyPlayerData<ulong>(clientId, clientName);
+                LobbyPlayerObject reserved = clientSlots[slotIndex];
 
-                lobbyModel.AddPlayer(newlyJoinedData);
-                reserved.NetworkObject.ChangeOwnership(clientId);
-                reserved.SlotModel.PlayerData = newlyJoinedData;
+                reserved.GetComponent<NetworkObject>().ChangeOwnership(clientId);
+                reserved.ForceRefresh();
+
+                lobbyModel.AddNewPlayer(clientId, clientName, slotIndex);
                 SideDataDelivery_ClientRpc(reserved.SlotModel.Side, RpcTarget.Single(clientId, RpcTargetUse.Temp));
             }
         }
@@ -208,21 +229,19 @@ namespace Controllers
         }
 
         [Rpc(SendTo.Server, RequireOwnership = false)]
-        private void SwitchPlayerSlot_ServerRpc(ulong callerClientId, int callerSlotId)
+        private void SwitchPlayerSlot_ServerRpc(ulong clientId, int targetSlotId)
         {
-            LobbyPlayerObject targetSlot = clientSlots[callerSlotId];
-            LobbyPlayerData<ulong> playerData = lobbyModel.ConnectedClients.Single(player => player.ID == callerClientId);
-            LobbyPlayerObject currentSlot = clientSlots.Single(obj => obj.SlotModel.PlayerData == playerData);
+            LobbyPlayerObject targetSlot = clientSlots[targetSlotId];
+            LobbyPlayerObject currentSlot = clientSlots.Single(obj => obj.SlotModel == lobbyModel.GetSlotOfPlayer(clientId));
 
             currentSlot.GetComponent<NetworkObject>().RemoveOwnership();
-            targetSlot.GetComponent<NetworkObject>().ChangeOwnership(callerClientId);
+            targetSlot.GetComponent<NetworkObject>().ChangeOwnership(clientId);
 
-            currentSlot.SlotModel.PlayerData = null;
-            targetSlot.SlotModel.PlayerData = playerData;
-            lobbyModel.ResetDeckOfPlayer(callerClientId);
-            SideDataDelivery_ClientRpc(targetSlot.SlotModel.Side, RpcTarget.Single(callerClientId, RpcTargetUse.Temp));
+            lobbyModel.ReassignPlayerToSlot(clientId, targetSlotId);
+            lobbyModel.ResetDeckOfPlayer(clientId);
+
+            SideDataDelivery_ClientRpc(targetSlot.SlotModel.Side, RpcTarget.Single(clientId, RpcTargetUse.Temp));
         }
-
         #endregion
 
         #region Ready function for Clients
@@ -234,11 +253,8 @@ namespace Controllers
         [Rpc(SendTo.Server, RequireOwnership = false)]
         private void ClientReady_ServerRpc(ulong clientId, int readyValue)
         {
-            LobbyPlayerObject obj = 
-                clientSlots
-                .Where(slot => slot.SlotModel.PlayerData != null)
-                .Single(slot => slot.SlotModel.PlayerData.ID == clientId);
-            obj.OnReadinessChangeInput(readyValue);
+            LobbyPlayerObject obj = clientSlots.Single(slot => slot.SlotModel == lobbyModel.GetSlotOfPlayer(clientId));
+            obj.OnReadinessInput(readyValue);
         }
         #endregion
 
@@ -271,13 +287,16 @@ namespace Controllers
             }
         }
 
+        #region RPCs
+
         [Rpc(SendTo.SpecifiedInParams)]
         private void SideDataDelivery_ClientRpc(Side own, RpcParams rpcParams)
         {
             deckSideText.text = DECK_TEXT_BASE;
-            deckSideText.text += own == Side.Blue ? $"<color=#4242ff>{own.ToString()}</color>" : $"<color=#ff4242>{own.ToString()}</color>";
+            deckSideText.text += own == Side.Imperium ? $"<color=#4242ff>{own.ToString()}</color>" : $"<color=#ff4242>{own.ToString()}</color>";
             ListUnitsForSide(own);
         }
+
 
         [Rpc(SendTo.Server)]
         private void GetLimit_ServerRpc(ulong clientId, UnitIdentifier identity)
@@ -286,6 +305,7 @@ namespace Controllers
             LimitDelivery_ClientRpc(limit, identity, RpcTarget.Single(clientId, RpcTargetUse.Temp));
         }
 
+
         [Rpc(SendTo.SpecifiedInParams)]
         private void LimitDelivery_ClientRpc(int limit, UnitIdentifier identity, RpcParams param)
         {
@@ -293,21 +313,24 @@ namespace Controllers
             adder.UnitLimit = limit;
         }
 
+
         [Rpc(SendTo.Server)]
         public void AddUnitToDeck_ServerRpc(ulong clientId, UnitIdentifier identity)
         {
             // Server-side:
-            int amount = lobbyModel.PlayerDecks[clientId].Add(identity);
+            int amount = lobbyModel.ConnectedClients[clientId].Deck.Add(identity);
             AmountDelivery_ClientRpc(amount, identity, RpcTarget.Single(clientId, RpcTargetUse.Temp));
         }
+
 
         [Rpc(SendTo.Server)]
         public void RemoveUnitFromDeck_ServerRpc(ulong clientId, UnitIdentifier identity)
         {
-            int remaining = lobbyModel.PlayerDecks[clientId].Remove(identity);
+            int remaining = lobbyModel.ConnectedClients[clientId].Deck.Remove(identity);
             AmountDelivery_ClientRpc(remaining, identity, RpcTarget.Single(clientId, RpcTargetUse.Temp));
         }
         
+
         [Rpc(SendTo.SpecifiedInParams)]
         private void AmountDelivery_ClientRpc(int amount, UnitIdentifier identity, RpcParams param)
         {
@@ -316,16 +339,37 @@ namespace Controllers
         }
         #endregion
 
+        #endregion
+
         #region Starting game / ending lobby
         public void TryStartGame()
         {
             if (IsServer)
             {
-                Debug.Log(lobbyModel.CanStart());
+                try
+                {
+                    if (lobbyModel.CanStart())
+                    {
+                        InterSceneData.ConvertLobbyData(lobbyModel.ConnectedClients);
+                        NetworkManager.Singleton.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
+                    }
+                }
+                catch (StartException e)
+                {
+                    if (currentErrorMessage != null)
+                    {
+                        StopCoroutine(currentErrorMessage);
+                    }
+                    currentErrorMessage = StartCoroutine(DisplayErrorMessage(e.Message));
+                }
                 // TODO
             } else
             {
-                StartCoroutine(DisplayErrorMessage("Only the host can start the game"));
+                if (currentErrorMessage != null)
+                {
+                    StopCoroutine(currentErrorMessage);
+                }
+                currentErrorMessage = StartCoroutine(DisplayErrorMessage("Only the host can start the game"));
             }
         }
         private IEnumerator DisplayErrorMessage(string message)
@@ -339,12 +383,7 @@ namespace Controllers
                 yield return null;
             }
 
-            float timePassed = 0;
-            while (timePassed < 4) // wait for 4 seconds
-            {
-                timePassed += Time.fixedDeltaTime;
-                yield return null;
-            }
+            yield return new WaitForSecondsRealtime(4);
 
             while (messageBox.alpha > 0.0f)
             {
@@ -353,6 +392,7 @@ namespace Controllers
             }
 
             messageBox.gameObject.SetActive(false);
+            currentErrorMessage = null;
         }
         #endregion
 
@@ -378,6 +418,7 @@ namespace Controllers
         }
         private void Start()
         {
+            currentErrorMessage = null;
             unitAdders = new List<UnitAdder>();
             if (InterSceneData.ShouldHost)
             {

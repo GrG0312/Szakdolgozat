@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
-using Controllers.DataObjects;
+using Controllers.Objects;
 using Controllers.Data;
 using UnityEngine.SceneManagement;
 using Unity.Netcode;

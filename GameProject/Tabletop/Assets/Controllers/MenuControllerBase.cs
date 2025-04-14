@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
-using Controllers.DataObjects;
+using Controllers.Objects;
 using Controllers.Data;
 
 namespace Controllers

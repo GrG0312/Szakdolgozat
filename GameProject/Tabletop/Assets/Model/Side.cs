@@ -2,7 +2,7 @@
 {
     public enum Side
     {
-        Red,
-        Blue,
+        Imperium,
+        Chaos,
     }
 }

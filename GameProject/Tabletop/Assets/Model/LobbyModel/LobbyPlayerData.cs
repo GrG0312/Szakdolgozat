@@ -1,18 +1,16 @@
 ﻿using Model.Deck;
-using System;
 
-namespace Model.Lobby
+namespace Model
 {
-    public class LobbyPlayerData<TypeId>
+    public class LobbyPlayerData
     {
         public bool IsReady { get; set; }
-        public TypeId ID { get; }
         public string Name { get; }
         public DeckObject Deck { get; }
+        public Side Side { get; set; }
 
-        public LobbyPlayerData(TypeId id, string name)
+        public LobbyPlayerData(string name)
         {
-            ID = id;
             Name = name;
             IsReady = false;
             Deck = new DeckObject();

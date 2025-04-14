@@ -3,18 +3,16 @@ using System.Security.Cryptography;
 
 namespace Model.Lobby
 {
-    public class LobbySlot<PlayerIdType>
+    public class LobbySlot
     {
         public event EventHandler? OccupantStatusChanged;
         public event EventHandler<bool>? PlayerChanged;
 
-        #region Constant values
         public Side Side { get; }
-        #endregion
 
         #region Status values
         private SlotOccupantStatus occupantStatus;
-        private LobbyPlayerData<PlayerIdType>? playerData;
+        private LobbyPlayerData? playerData;
         public SlotOccupantStatus OccupantStatus
         {
             get { return occupantStatus; }
@@ -24,7 +22,7 @@ namespace Model.Lobby
                 OccupantStatusChanged?.Invoke(this, EventArgs.Empty);
             }
         }
-        public LobbyPlayerData<PlayerIdType>? PlayerData
+        public LobbyPlayerData? PlayerData
         {
             get { return playerData; }
             set
@@ -32,6 +30,7 @@ namespace Model.Lobby
                 playerData = value;
                 if (playerData != null)
                 {
+                    value.Side = this.Side;
                     OccupantStatus = SlotOccupantStatus.Occupied;
                 } else
                 {
@@ -53,11 +52,6 @@ namespace Model.Lobby
         public string GetPlayerName()
         {
             return playerData == null ? string.Empty : playerData.Name;
-        }
-        public bool GetPlayerId(out PlayerIdType id)
-        {
-            id = PlayerData == null ? default : PlayerData.ID;
-            return PlayerData != null;
         }
         public bool IsPlayerReady()
         {

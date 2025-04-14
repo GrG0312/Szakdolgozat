@@ -1,5 +1,4 @@
-﻿using Model.Units.Interfaces;
-using Model.Units;
+﻿using Model.Units;
 
 namespace Model.Deck
 {

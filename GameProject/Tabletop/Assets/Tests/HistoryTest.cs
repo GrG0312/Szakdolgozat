@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using Model;
+using Model.GameModel;
 
 namespace Tests
 {

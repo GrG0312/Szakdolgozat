@@ -8,7 +8,16 @@ namespace Model.Units
 {
     public enum UnitIdentifier
     {
-        ImperialMarine,
-        ChaosMarine,
+        Kriegsman,
+        TacticalMarine,
+        MarineCaptain,
+        Baneblade,
+        Ballistus,
+
+        ChaosCultist,
+        ChaosLegionnaire,
+        ChaosLord,
+        Predator,
+        Forgefiend,
     }
 }

@@ -62,19 +62,34 @@
     <Analyzer Include="D:\Unity\Editor\6000.0.24f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Controllers\DataObjects\UnitAdder.cs" />
+    <Compile Include="Assets\Controllers\Objects\Game\WeaponSelection\WeaponButton.cs" />
+    <Compile Include="Assets\Controllers\Objects\ProfileDisplayer.cs" />
+    <Compile Include="Assets\Controllers\InputSystemActions.cs" />
+    <Compile Include="Assets\Controllers\Objects\Game\Billboard\UnitBillboard.cs" />
+    <Compile Include="Assets\Controllers\Objects\PurchaserWindow.cs" />
+    <Compile Include="Assets\Controllers\Objects\MenuElement.cs" />
+    <Compile Include="Assets\Controllers\Objects\UnitController.cs" />
+    <Compile Include="Assets\Controllers\Data\SelectedUnitData.cs" />
+    <Compile Include="Assets\Controllers\Objects\Game\ThrowStatPanel.cs" />
+    <Compile Include="Assets\Controllers\Objects\DeckParent.cs" />
+    <Compile Include="Assets\Controllers\Data\WeaponInfoData.cs" />
     <Compile Include="Assets\Controllers\LobbyController.cs" />
     <Compile Include="Assets\Controllers\BaseController.cs" />
+    <Compile Include="Assets\Controllers\Objects\UnitAdder.cs" />
     <Compile Include="Assets\Controllers\Data\InterSceneData.cs" />
-    <Compile Include="Assets\Controllers\DataObjects\LobbyPlayerObject.cs" />
+    <Compile Include="Assets\Controllers\Objects\Game\InfoPanel\WeaponPanel.cs" />
+    <Compile Include="Assets\Controllers\Objects\Game\GamePlayerObject.cs" />
     <Compile Include="Assets\Controllers\GameController.cs" />
-    <Compile Include="Assets\Controllers\DataObjects\DeckParent.cs" />
-    <Compile Include="Assets\Controllers\DataObjects\MenuElement.cs" />
     <Compile Include="Assets\Controllers\ProfileController.cs" />
-    <Compile Include="Assets\Controllers\DataObjects\ProfileDisplayer.cs" />
     <Compile Include="Assets\Controllers\MainMenuController.cs" />
     <Compile Include="Assets\Controllers\Data\ScreenType.cs" />
+    <Compile Include="Assets\Controllers\Objects\Game\InfoPanel\UnitInfoPanel.cs" />
+    <Compile Include="Assets\Controllers\Objects\LobbyPlayerObject.cs" />
     <Compile Include="Assets\Controllers\MenuControllerBase.cs" />
+    <Compile Include="Assets\Controllers\Objects\UnitPurchaser.cs" />
+    <Compile Include="Assets\Controllers\Objects\Game\WeaponSelection\WeaponSelector.cs" />
+    <Compile Include="Assets\Controllers\Objects\Game\Billboard\Billboard.cs" />
+    <Compile Include="Assets\Controllers\Objects\Game\InputButtons\ReverseButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Controllers\Controllers.asmdef" />
@@ -1098,6 +1113,10 @@
     </Reference>
     <Reference Include="Unity.Collections">
       <HintPath>Library\ScriptAssemblies\Unity.Collections.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.InputSystem">
+      <HintPath>Library\ScriptAssemblies\Unity.InputSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEditor.UI">

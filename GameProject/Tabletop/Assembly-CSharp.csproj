@@ -62,9 +62,12 @@
     <Analyzer Include="D:\Unity\Editor\6000.0.24f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Persistence\ProfileDataManager.cs" />
-    <Compile Include="Assets\Persistence\IDataManager.cs" />
-    <Compile Include="Assets\Persistence\Profile.cs" />
+    <Compile Include="Assets\QuickOutline\Scripts\Outline.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\QuickOutline\Resources\Shaders\OutlineMask.shader" />
+    <None Include="Assets\QuickOutline\Readme.txt" />
+    <None Include="Assets\QuickOutline\Resources\Shaders\OutlineFill.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -1381,9 +1384,9 @@
       <Project>{4309F30A-7EDF-3087-5ABF-1664370B1B54}</Project>
       <Name>Model</Name>
     </ProjectReference>
-    <ProjectReference Include="View.csproj">
-      <Project>{B6236E10-CD54-1883-0F38-EDCC826E7E4A}</Project>
-      <Name>View</Name>
+    <ProjectReference Include="Persistence.csproj">
+      <Project>{FCDDB7FA-5174-9546-4B0F-AE563E67BE8E}</Project>
+      <Name>Persistence</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

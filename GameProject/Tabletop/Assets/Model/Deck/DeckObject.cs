@@ -70,9 +70,14 @@ namespace Model.Deck
             }
         }
 
-        public void Reset()
+        public void Clear()
         {
             Entries.Clear();
+        }
+
+        public bool IsEmpty()
+        {
+            return Entries.Count == 0;
         }
     }
 }

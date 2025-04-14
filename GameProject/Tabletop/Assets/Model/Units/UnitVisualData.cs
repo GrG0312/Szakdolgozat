@@ -1,14 +1,16 @@
 ﻿namespace Model.Units
 {
-    public struct UnitVisualData
+    public class UnitVisualData
     {
         public string UnitName { get; }
-        public string UnitSprite { get; }
+        public string UnitProfileSprite { get; }
+        public string UnitFullSprite { get; }
 
-        public UnitVisualData(string name, string spritePath)
+        public UnitVisualData(string name, string spritePath, string unitFullSprite)
         {
             UnitName = name;
-            UnitSprite = spritePath;
+            UnitProfileSprite = spritePath;
+            UnitFullSprite = unitFullSprite;
         }
     }
 }
