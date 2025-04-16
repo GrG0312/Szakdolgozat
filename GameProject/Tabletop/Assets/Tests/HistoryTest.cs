@@ -5,7 +5,6 @@ namespace Tests
 {
     public class HistoryTest
     {
-        // A Test behaves as an ordinary method
         [Test]
         public void SizeTest()
         {

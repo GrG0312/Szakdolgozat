@@ -2,12 +2,13 @@
 
 namespace Model.Interfaces
 {
-    public interface IUnit
+    public interface IUnit : ISidedObject
     {
         /// <summary>
         /// The Unit's identifier
         /// </summary>
         public UnitIdentifier Identity { get; }
+
         /// <summary>
         /// Base values for the statistics of this unit
         /// </summary>

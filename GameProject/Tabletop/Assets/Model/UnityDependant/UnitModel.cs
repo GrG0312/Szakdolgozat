@@ -1,20 +1,20 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-using Unity.Netcode;
-using Model.Units;
-using Model.Interfaces;
-using Model.Weapons;
-using UnityEngine.AI;
 using Model.GameModel;
-using System.Linq;
+using Model.Interfaces;
+using Model.Units;
+using Model.Weapons;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.AI;
 
 namespace Model.UnityDependant
 {
     public class UnitModel : NetworkBehaviour, 
-        IUnit, ISelectable<ulong>, IMovable<Vector3>, IDamagable<ulong>, IArmored, IUsable, IWeaponUser<ulong>
+        IUnit, ISelectable<ulong>, IMovable<Vector3>, IDamageable<Vector3>, IArmored, IUsable, IWeaponUser<Vector3>
     {
         #region Serializations
         [SerializeField] private LayerMask navigableLayer;
@@ -23,7 +23,20 @@ namespace Model.UnityDependant
 
         #region IWeaponUser
 
-        public IReadOnlyList<UsableWeapon> EquippedWeapons { get; private set; }
+        public IReadOnlyList<UsableWeapon> UsableWeapons { get; private set; }
+
+        public bool CanTarget(IDamageable<Vector3> d)
+        {
+            if (d.Side == this.Side)
+            {
+                return false;
+            }
+            if (d is IOwned<ulong> o && o.Owner == this.Owner)
+            {
+                return false;
+            }
+            return true;
+        }
 
         #endregion
 
@@ -35,7 +48,7 @@ namespace Model.UnityDependant
                 return CanMove;
             } else if(where == Phase.Fighting)
             {
-                return EquippedWeapons.Any(w => w.IsUsable(where));
+                return UsableWeapons.Any(w => w.IsUsable(where));
             }
             return false;
         }
@@ -74,35 +87,20 @@ namespace Model.UnityDependant
 
         #endregion
 
-        #region IHasArmor
+        #region IArmored
 
         public async Task<int> ArmorSave(int amount, int armorPiercing, IDiceRoller roller)
         {
-            Debug.Log($"Rolling {amount} with {armorPiercing} AP");
             int[] results = await roller.RollDice(amount);
 
-            string debuglog = "Roll complete: [ ";
-            foreach (int item in results)
-            {
-                debuglog += $"{item} ";
-            }
-            Debug.Log(debuglog);
-
             int threshold = Constants.ArmorSave + armorPiercing;
-            Debug.Log($"The (inclusive) threshold is {Constants.ArmorSave} - {armorPiercing} = {threshold}");
             int evaded = results.Count(roll => roll > threshold);
-            Debug.Log($"Evaded {evaded} attacks!");
             return evaded;
         }
 
         #endregion
 
-        #region IMovable
-        public NavMeshAgent NavAgent { get; private set; }
-
-        public event EventHandler<bool>? Moving;
-
-        public bool CanMove { get; set; }
+        #region IMapObject
         public Vector3 Position
         {
             get { return transform.position; }
@@ -111,6 +109,19 @@ namespace Model.UnityDependant
                 transform.position = value;
             }
         }
+
+        public float DistanceTo(IMapObject<Vector3> other)
+        {
+            return Vector3.Distance(this.Position, other.Position);
+        }
+        #endregion
+
+        #region IMovable
+        public NavMeshAgent NavAgent { get; private set; }
+
+        public event EventHandler<bool>? Moving;
+
+        public bool CanMove { get; set; }
 
         public void MoveTo(Vector3 moveDestination)
         {
@@ -194,6 +205,12 @@ namespace Model.UnityDependant
         }
         #endregion
 
+        #region ISidedObject
+
+        public Side Side { get => Constants.Side; }
+
+        #endregion
+
         #region IUnit
         public UnitIdentifier Identity { get; protected set; }
         public UnitConstants Constants { get; protected set; }
@@ -201,7 +218,7 @@ namespace Model.UnityDependant
         public void SetStartValues()
         {
             CanMove = true;
-            foreach (UsableWeapon w in EquippedWeapons)
+            foreach (UsableWeapon w in UsableWeapons)
             {
                 w.CanDamage = true;
             }
@@ -237,7 +254,7 @@ namespace Model.UnityDependant
             {
                 ws.Add(new UsableWeapon(w));
             }
-            EquippedWeapons = ws;
+            UsableWeapons = ws;
         }
         #endregion
     }

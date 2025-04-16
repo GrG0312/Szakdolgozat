@@ -1,12 +1,10 @@
-using Model.GameModel.Commands;
-using Model.Units;
 using Model.Interfaces;
+using Model.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using System.Threading.Tasks;
-using static UnityEngine.UI.CanvasScaler;
+using UnityEngine;
 
 namespace Model.GameModel
 {
@@ -37,15 +35,15 @@ namespace Model.GameModel
         /// </summary>
         public event EventHandler? PhaseChanged;
 
-        public event EventHandler? RequestMoreData;
-
         public event EventHandler? SelectedUnitChanged;
 
         public event EventHandler<Side>? GameOver;
 
+        public event EventHandler? UnitCycled;
+
         #endregion
 
-        #region Turn Variables
+        #region Turn
 
         private int turnCounter;
 
@@ -83,7 +81,7 @@ namespace Model.GameModel
         }
         #endregion
 
-        #region Player variables
+        #region Player
 
         private int indexOfPlayer;
 
@@ -118,7 +116,7 @@ namespace Model.GameModel
 
         #endregion
 
-        #region Selected Unit variables
+        #region Selected Unit
 
         private ISelectable<PlayerIdType>? selectedUnit;
         public ISelectable<PlayerIdType>? SelectedUnit
@@ -129,31 +127,30 @@ namespace Model.GameModel
             }
             private set
             {
-                Debug.Log($"<color=magenta>Selecting unit...</color>");
-                Debug.Log($"<color=magenta>Is previous null? {selectedUnit == null}</color>");
                 if (selectedUnit != null)
                 {
-                    Debug.Log($"<color=magenta>Deselecting old one...</color>");
                     selectedUnit.SetSelected(false);
                 }
                 selectedUnit = value;
-                Debug.Log($"<color=magenta>New value set...</color>");
-                Debug.Log($"<color=magenta>Is new value null? {selectedUnit == null}</color>");
                 if (selectedUnit != null)
                 {
-                    Debug.Log($"<color=magenta>Applying selection to new...</color>");
                     selectedUnit.SetSelected(true);
                 }
-                Debug.Log($"<color=magenta>Invoking event...</color>");
                 SelectedUnitChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
         #endregion
 
-        public IUnitCommand PendingCommand { get; private set; }
+        #region Command
 
         private History<IUnitCommand> commandHistory;
+
+        public IUnitCommand? PendingCommand { get; private set; }
+
+        #endregion
+
+        #region Constructor
 
         public GameModel(Dictionary<PlayerIdType, GamePlayerData> players, IUnitFactory<PlayerIdType> ufactory, ICommandFactory cfactory, IDiceRoller diceRoller)
         {
@@ -168,6 +165,8 @@ namespace Model.GameModel
             this.diceRoller = diceRoller;
             TurnCounter = 0;
         }
+
+        #endregion
 
         #region Turn manipulation
 
@@ -201,6 +200,18 @@ namespace Model.GameModel
             {
                 return;
             }
+            commandHistory.Flush();
+
+            if (IsGameOver(out Side winner))
+            {
+                foreach (GamePlayerData data in ConnectedPlayers.Values)
+                {
+                    data.DeleteUnits(true);
+                }
+                GameOver?.Invoke(this, winner);
+                return;
+            }
+
             if (IsLastPlayer())
             {
                 NextPhase();
@@ -219,12 +230,8 @@ namespace Model.GameModel
         {
             nextIndex = default;
 
-            Debug.Log($"<color=green>Current player: {ConnectedPlayers[ActivePlayerId].Name} {indexOfPlayer}</color>");
-
             bool found = CollectionHelper.LoopbackSearch(
                 ConnectedPlayers.ToList(), p => !p.Value.IsDefeated, indexOfPlayer, out nextIndex);
-
-            Debug.Log($"<color=green>Found the index of the next player: {ConnectedPlayers.ElementAt(nextIndex).Value.Name} {nextIndex}</color>");
 
             return found;
         }
@@ -254,14 +261,9 @@ namespace Model.GameModel
                 CurrentPhase++;
             }
         }
+
         private void NextTurn()
         {
-            if (IsGameOver(out Side winner))
-            {
-                Debug.Log("<color=orange>The game is over!</color>");
-                GameOver?.Invoke(this, winner);
-            }
-
             CurrentPhase = Phase.Command;
             TurnCounter++;
 
@@ -317,7 +319,7 @@ namespace Model.GameModel
 
         #endregion
 
-        #region Public methods
+        #region Units
 
         public bool BuyUnit(PlayerIdType id, UnitIdentifier identity)
         {
@@ -343,47 +345,96 @@ namespace Model.GameModel
             SelectedUnit = unit;
         }
 
-        public async void CreateCommand<T>(PlayerIdType id, params object[] args) where T : IUnitCommand
+        public void CycleUnits(PlayerIdType id)
         {
-            Debug.Log("<color=aqua>Creating command in the model...</color>");
-            // AttackCommand : id, {targetUnit}
-            // MoveCommand: id, {targetLocation}
-            Debug.Log($"<color=aqua>Is selected unit null? {SelectedUnit == null}</color>");
-            if (SelectedUnit == null || !IsCurrentPlayer(id) || SelectedUnit.Owner.CompareTo(id) != 0)
+            if (!IsCurrentPlayer(id))
             {
-                Debug.Log($"<color=aqua>Then call it off...</color>");
                 return;
             }
-            Debug.Log($"<color=aqua>Is previous command null? {PendingCommand == null}</color>");
-            Debug.Log($"<color=aqua>Selected unit is not null, going into the factory...</color>");
-            PendingCommand = commandFactory.Produce<T>(SelectedUnit, args, diceRoller);
-            Debug.Log($"<color=aqua>Factory finished. Trying to execute the command.</color>");
-            await ExecutePendingCommand();
+
+            IUnit? found;
+            // If the selected is not null and it's owned by the player, then select a new unit after this one
+            if (SelectedUnit != null && SelectedUnit.Owner.CompareTo(id) == 0)
+            {
+                found = ActivePlayerData.Cycle(CurrentPhase, SelectedUnit as IUnit);
+            }
+            // If not, then just select the first available
+            else
+            {
+                found = ActivePlayerData.Cycle(CurrentPhase);
+            }
+
+            // If the selected is still useful and it's the player's
+            if (SelectedUnit != null && SelectedUnit.Owner.CompareTo(id) == 0 && SelectedUnit is IUsable u && u.IsUsable(CurrentPhase))
+            {
+                // Only switch if we found one
+                if (found != null)
+                {
+                    SelectedUnit = found as ISelectable<PlayerIdType>;
+                }
+                UnitCycled?.Invoke(this, EventArgs.Empty);
+            }
+            // Otherwise if the selected is null or it's not mine or it's not usable then switch. Whats the worst that could happen
+            else
+            {
+                SelectedUnit = found as ISelectable<PlayerIdType>;
+                UnitCycled?.Invoke(this, EventArgs.Empty);
+            }
         }
 
-        public async Task ExecutePendingCommand()
+        #endregion
+
+        #region Commands
+
+        public void CreateCommand<T>(PlayerIdType id, params object[] args) where T : IUnitCommand
         {
-            // Only request data if the AttackCommand has its preconditions but cannot execute
-            if (PendingCommand is AttackCommand<PlayerIdType> c && c.Preconditions(CurrentPhase) && !c.CanExecute(CurrentPhase))
+            // AttackCommand : id, {targetUnit}
+            // MoveCommand: id, {targetLocation}
+            if (SelectedUnit == null || !IsCurrentPlayer(id) || SelectedUnit.Owner.CompareTo(id) != 0)
             {
-                Debug.Log($"<color=aqua>Pending is an AC, but needs more info.</color>");
-                RequestMoreData?.Invoke(this, EventArgs.Empty);
+                return;
             }
-            else if (PendingCommand.CanExecute(CurrentPhase))
+            PendingCommand = commandFactory.Produce<T>(SelectedUnit, args, diceRoller);
+        }
+
+        public async Task ExecuteCommand()
+        {
+            if (PendingCommand.CanExecute(CurrentPhase))
             {
-                Debug.Log($"<color=aqua>Command can execute.</color>");
                 await PendingCommand.Execute();
-                Debug.Log($"<color=aqua>Command executed. Pushing into history and removing from pending.</color>");
                 commandHistory.Push(PendingCommand);
                 PendingCommand = null;
-                Debug.Log($"<color=aqua>Is Pending null? {PendingCommand == null}</color>");
             }
         }
+
+        public void AbortCommand()
+        {
+            PendingCommand = null;
+        }
+
+        public void UndoCommand(PlayerIdType id)
+        {
+            if (!IsCurrentPlayer(id))
+            {
+                return;
+            }
+            try
+            {
+                if (commandHistory.Peek() is IUndoableCommand undoable)
+                {
+                    undoable.Undo();
+                    commandHistory.Pop();
+                }
+            } catch (IndexOutOfRangeException) { /* No need to do anything, since if the history is empty then there is nothing to undo */ }
+        }
+
         #endregion
 
         private bool IsCurrentPlayer(PlayerIdType id)
         {
             return ActivePlayerId.CompareTo(id) == 0;
         }
+
+        
     }
 }

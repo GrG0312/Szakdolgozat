@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 
-namespace Controllers.Objects
+namespace Controllers.Objects.Lobby
 {
     public class DeckParent : MonoBehaviour
     {

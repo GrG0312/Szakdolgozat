@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Controllers.Objects
+namespace Controllers.Objects.Game.Purchase
 {
     public class PurchaserWindow : MonoBehaviour
     {

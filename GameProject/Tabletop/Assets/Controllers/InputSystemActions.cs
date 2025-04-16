@@ -26,7 +26,7 @@ namespace Controllers
     ""name"": ""InputSystem_Actions"",
     ""maps"": [
         {
-            ""name"": ""Player"",
+            ""name"": ""Game"",
             ""id"": ""df70fa95-8a34-4494-b137-73ab6b9c7d37"",
             ""actions"": [
                 {
@@ -37,15 +37,6 @@ namespace Controllers
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Cycle"",
-                    ""type"": ""Button"",
-                    ""id"": ""2776c80d-3c14-4091-8c56-d04ced07a2b0"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""Select"",
@@ -60,6 +51,15 @@ namespace Controllers
                     ""name"": ""Order"",
                     ""type"": ""Button"",
                     ""id"": ""1f40d016-7a0c-4bf1-89b6-ead0df614554"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Range"",
+                    ""type"": ""Button"",
+                    ""id"": ""99cafa3d-b62f-43a3-bd39-87a640d7df56"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -200,39 +200,6 @@ namespace Controllers
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""1D Axis"",
-                    ""id"": ""84d1b7b6-6b2b-4170-a05b-9dab057934e6"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Cycle"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""5c33044e-3164-4b6b-82c7-be54a2751863"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Cycle"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""c27ef032-29f3-4b5e-abab-7d1f7c8973cf"",
-                    ""path"": ""<Keyboard>/g"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Cycle"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": """",
                     ""id"": ""10bcabd4-abd4-4b40-9ecf-d1e0166bc198"",
                     ""path"": ""<Mouse>/leftButton"",
@@ -251,6 +218,73 @@ namespace Controllers
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Order"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a9ae5c35-eb95-4b73-a46a-60731943634c"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Range"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Throw"",
+            ""id"": ""7f3f5f23-bd37-4a18-814e-0b4afb663273"",
+            ""actions"": [
+                {
+                    ""name"": ""Done"",
+                    ""type"": ""Button"",
+                    ""id"": ""73aa7d22-fff1-4718-9e05-94d86491b56b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""aa5ea945-2182-4788-8bca-6a919a5fa1d4"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Done"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Always"",
+            ""id"": ""8af07545-2e67-4e1a-a2ec-ef6def19fff4"",
+            ""actions"": [
+                {
+                    ""name"": ""Esc"",
+                    ""type"": ""Button"",
+                    ""id"": ""aba0cb90-77e1-4bf3-ba34-5a75afea0bae"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""ca9dc148-07f6-4679-a56f-886e4a46acdb"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Esc"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -320,17 +354,25 @@ namespace Controllers
         }
     ]
 }");
-            // Player
-            m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-            m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
-            m_Player_Cycle = m_Player.FindAction("Cycle", throwIfNotFound: true);
-            m_Player_Select = m_Player.FindAction("Select", throwIfNotFound: true);
-            m_Player_Order = m_Player.FindAction("Order", throwIfNotFound: true);
+            // Game
+            m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
+            m_Game_Move = m_Game.FindAction("Move", throwIfNotFound: true);
+            m_Game_Select = m_Game.FindAction("Select", throwIfNotFound: true);
+            m_Game_Order = m_Game.FindAction("Order", throwIfNotFound: true);
+            m_Game_Range = m_Game.FindAction("Range", throwIfNotFound: true);
+            // Throw
+            m_Throw = asset.FindActionMap("Throw", throwIfNotFound: true);
+            m_Throw_Done = m_Throw.FindAction("Done", throwIfNotFound: true);
+            // Always
+            m_Always = asset.FindActionMap("Always", throwIfNotFound: true);
+            m_Always_Esc = m_Always.FindAction("Esc", throwIfNotFound: true);
         }
 
         ~@InputSystemActions()
         {
-            UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, InputSystemActions.Player.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_Game.enabled, "This will cause a leak and performance issues, InputSystemActions.Game.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_Throw.enabled, "This will cause a leak and performance issues, InputSystemActions.Throw.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_Always.enabled, "This will cause a leak and performance issues, InputSystemActions.Always.Disable() has not been called.");
         }
 
         public void Dispose()
@@ -389,75 +431,167 @@ namespace Controllers
             return asset.FindBinding(bindingMask, out action);
         }
 
-        // Player
-        private readonly InputActionMap m_Player;
-        private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
-        private readonly InputAction m_Player_Move;
-        private readonly InputAction m_Player_Cycle;
-        private readonly InputAction m_Player_Select;
-        private readonly InputAction m_Player_Order;
-        public struct PlayerActions
+        // Game
+        private readonly InputActionMap m_Game;
+        private List<IGameActions> m_GameActionsCallbackInterfaces = new List<IGameActions>();
+        private readonly InputAction m_Game_Move;
+        private readonly InputAction m_Game_Select;
+        private readonly InputAction m_Game_Order;
+        private readonly InputAction m_Game_Range;
+        public struct GameActions
         {
             private @InputSystemActions m_Wrapper;
-            public PlayerActions(@InputSystemActions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Move => m_Wrapper.m_Player_Move;
-            public InputAction @Cycle => m_Wrapper.m_Player_Cycle;
-            public InputAction @Select => m_Wrapper.m_Player_Select;
-            public InputAction @Order => m_Wrapper.m_Player_Order;
-            public InputActionMap Get() { return m_Wrapper.m_Player; }
+            public GameActions(@InputSystemActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Move => m_Wrapper.m_Game_Move;
+            public InputAction @Select => m_Wrapper.m_Game_Select;
+            public InputAction @Order => m_Wrapper.m_Game_Order;
+            public InputAction @Range => m_Wrapper.m_Game_Range;
+            public InputActionMap Get() { return m_Wrapper.m_Game; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
             public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(PlayerActions set) { return set.Get(); }
-            public void AddCallbacks(IPlayerActions instance)
+            public static implicit operator InputActionMap(GameActions set) { return set.Get(); }
+            public void AddCallbacks(IGameActions instance)
             {
-                if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
-                m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
+                if (instance == null || m_Wrapper.m_GameActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_GameActionsCallbackInterfaces.Add(instance);
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
-                @Cycle.started += instance.OnCycle;
-                @Cycle.performed += instance.OnCycle;
-                @Cycle.canceled += instance.OnCycle;
                 @Select.started += instance.OnSelect;
                 @Select.performed += instance.OnSelect;
                 @Select.canceled += instance.OnSelect;
                 @Order.started += instance.OnOrder;
                 @Order.performed += instance.OnOrder;
                 @Order.canceled += instance.OnOrder;
+                @Range.started += instance.OnRange;
+                @Range.performed += instance.OnRange;
+                @Range.canceled += instance.OnRange;
             }
 
-            private void UnregisterCallbacks(IPlayerActions instance)
+            private void UnregisterCallbacks(IGameActions instance)
             {
                 @Move.started -= instance.OnMove;
                 @Move.performed -= instance.OnMove;
                 @Move.canceled -= instance.OnMove;
-                @Cycle.started -= instance.OnCycle;
-                @Cycle.performed -= instance.OnCycle;
-                @Cycle.canceled -= instance.OnCycle;
                 @Select.started -= instance.OnSelect;
                 @Select.performed -= instance.OnSelect;
                 @Select.canceled -= instance.OnSelect;
                 @Order.started -= instance.OnOrder;
                 @Order.performed -= instance.OnOrder;
                 @Order.canceled -= instance.OnOrder;
+                @Range.started -= instance.OnRange;
+                @Range.performed -= instance.OnRange;
+                @Range.canceled -= instance.OnRange;
             }
 
-            public void RemoveCallbacks(IPlayerActions instance)
+            public void RemoveCallbacks(IGameActions instance)
             {
-                if (m_Wrapper.m_PlayerActionsCallbackInterfaces.Remove(instance))
+                if (m_Wrapper.m_GameActionsCallbackInterfaces.Remove(instance))
                     UnregisterCallbacks(instance);
             }
 
-            public void SetCallbacks(IPlayerActions instance)
+            public void SetCallbacks(IGameActions instance)
             {
-                foreach (var item in m_Wrapper.m_PlayerActionsCallbackInterfaces)
+                foreach (var item in m_Wrapper.m_GameActionsCallbackInterfaces)
                     UnregisterCallbacks(item);
-                m_Wrapper.m_PlayerActionsCallbackInterfaces.Clear();
+                m_Wrapper.m_GameActionsCallbackInterfaces.Clear();
                 AddCallbacks(instance);
             }
         }
-        public PlayerActions @Player => new PlayerActions(this);
+        public GameActions @Game => new GameActions(this);
+
+        // Throw
+        private readonly InputActionMap m_Throw;
+        private List<IThrowActions> m_ThrowActionsCallbackInterfaces = new List<IThrowActions>();
+        private readonly InputAction m_Throw_Done;
+        public struct ThrowActions
+        {
+            private @InputSystemActions m_Wrapper;
+            public ThrowActions(@InputSystemActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Done => m_Wrapper.m_Throw_Done;
+            public InputActionMap Get() { return m_Wrapper.m_Throw; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(ThrowActions set) { return set.Get(); }
+            public void AddCallbacks(IThrowActions instance)
+            {
+                if (instance == null || m_Wrapper.m_ThrowActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_ThrowActionsCallbackInterfaces.Add(instance);
+                @Done.started += instance.OnDone;
+                @Done.performed += instance.OnDone;
+                @Done.canceled += instance.OnDone;
+            }
+
+            private void UnregisterCallbacks(IThrowActions instance)
+            {
+                @Done.started -= instance.OnDone;
+                @Done.performed -= instance.OnDone;
+                @Done.canceled -= instance.OnDone;
+            }
+
+            public void RemoveCallbacks(IThrowActions instance)
+            {
+                if (m_Wrapper.m_ThrowActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IThrowActions instance)
+            {
+                foreach (var item in m_Wrapper.m_ThrowActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_ThrowActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public ThrowActions @Throw => new ThrowActions(this);
+
+        // Always
+        private readonly InputActionMap m_Always;
+        private List<IAlwaysActions> m_AlwaysActionsCallbackInterfaces = new List<IAlwaysActions>();
+        private readonly InputAction m_Always_Esc;
+        public struct AlwaysActions
+        {
+            private @InputSystemActions m_Wrapper;
+            public AlwaysActions(@InputSystemActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Esc => m_Wrapper.m_Always_Esc;
+            public InputActionMap Get() { return m_Wrapper.m_Always; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(AlwaysActions set) { return set.Get(); }
+            public void AddCallbacks(IAlwaysActions instance)
+            {
+                if (instance == null || m_Wrapper.m_AlwaysActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_AlwaysActionsCallbackInterfaces.Add(instance);
+                @Esc.started += instance.OnEsc;
+                @Esc.performed += instance.OnEsc;
+                @Esc.canceled += instance.OnEsc;
+            }
+
+            private void UnregisterCallbacks(IAlwaysActions instance)
+            {
+                @Esc.started -= instance.OnEsc;
+                @Esc.performed -= instance.OnEsc;
+                @Esc.canceled -= instance.OnEsc;
+            }
+
+            public void RemoveCallbacks(IAlwaysActions instance)
+            {
+                if (m_Wrapper.m_AlwaysActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IAlwaysActions instance)
+            {
+                foreach (var item in m_Wrapper.m_AlwaysActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_AlwaysActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public AlwaysActions @Always => new AlwaysActions(this);
         private int m_KeyboardMouseSchemeIndex = -1;
         public InputControlScheme KeyboardMouseScheme
         {
@@ -503,12 +637,20 @@ namespace Controllers
                 return asset.controlSchemes[m_XRSchemeIndex];
             }
         }
-        public interface IPlayerActions
+        public interface IGameActions
         {
             void OnMove(InputAction.CallbackContext context);
-            void OnCycle(InputAction.CallbackContext context);
             void OnSelect(InputAction.CallbackContext context);
             void OnOrder(InputAction.CallbackContext context);
+            void OnRange(InputAction.CallbackContext context);
+        }
+        public interface IThrowActions
+        {
+            void OnDone(InputAction.CallbackContext context);
+        }
+        public interface IAlwaysActions
+        {
+            void OnEsc(InputAction.CallbackContext context);
         }
     }
 }

@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Controllers
+namespace Controllers.Objects.Lobby
 {
     public class UnitAdder : MonoBehaviour
     {

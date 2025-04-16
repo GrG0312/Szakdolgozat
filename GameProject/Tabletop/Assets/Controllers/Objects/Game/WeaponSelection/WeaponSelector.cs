@@ -18,14 +18,10 @@ namespace Controllers.Objects.Game.WeaponSelection
             this.gameObject.SetActive(false);
         }
 
-        public void AddButton(WeaponInfoData data)
+        public void AddButton(WeaponIdentifier id)
         {
-            if (!data.CanShoot)
-            {
-                return;
-            }
             WeaponButton btn = Instantiate(weaponButtonPrefab, this.transform);
-            btn.SetupValues(data);
+            btn.SetupValues(id);
             btn.Clicked += ButtonClicked;
             buttons.Add(btn);
         }
@@ -41,18 +37,10 @@ namespace Controllers.Objects.Game.WeaponSelection
 
         private void ButtonClicked(object sender, WeaponIdentifier e)
         {
-            Debug.Log($"User clicked the button of {e}");
             ulong clientId = NetworkManager.Singleton.LocalClientId;
             WeaponIdentifier id = e;
             GameController.Instance.AttackingWeaponSelected_ServerRpc(clientId, id);
             this.gameObject.SetActive(false);
-        }
-
-
-        private IEnumerator HideAtEndOfFrame()
-        {
-            yield return new WaitForEndOfFrame();
-            //
         }
     }
 }

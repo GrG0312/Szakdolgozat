@@ -64,32 +64,32 @@
   <ItemGroup>
     <Compile Include="Assets\Controllers\Objects\Game\WeaponSelection\WeaponButton.cs" />
     <Compile Include="Assets\Controllers\Objects\ProfileDisplayer.cs" />
+    <Compile Include="Assets\Controllers\Objects\Game\RangeIndicator.cs" />
     <Compile Include="Assets\Controllers\InputSystemActions.cs" />
     <Compile Include="Assets\Controllers\Objects\Game\Billboard\UnitBillboard.cs" />
-    <Compile Include="Assets\Controllers\Objects\PurchaserWindow.cs" />
     <Compile Include="Assets\Controllers\Objects\MenuElement.cs" />
-    <Compile Include="Assets\Controllers\Objects\UnitController.cs" />
+    <Compile Include="Assets\Controllers\Objects\Lobby\UnitAdder.cs" />
+    <Compile Include="Assets\Controllers\Objects\Lobby\LobbyPlayerObject.cs" />
     <Compile Include="Assets\Controllers\Data\SelectedUnitData.cs" />
     <Compile Include="Assets\Controllers\Objects\Game\ThrowStatPanel.cs" />
-    <Compile Include="Assets\Controllers\Objects\DeckParent.cs" />
     <Compile Include="Assets\Controllers\Data\WeaponInfoData.cs" />
     <Compile Include="Assets\Controllers\LobbyController.cs" />
     <Compile Include="Assets\Controllers\BaseController.cs" />
-    <Compile Include="Assets\Controllers\Objects\UnitAdder.cs" />
     <Compile Include="Assets\Controllers\Data\InterSceneData.cs" />
     <Compile Include="Assets\Controllers\Objects\Game\InfoPanel\WeaponPanel.cs" />
     <Compile Include="Assets\Controllers\Objects\Game\GamePlayerObject.cs" />
     <Compile Include="Assets\Controllers\GameController.cs" />
+    <Compile Include="Assets\Controllers\Objects\Game\UnitController.cs" />
+    <Compile Include="Assets\Controllers\Objects\Game\Purchase\UnitPurchaser.cs" />
+    <Compile Include="Assets\Controllers\Objects\Game\Purchase\PurchaserWindow.cs" />
     <Compile Include="Assets\Controllers\ProfileController.cs" />
     <Compile Include="Assets\Controllers\MainMenuController.cs" />
     <Compile Include="Assets\Controllers\Data\ScreenType.cs" />
     <Compile Include="Assets\Controllers\Objects\Game\InfoPanel\UnitInfoPanel.cs" />
-    <Compile Include="Assets\Controllers\Objects\LobbyPlayerObject.cs" />
     <Compile Include="Assets\Controllers\MenuControllerBase.cs" />
-    <Compile Include="Assets\Controllers\Objects\UnitPurchaser.cs" />
+    <Compile Include="Assets\Controllers\Objects\Lobby\DeckParent.cs" />
     <Compile Include="Assets\Controllers\Objects\Game\WeaponSelection\WeaponSelector.cs" />
     <Compile Include="Assets\Controllers\Objects\Game\Billboard\Billboard.cs" />
-    <Compile Include="Assets\Controllers\Objects\Game\InputButtons\ReverseButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Controllers\Controllers.asmdef" />

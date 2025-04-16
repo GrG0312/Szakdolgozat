@@ -1,6 +1,6 @@
 ﻿using Model.Deck;
-using Model.Units;
 using Model.Interfaces;
+using Model.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,9 @@ namespace Model.GameModel
         public Side Side { get; }
         #endregion
 
-        #region Units in play
+        #region Units
+
+        private List<IUnit> toBeDestroyed = new List<IUnit>();
 
         private List<IUnit> unitsInPlay;
         public IReadOnlyList<IUnit> UnitsInPlay { get; }
@@ -24,6 +26,7 @@ namespace Model.GameModel
         #endregion
 
         public bool IsDefeated { get; private set; }
+        public bool IsConnected { get; private set; }
 
         public GamePlayerData(string name, DeckObject obj, Side s)
         {
@@ -31,6 +34,7 @@ namespace Model.GameModel
             this.Deck = obj;
             this.Side = s;
             IsDefeated = false;
+            IsConnected = true;
 
             Currency = 0;
             CapturedPoints = 0;
@@ -42,27 +46,90 @@ namespace Model.GameModel
 
         public void ResetUnits()
         {
-            List<IUnit> toRemove = new List<IUnit>();
             foreach (IUnit unit in unitsInPlay)
             {
-                if (unit is IDamagable d && !d.Alive)
+                if (unit is IDamageable d && !d.Alive)
                 {
-                    d.Delete();
-                    toRemove.Add(unit);
-                    Debug.Log($"<color=orange>Unit deleted</color>");
+                    toBeDestroyed.Add(unit);
                 } else
                 {
                     unit.SetStartValues();
                 }
             }
-            foreach (IUnit unit in toRemove)
+            DeleteUnits();
+        }
+
+        public void DeleteUnits(bool forceDelete = false)
+        {
+            foreach (IUnit unit in toBeDestroyed)
             {
-                unitsInPlay.Remove(unit);
-                Debug.Log($"<color=orange>Unit removed</color>");
+                if (unitsInPlay.Contains(unit))
+                {
+                    unitsInPlay.Remove(unit);
+                }
+                IDamageable d = unit as IDamageable;
+                d.Delete();
+            }
+            toBeDestroyed.Clear();
+
+            if (forceDelete)
+            {
+                foreach (IUnit unit in unitsInPlay)
+                {
+                    IDamageable d = unit as IDamageable;
+                    d.Delete();
+                }
+                unitsInPlay.Clear();
             }
         }
 
         #region Cycle
+
+        public IUnit? Cycle(Phase phase, IUnit selected)
+        {
+            int selectedIndex = 0;
+            bool found = false;
+            while (!found && selectedIndex < unitsInPlay.Count)
+            {
+                if (selected == unitsInPlay[selectedIndex])
+                {
+                    found = true;
+                } else
+                {
+                    selectedIndex++;
+                }
+            }
+
+            if (!found)
+            {
+                throw new Exception("Could not find selected unit in the list!");
+            }
+
+            if (CollectionHelper.LoopbackSearch(
+                unitsInPlay, 
+                unit => unit is IUsable u && u.IsUsable(phase) && unit is IDamageable d && d.Alive, 
+                selectedIndex, 
+                out int foundIndex))
+            {
+                return unitsInPlay[foundIndex];
+            } else
+            {
+                return null;
+            }
+        }
+
+        public IUnit? Cycle(Phase phase)
+        {
+            for (int i = 0; i < unitsInPlay.Count; i++)
+            {
+                if (unitsInPlay[i] is IUsable u && u.IsUsable(phase) && unitsInPlay[i] is IDamageable d && d.Alive)
+                {
+                    return unitsInPlay[i];
+                }
+            }
+            return null;
+        }
+
         #endregion
 
         #region Points
@@ -114,7 +181,7 @@ namespace Model.GameModel
 
         #endregion
 
-        #region Unit purchase
+        #region Units
 
         public bool BuyUnit(UnitIdentifier identity)
         {
@@ -135,27 +202,28 @@ namespace Model.GameModel
 
         public void GetUnit(IUnit unit)
         {
-            IDamagable d = unit as IDamagable;
+            IDamageable d = unit as IDamageable;
             d.UnitDestroyed += UnitDestroyed;
             unitsInPlay.Add(unit);
         }
 
-        #endregion
-
         private void UnitDestroyed(object sender, EventArgs e)
         {
-            if (Deck.Entries.Count == 0 && unitsInPlay.Count == 0)
+            if (Deck.Entries.Count == 0 && unitsInPlay.Count(u => u is IDamageable d && d.Alive) == 0)
             {
                 IsDefeated = true;
             }
         }
 
+        #endregion
+
         public void Forfeit()
         {
             IsDefeated = true;
+            IsConnected = false;
             foreach (IUnit unit in unitsInPlay)
             {
-                IDamagable d = unit as IDamagable;
+                IDamageable d = unit as IDamageable;
                 d.Die();
             }
         }

@@ -3,7 +3,7 @@
 namespace Model.Interfaces
 {
     /// <summary>
-    /// Implementing objects can damage other, <see cref="IDamagable"/> objects
+    /// Implementing objects can damage other, <see cref="IDamageable"/> objects
     /// </summary>
     public interface IDamageDealer
     {
@@ -15,6 +15,6 @@ namespace Model.Interfaces
         /// Rolling the dices and based on the result damage the target with appropiate amount of points
         /// </summary>
         /// <returns>The caused damage</returns>
-        public Task<int> Damage(IDamagable target, IDiceRoller roller);
+        public Task<int> Damage<T>(IDamageable<T> target, IDiceRoller roller);
     }
 }

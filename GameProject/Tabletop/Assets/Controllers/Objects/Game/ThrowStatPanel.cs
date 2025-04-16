@@ -19,6 +19,8 @@ namespace Controllers.Objects.Game
         [SerializeField] private TMP_Text damageText;
         [SerializeField] private TMP_Text armorSaveText;
 
+        [SerializeField] private TMP_Text pressSpaceLabel;
+
         [SerializeField] private TMP_Text rollTextPrefab;
         [SerializeField] private GridLayoutGroup offensiveRollsContainer;
         [SerializeField] private GridLayoutGroup defensiveRollsContainer;
@@ -73,6 +75,11 @@ namespace Controllers.Objects.Game
             }
         }
 
+        public void ShowMessage(bool v)
+        {
+            pressSpaceLabel.gameObject.SetActive(v);
+        }
+
         #region Registering variables
 
         public void RegisterThrower(DiceRoller r)
@@ -87,8 +94,6 @@ namespace Controllers.Objects.Game
             ballisticsNetVar.Value = bs;
             armorPiercingNetVar.Value = ap;
             damageNetVar.Value = d;
-
-
         }
 
         public void RegisterDefender(int ars)
@@ -115,7 +120,7 @@ namespace Controllers.Objects.Game
 
         private void ArmorPiercingStatChanged(int oldvalue, int newvalue)
         {
-            ballisticsText.text = newvalue.ToString();
+            armorPiercingText.text = newvalue.ToString();
         }
 
         private void DamageStatChanged(int oldvalue, int newvalue)
@@ -169,7 +174,7 @@ namespace Controllers.Objects.Game
                 case NetworkListEvent<int>.EventType.Add:
                     TMP_Text newtext = Instantiate(rollTextPrefab, defensiveRollsContainer.transform);
                     newtext.text = changeEvent.Value.ToString();
-                    if (changeEvent.Value > armorSaveNetVar.Value)
+                    if (changeEvent.Value > armorSaveNetVar.Value + armorPiercingNetVar.Value)
                     {
                         newtext.color = goodColor;
                     }

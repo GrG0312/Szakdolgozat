@@ -37,6 +37,10 @@ namespace Model.GameModel
         {
             return hidden[hidden.Count - 1];
         }
+        public void Flush()
+        {
+            hidden.Clear();
+        }
         public bool Contains(T element)
         {
             return hidden.Contains(element);

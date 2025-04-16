@@ -89,18 +89,23 @@ namespace Model.UnityDependant
             }
             while (!allStopped);
 
-            // For some visual delay to process the results
-            await Task.Delay(DELAY_MILISECONDS);
-
             // Calculate results
             for (int i = 0; i < diceCount; i++)
             {
                 values[i] = GetDiceValue(diceList[i]);
+            }
+            NotifyListeners(values);
+            
+            // For some visual delay to process the results
+            await Task.Delay(DELAY_MILISECONDS);
+
+            // Delete the now unused cubes
+            for (int i = 0; i < diceCount; i++)
+            {
                 diceList[i].GetComponent<NetworkObject>().Despawn(true);
             }
             diceList.Clear();
 
-            NotifyListeners(values);
             return values;
         }
 

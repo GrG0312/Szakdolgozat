@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Model.Interfaces
 {
-    public interface IDamagable
+    public interface IDamageable : ISidedObject
     {
         /// <summary>
         /// Current HP of this unit
@@ -25,5 +25,6 @@ namespace Model.Interfaces
 
         public void Delete();
     }
-    public interface IDamagable<IdType> : IOwned<IdType>, IDamagable { }
+
+    public interface IDamageable<WorldPositionType> : IDamageable, IMapObject<WorldPositionType> { }
 }

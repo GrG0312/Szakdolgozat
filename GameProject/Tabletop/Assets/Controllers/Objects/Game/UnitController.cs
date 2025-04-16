@@ -9,7 +9,7 @@ using Model.Units;
 using System.Collections.Generic;
 using TMPro;
 
-namespace Controllers.Objects
+namespace Controllers.Objects.Game
 {
     public class UnitController : NetworkBehaviour
     {

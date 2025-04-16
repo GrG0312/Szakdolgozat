@@ -7,7 +7,7 @@ namespace Model
 {
     public static partial class Defines
     {
-        public const int RANGE_ADJUSTMENT = 4;
+        public const int RANGE_ADJUSTMENT = 3;
 
         public static readonly IReadOnlyList<string> BlueColors = new List<string>
         {

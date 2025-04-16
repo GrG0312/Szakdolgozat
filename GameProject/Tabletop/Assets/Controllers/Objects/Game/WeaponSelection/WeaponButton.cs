@@ -17,9 +17,9 @@ namespace Controllers.Objects.Game.WeaponSelection
 
         public WeaponIdentifier Id { get; private set; }
 
-        public void SetupValues(WeaponInfoData data)
+        public void SetupValues(WeaponIdentifier id)
         {
-            Id = (WeaponIdentifier)data.WeaponIdentifier;
+            Id = id;
             nameText.text = Defines.Weapons[Id].Name;
         }
 

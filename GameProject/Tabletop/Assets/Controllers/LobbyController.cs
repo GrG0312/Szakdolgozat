@@ -1,17 +1,16 @@
-﻿using Unity.Netcode;
-using UnityEngine;
-using TMPro;
+﻿using Controllers.Data;
+using Controllers.Objects.Lobby;
+using Model;
+using Model.Lobby;
+using Model.Units;
 using System.Collections;
 using System.Collections.Generic;
-using Controllers.Objects;
-using Unity.Netcode.Transports.UTP;
-using UnityEngine.SceneManagement;
-using Model.Lobby;
-using Controllers.Data;
 using System.Linq;
-using Model;
-using Model.Deck;
-using Model.Units;
+using TMPro;
+using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Controllers
 {
@@ -107,7 +106,6 @@ namespace Controllers
             }
             if (NetworkManager.Singleton.IsConnectedClient)
             {
-                Debug.Log("Starting disconnect");
                 ClientDisconnect_ServerRpc(NetworkManager.Singleton.LocalClientId);
             } else
             {
@@ -167,7 +165,6 @@ namespace Controllers
         private void ClientDisconnect_ServerRpc(ulong clientId)
         {
             // Server side:
-            Debug.Log("A client wants to disconnect");
             LobbySlot slotOfClient = lobbyModel.GetSlotOfPlayer(clientId);
             if (slotOfClient != null) // which shouldnt be
             {
@@ -411,9 +408,7 @@ namespace Controllers
 
             if (NetworkManager.Singleton == null)
             {
-                Debug.LogWarning("<color=yellow>NetworkManager object's instance is null!</color>");
                 Instantiate(networkManagerPrefab);
-                Debug.Log("<color=green>NetworkManager instantiated.</color>");
             }
         }
         private void Start()

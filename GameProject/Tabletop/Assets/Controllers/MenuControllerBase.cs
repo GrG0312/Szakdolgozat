@@ -38,7 +38,6 @@ namespace Controllers
             }
             catch (InvalidOperationException)
             {
-                Debug.LogWarning("Quitting application because stack was empty...");
                 Application.Quit();
             }
         }

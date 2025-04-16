@@ -7,7 +7,7 @@ using Unity.Netcode;
 using UnityEngine;
 using Unity.Collections;
 
-namespace Controllers.Objects
+namespace Controllers.Objects.Lobby
 {
     public class LobbyPlayerObject : NetworkBehaviour
     {
@@ -130,7 +130,6 @@ namespace Controllers.Objects
                     break;
                 // OCCUPIED option doesnt exist
                 default:
-                    Debug.LogError($"LobbyPlayerObject #{SlotId} : What are you on about?");
                     break;
             }
         }

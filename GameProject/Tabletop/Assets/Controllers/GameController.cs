@@ -1,26 +1,27 @@
 using Controllers.Data;
-using Controllers.Objects;
 using Controllers.Objects.Game;
 using Controllers.Objects.Game.InfoPanel;
+using Controllers.Objects.Game.Purchase;
 using Controllers.Objects.Game.WeaponSelection;
 using Model;
 using Model.Deck;
 using Model.GameModel;
 using Model.GameModel.Commands;
-using Model.Interfaces;
 using Model.Units;
 using Model.UnityDependant;
 using Model.Weapons;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 
 namespace Controllers
@@ -47,10 +48,14 @@ namespace Controllers
         [SerializeField] private LayerMask unitLayer;
         [SerializeField] private LayerMask groundLayer;
         [SerializeField] private LayerMask uiLayer;
+
+        [SerializeField] private InputActionAsset inputActionAsset;
         [SerializeField] private InputActionReference moveAction;
         [SerializeField] private InputActionReference selectAction;
         [SerializeField] private InputActionReference orderAction;
-        [SerializeField] private InputActionReference cycleAction;
+        [SerializeField] private InputActionReference rangeAction;
+        [SerializeField] private InputActionReference escape;
+        [SerializeField] private InputActionReference doneAction;
 
         [SerializeField] private WeaponSelector selector;
         [SerializeField] private DiceRoller diceRoller;
@@ -59,15 +64,21 @@ namespace Controllers
         [SerializeField] private GameObject buttonControlPanel;
         [SerializeField] private ThrowStatPanel throwPanel;
 
+        [SerializeField] private RangeIndicator rangeIndicatorObject;
+
         #endregion
 
         #region Fields
 
-        private bool movingEnabled;
-        private bool purchaseToggled;
+        private bool wasSpacePressed = false;
+        private bool purchaseToggled = false;
+        private bool leaveToggled = false;
+
         private GamePlayerObject gamePlayerObject;
         private GameModel<ulong> gameModel;
-        private UnitModel? attackedModel;
+
+        private TaskCompletionSource<WeaponIdentifier> orderTaskSource;
+
         public Dictionary<ulong, string> UserColors { get; private set; }
 
         #endregion
@@ -82,10 +93,12 @@ namespace Controllers
 
         NetworkVariable<SelectedUnitData> SelectedUnitNetVar = new NetworkVariable<SelectedUnitData>(SelectedUnitData.Empty);
         NetworkList<WeaponInfoData> SelectedWeaponsNetVar = new NetworkList<WeaponInfoData>();
+        NetworkList<int> AttackingWeaponsNetVar = new NetworkList<int>(); 
 
         #endregion
 
         #region Unity messages
+
         private void Awake()
         {
             if (Instance != null)
@@ -98,17 +111,22 @@ namespace Controllers
                 Instance = this;
             }
         }
+
         private void Start()
         {
             ChangeScreen(ScreenType.Game);
-            purchaseToggled = false;
-            movingEnabled = true;
+
+            foreach (InputActionMap map in inputActionAsset.actionMaps)
+            {
+                map.Disable();
+            }
 
             PlayerNameNetVar.OnValueChanged += PlayerNameChanged;
             TurnCounterNetVar.OnValueChanged += TurnValueChanged;
             PhaseNetVar.OnValueChanged += PhaseValueChanged;
             SelectedUnitNetVar.OnValueChanged += SelectedUnitValueChanged;
             SelectedWeaponsNetVar.OnListChanged += SelectedWeaponsValueChanged;
+            AttackingWeaponsNetVar.OnListChanged += AttackingWeaponsValueChanged;
             ShownUI.OnValueChanged += NetworkScreenChange;
 
             moveAction.action.performed += MoveAction_Performed;
@@ -116,6 +134,13 @@ namespace Controllers
 
             selectAction.action.performed += SelectAction_Performed;
             orderAction.action.performed += OrderAction_Performed;
+
+            rangeAction.action.started += RangeAction_Started;
+            rangeAction.action.canceled += RangeAction_Canceled;
+
+            escape.action.performed += EscapeAction_Performed;
+
+            doneAction.action.performed += DoneAction_Performed;
 
             if (NetworkManager.Singleton.IsHost)
             {
@@ -140,9 +165,9 @@ namespace Controllers
                 gameModel.ActivePlayerChanged += GameModel_ActivePlayerChanged;
                 gameModel.PhaseChanged += GameModel_PhaseChanged;
                 gameModel.TurnChanged += GameModel_TurnChanged;
-                gameModel.RequestMoreData += GameModel_RequestMoreData;
                 gameModel.SelectedUnitChanged += GameModel_SelectedUnitChanged;
                 gameModel.GameOver += GameModel_GameOver;
+                gameModel.UnitCycled += GameModel_UnitCycled;
 
                 SetupPurchasers();
                 SetupColors();
@@ -152,6 +177,9 @@ namespace Controllers
                 gameModel.StartGame();
                 ForceUpdate_ClientRpc(PlayerNameNetVar.Value, TurnCounterNetVar.Value, PhaseNetVar.Value);
             }
+
+            inputActionAsset.FindActionMap("Game").Enable();
+            inputActionAsset.FindActionMap("Always").Enable();
         }
 
         public override void OnDestroy()
@@ -239,7 +267,7 @@ namespace Controllers
         [Rpc(SendTo.Server)]
         private void MoveCamera_ServerRpc(ulong clientId, float x, float y)
         {
-            if (gameModel.ActivePlayerId != clientId || !movingEnabled)
+            if (gameModel.ActivePlayerId != clientId)
             {
                 return;
             }
@@ -345,32 +373,25 @@ namespace Controllers
             }
             else
             {
-                ShowWeaponSelector_ClientRpc(false, RpcTarget.Single(clientId, RpcTargetUse.Temp));
                 gameModel.SelectUnit(clientId, null);
             }
+            ShowWeaponSelector_ClientRpc(false, RpcTarget.Single(clientId, RpcTargetUse.Temp));
         }
 
         private void GameModel_SelectedUnitChanged(object sender, EventArgs e)
         {
-            Debug.Log($"<color=magenta>Entering event handler...</color>");
-            Debug.Log($"<color=magenta>Is value null? {gameModel.SelectedUnit == null}</color>");
             if (gameModel.SelectedUnit != null)
             {
-                Debug.Log($"<color=magenta>Value is not null, starting selection...</color>");
                 UnitModel m = gameModel.SelectedUnit as UnitModel;
                 SelectedWeaponsNetVar.Clear();
-                Debug.Log($"<color=magenta>Previous weapons have been cleared...</color>");
-                foreach (UsableWeapon weapon in m.EquippedWeapons)
+                foreach (UsableWeapon weapon in m.UsableWeapons)
                 {
-                    Debug.Log($"<color=magenta>New weapon added: {weapon.Weapon.Constants.Name}</color>");
                     SelectedWeaponsNetVar.Add(new WeaponInfoData((int)weapon.Weapon.Identity, weapon.Weapon.Count, weapon.CanDamage, m.GetInstanceID()));
                 }
-                Debug.Log($"<color=magenta>Network value set. Selection ended on server.</color>");
                 SelectedUnitNetVar.Value = new SelectedUnitData((int)m.Identity, m.CanMove, m.CurrentHP, m.GetInstanceID());
                 ShowInfoPanel_ClientRpc(true);
             } else
             {
-                Debug.Log($"<color=magenta>New value is null. Hiding panel, selection ended.</color>");
                 ShowInfoPanel_ClientRpc(false);
             }
         }
@@ -392,17 +413,12 @@ namespace Controllers
             switch (changeEvent.Type)
             {
                 case NetworkListEvent<WeaponInfoData>.EventType.Add:
-                    Debug.Log($"<color=yellow>A weapon has been added: {changeEvent.Value}</color>");
                     infopanel.AddWeapon(changeEvent.Value);
-                    selector.AddButton(changeEvent.Value);
                     break;
                 case NetworkListEvent<WeaponInfoData>.EventType.Clear:
-                    Debug.Log($"<color=yellow>Weapons list has been cleared.</color>");
                     infopanel.ClearWeapons();
-                    selector.ClearButtons();
                     break;
                 default:
-                    Debug.Log("Default branch");
                     break;
             }
         }
@@ -421,33 +437,108 @@ namespace Controllers
         [Rpc(SendTo.Server)]
         private void OrderUnit_ServerRpc(ulong clientId, Vector3 mousepos)
         {
+            ShowWeaponSelector_ClientRpc(false, RpcTarget.Single(clientId, RpcTargetUse.Temp));
             Ray ray = gamePlayerObject.AttachedCamera.ScreenPointToRay(mousepos);
             if (Physics.Raycast(ray, out RaycastHit hit, MAX_CLICK_DISTANCE, unitLayer))
             {
-                GameObject obi = hit.collider.gameObject;
-                attackedModel = obi.GetComponent<UnitModel>();
-                if (attackedModel != null)
+                if (gameModel.CurrentPhase != Phase.Fighting)
                 {
-                    Debug.Log("<color=aqua>Invoking attack order creation...</color>");
-                    gameModel.CreateCommand<AttackCommand<ulong>>(clientId, attackedModel);
-                    throwPanel.RegisterDefender(attackedModel.Constants.ArmorSave);
+                    return;
+                }
+                GameObject obi = hit.collider.gameObject;
+                UnitModel? attacked = obi.GetComponent<UnitModel>();
+                if (attacked != null)
+                {
+                    // Register the defender's stats on the throw sidepanel
+                    throwPanel.RegisterDefender(attacked.Constants.ArmorSave);
+                    // Create the still incomplete AttackCommand
+                    gameModel.CreateCommand<AttackCommand<Vector3>>(clientId, attacked);
+                    AttackCommand<Vector3> cmd = gameModel.PendingCommand as AttackCommand<Vector3>;
+                    if (cmd.UsableWeapons.Count == 0)
+                    {
+                        gameModel.AbortCommand();
+                        return;
+                    }
+
+                    // Set up the weapon selector window with only the weapons that can reach the target
+                    AttackingWeaponsNetVar.Clear();
+                    foreach (UsableWeapon weapon in cmd.UsableWeapons)
+                    {
+                        AttackingWeaponsNetVar.Add((int)weapon.Weapon.Identity);
+                    }
+
+                    AttackCommandProcess(clientId, attacked);
                 }
             }
             else if (Physics.Raycast(ray, out hit, MAX_CLICK_DISTANCE, groundLayer))
             {
+                if (gameModel.CurrentPhase != Phase.Movement)
+                {
+                    return;
+                }
                 Vector3 hitLocation = hit.point;
-                Debug.Log("<color=aqua>Invoking move order creation...</color>");
                 // I know this is wacky but as far as I know this is the only way to keep the model clean of any types depending on unity
                 gameModel.CreateCommand<MoveCommand<Vector3>>(clientId, hitLocation);
+                gameModel.ExecuteCommand();
             }
         }
 
-
-        private void GameModel_RequestMoreData(object sender, EventArgs e)
+        private void AttackingWeaponsValueChanged(NetworkListEvent<int> changeEvent)
         {
-            ShowWeaponSelector_ClientRpc(true, RpcTarget.Single(gameModel.ActivePlayerId, RpcTargetUse.Temp));
+            switch (changeEvent.Type)
+            {
+                case NetworkListEvent<int>.EventType.Add:
+                    selector.AddButton((WeaponIdentifier)changeEvent.Value);
+                    break;
+                case NetworkListEvent<int>.EventType.Clear:
+                    selector.ClearButtons();
+                    break;
+                default:
+                    break;
+            }
         }
 
+        private async void AttackCommandProcess(ulong clientId, UnitModel defender)
+        {
+            WeaponIdentifier id = await WaitForAttackingWeapon(clientId);
+            WeaponConstants used = Defines.Weapons[id];
+            AttackCommand<Vector3> cmd = gameModel.PendingCommand as AttackCommand<Vector3>;
+            cmd.RegisterUsedWeapon(id);
+            int weaponCount = cmd.UsableWeapons.Single(w => w.Weapon.Identity == id).Weapon.Count;
+            throwPanel.RegisterAttacker(used.Attacks * weaponCount, used.BallisticSkill, used.ArmorPiercing, used.Damage);
+
+            UnitModel m = gameModel.SelectedUnit as UnitModel;
+
+            wasSpacePressed = false;
+
+            SwitchActionMap_ClientRpc(false);
+            ShownUI.Value = (int)ScreenType.Throw;
+
+            await gamePlayerObject.MoveToArena();
+            await gameModel.ExecuteCommand();
+            ShowSpaceMessage_ClientRpc(true, RpcTarget.Single(clientId, RpcTargetUse.Temp));
+            await WaitUntilSpacePressed();
+            ShowSpaceMessage_ClientRpc(false, RpcTarget.Single(clientId, RpcTargetUse.Temp));
+            await gamePlayerObject.MoveToPrevious();
+
+            // Refresh the usable weapons' list. (I cant modify a single element so I have to reload the whole list)
+            SelectedWeaponsNetVar.Clear();
+            foreach (UsableWeapon weapon in m.UsableWeapons)
+            {
+                SelectedWeaponsNetVar.Add(new WeaponInfoData((int)weapon.Weapon.Identity, weapon.Weapon.Count, weapon.CanDamage, m.GetInstanceID()));
+            }
+
+            SwitchActionMap_ClientRpc(true);
+            ShownUI.Value = (int)ScreenType.Game;
+            
+        }
+
+        private Task<WeaponIdentifier> WaitForAttackingWeapon(ulong clientId)
+        {
+            orderTaskSource = new TaskCompletionSource<WeaponIdentifier>();
+            ShowWeaponSelector_ClientRpc(true, RpcTarget.Single(clientId, RpcTargetUse.Temp));
+            return orderTaskSource.Task;
+        }
 
         [Rpc(SendTo.SpecifiedInParams)]
         private void ShowWeaponSelector_ClientRpc(bool isShown, RpcParams param)
@@ -459,58 +550,56 @@ namespace Controllers
         [Rpc(SendTo.Server, RequireOwnership = false)]
         public void AttackingWeaponSelected_ServerRpc(ulong clientId, WeaponIdentifier id)
         {
-            Debug.Log($"<color=red>Got attacking weapon: {id}</color>");
-            AttackCommand<ulong> c = gameModel.PendingCommand as AttackCommand<ulong>;
-
-            WeaponConstants con = Defines.Weapons[id];
-            IWeaponUser m = c.Initiator;
-            int weaponCount = m.EquippedWeapons.Single(w => w.Weapon.Identity == id).Weapon.Count;
-            c.SetUsedWeapon(id);
-            throwPanel.RegisterAttacker(con.Attacks * weaponCount, con.BallisticSkill, con.ArmorPiercing, con.Damage);
-
-            ExecuteAttackCommandAsync();
-            Debug.Log("<color=red>AttackWeaponSelected method is over...</color>");
-        }
-
-        private async void ExecuteAttackCommandAsync()
-        {
-            Debug.Log($"<color=red>Starting of execution...</color>");
-            Debug.Log($"<color=red>Saving the initiator...</color>");
-            AttackCommand<ulong> ac = gameModel.PendingCommand as AttackCommand<ulong>;
-            UnitModel m = ac.Initiator as UnitModel;
-            Debug.Log($"<color=red>Is initiator null? {m == null}</color>");
-
-            Debug.Log($"<color=red>Is button control panel enabled? {buttonControlPanel.activeSelf}</color>");
-            ShownUI.Value = (int)ScreenType.Throw;
-            Debug.Log($"<color=red>Is button control panel enabled? {buttonControlPanel.activeSelf}</color>");
-
-            Debug.Log($"<color=red>Is moving enabled? {buttonControlPanel.activeSelf}</color>");
-            movingEnabled = false;
-            Debug.Log($"<color=red>Is moving enabled? {buttonControlPanel.activeSelf}</color>");
-
-            await gamePlayerObject.MoveToArena();
-            await gameModel.ExecutePendingCommand();
-            await gamePlayerObject.MoveToPrevious();
-
-            // Refresh the usable weapons' list. (I cant modify a single element so I have to reload the whole list)
-            SelectedWeaponsNetVar.Clear();
-            foreach (UsableWeapon weapon in m.EquippedWeapons)
-            {
-                SelectedWeaponsNetVar.Add(new WeaponInfoData((int)weapon.Weapon.Identity, weapon.Weapon.Count, weapon.CanDamage, m.GetInstanceID()));
-            }
-
-            Debug.Log($"<color=red>Is button control panel enabled? {buttonControlPanel.activeSelf}</color>");
-            ShownUI.Value = (int)ScreenType.Game;
-            Debug.Log($"<color=red>Is button control panel enabled? {buttonControlPanel.activeSelf}</color>");
-
-            Debug.Log($"<color=red>Is moving enabled? {buttonControlPanel.activeSelf}</color>");
-            movingEnabled = true;
-            Debug.Log($"<color=red>Is moving enabled? {buttonControlPanel.activeSelf}</color>");
+            orderTaskSource.SetResult(id);
         }
 
         private void NetworkScreenChange(int oldvalue, int newvalue)
         {
             ChangeScreen((ScreenType)newvalue);
+        }
+
+        [Rpc(SendTo.ClientsAndHost)]
+        private void SwitchActionMap_ClientRpc(bool defaultcontrols)
+        {
+            if (defaultcontrols)
+            {
+                inputActionAsset.FindActionMap("Throw").Disable();
+                inputActionAsset.FindActionMap("Game").Enable();
+            } else
+            {
+                inputActionAsset.FindActionMap("Game").Disable();
+                inputActionAsset.FindActionMap("Throw").Enable();
+            }
+        }
+
+        [Rpc(SendTo.SpecifiedInParams)]
+        private void ShowSpaceMessage_ClientRpc(bool v, RpcParams param)
+        {
+            throwPanel.ShowMessage(v);
+        }
+
+        private async Task WaitUntilSpacePressed()
+        {
+            while (!wasSpacePressed)
+            {
+                await Task.Yield();
+            }
+        }
+
+        private void DoneAction_Performed(InputAction.CallbackContext obj)
+        {
+            ulong clientId = NetworkManager.Singleton.LocalClientId;
+            SpacePressed_ServerRpc(clientId);
+        }
+
+        [Rpc(SendTo.Server, RequireOwnership = false)]
+        private void SpacePressed_ServerRpc(ulong clientId)
+        {
+            if (clientId != gameModel.ActivePlayerId)
+            {
+                return;
+            }
+            wasSpacePressed = true;
         }
 
         #endregion
@@ -526,6 +615,7 @@ namespace Controllers
         [Rpc(SendTo.Server)]
         private void TurnFinished_ServerRpc(ulong clientId)
         {
+            ShowWeaponSelector_ClientRpc(false, RpcTarget.Single(clientId, RpcTargetUse.Temp));
             gameModel.PlayerDone(clientId);
         }
 
@@ -577,22 +667,153 @@ namespace Controllers
         public void CycleWithButton()
         {
             ulong clientId = NetworkManager.Singleton.LocalClientId;
-            NextCycle_ServerRpc(clientId, 1);
+            NextCycle_ServerRpc(clientId);
         }
 
 
         [Rpc(SendTo.Server)]
-        private void NextCycle_ServerRpc(ulong clientId, int value)
+        private void NextCycle_ServerRpc(ulong clientId)
         {
-            Debug.LogError("Not finished function!");
+            gameModel.CycleUnits(clientId);
         }
 
+        private void GameModel_UnitCycled(object sender, EventArgs e)
+        {
+            if (gameModel.SelectedUnit == null)
+            {
+                return;
+            }
+            UnitModel m = gameModel.SelectedUnit as UnitModel;
+            gamePlayerObject.transform.position = m.Position;
+        }
+
+        #endregion
+
+        #region Undo commands
+
+        public void UndoWithButton()
+        {
+            ulong clientId = NetworkManager.Singleton.LocalClientId;
+
+        }
+
+        [Rpc(SendTo.Server)]
+        private void UndoCommand_ServerRpc(ulong clientId)
+        {
+            gameModel.UndoCommand(clientId);
+        }
+
+        #endregion
+
+        #region Range display
+
+        private void RangeAction_Started(InputAction.CallbackContext obj)
+        {
+            ulong clientId = NetworkManager.Singleton.LocalClientId;
+            RangeIndicatorShow_ServerRpc(clientId, true);
+        }
+
+        private void RangeAction_Canceled(InputAction.CallbackContext obj)
+        {
+            ulong clientId = NetworkManager.Singleton.LocalClientId;
+            RangeIndicatorShow_ServerRpc(clientId, false);
+        }
+
+        [Rpc(SendTo.Server)]
+        private void RangeIndicatorShow_ServerRpc(ulong clientId, bool shouldShow)
+        {
+            if (clientId != gameModel.ActivePlayerId)
+            {
+                return;
+            }
+            if (shouldShow)
+            {
+                if (gameModel.SelectedUnit != null)
+                {
+                    UnitModel m = gameModel.SelectedUnit as UnitModel;
+                    Vector3 pos = m.Position;
+                    RangeIndicatorPosition_ClientRpc(pos);
+                }
+            } else
+            {
+                RangeIndicatorHide_ClientRpc();
+            }
+        }
+
+        [Rpc(SendTo.ClientsAndHost)]
+        private void RangeIndicatorPosition_ClientRpc(Vector3 selectedPos)
+        {
+            rangeIndicatorObject.transform.position = selectedPos;
+            rangeIndicatorObject.gameObject.SetActive(true);
+        }
+
+        [Rpc(SendTo.ClientsAndHost)]
+        private void RangeIndicatorHide_ClientRpc()
+        {
+            rangeIndicatorObject.gameObject.SetActive(false);
+        }
+        #endregion
+
+        #region Leaving
+
+        private void EscapeAction_Performed(InputAction.CallbackContext obj)
+        {
+            if (leaveToggled)
+            {
+                ChangeScreen(ScreenType.Game);
+            } else
+            {
+                ChangeScreen(ScreenType.Leave);
+            }
+            leaveToggled = !leaveToggled;
+        }
+
+        public void LeaveGame()
+        {
+            ulong clientId = NetworkManager.Singleton.LocalClientId;
+            ClientLeaves_ServerRpc(clientId);
+            BackToMenu(false);
+        }
+
+        [Rpc(SendTo.Server)]
+        private void ClientLeaves_ServerRpc(ulong clientId)
+        {
+            gameModel.Forfeit(clientId);
+        }
+
+        private void BackToMenu(bool didWin)
+        {
+            ProfileController.Instance.GameFinished(didWin);
+            StartCoroutine(ShutdownRoutine());
+        }
+
+        private IEnumerator ShutdownRoutine()
+        {
+            if (IsHost)
+            {
+                yield return new WaitUntil(() => NetworkManager.Singleton.ConnectedClients.Count == 1);
+            }
+            NetworkManager.Singleton.Shutdown(true);
+            yield return new WaitForSeconds(0.5f);
+            Destroy(NetworkManager.Singleton.gameObject);
+            SceneManager.LoadScene("MenuScene", LoadSceneMode.Single);
+        }
         #endregion
 
         #region Game over
         private void GameModel_GameOver(object sender, Side e)
         {
-            Debug.LogError("GAMOE OVER EVENT RECIEVED");
+            // Server side:
+            foreach (KeyValuePair<ulong, GamePlayerData> kvp in gameModel.ConnectedPlayers)
+            {
+                GameOver_ClientRpc(kvp.Value.Side == e);
+            }
+        }
+
+        [Rpc(SendTo.ClientsAndHost)]
+        private void GameOver_ClientRpc(bool didWin)
+        {
+            BackToMenu(didWin);
         }
         #endregion
     }

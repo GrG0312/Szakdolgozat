@@ -9,9 +9,12 @@ using UnityEngine;
 
 namespace Model.Weapons
 {
-    public class UsableWeapon : IDamageDealer, IUsable
+    public class UsableWeapon : IDamageDealer, IUsable, IRanged<int>
     {
         public bool CanDamage { get; set; }
+
+        public int Range { get => Weapon.Constants.Range; }
+
         public UnitWeapon Weapon { get; }
 
         public UsableWeapon(UnitWeapon w)
@@ -20,23 +23,14 @@ namespace Model.Weapons
             Weapon = w;
         }
 
-        public async Task<int> Damage(IDamagable target, IDiceRoller roller)
+        public async Task<int> Damage<T>(IDamageable<T> target, IDiceRoller roller)
         {
             CanDamage = false;
 
             int numberOfDice = Weapon.Count * Weapon.Constants.Attacks;
             int[] result = await roller.RollDice(numberOfDice);
-
-            string debuglog = "Roll complete: [ ";
-            foreach (int item in result)
-            {
-                debuglog += $"{item} ";
-            }
-            debuglog += "]";
-            Debug.Log(debuglog);
             
             int attacksHit = result.Count(roll => roll > Weapon.Constants.BallisticSkill);
-            Debug.Log($"Attacks hit: {attacksHit} (with a {Weapon.Constants.BallisticSkill}+ BS)");
             if (target is IArmored armored)
             {
                 int attacksEvaded = await armored.ArmorSave(attacksHit, Weapon.Constants.ArmorPiercing, roller);
@@ -44,7 +38,6 @@ namespace Model.Weapons
             }
 
             int totalDamage = attacksHit * Weapon.Constants.Damage;
-            Debug.Log($"Damaging enemy for: {attacksHit} * {Weapon.Constants.Damage} = {totalDamage}");
             target.TakeDamage(totalDamage);
             return totalDamage;
         }

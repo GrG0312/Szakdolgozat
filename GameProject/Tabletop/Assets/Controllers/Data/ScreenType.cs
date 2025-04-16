@@ -9,5 +9,6 @@
         Deck,
         Game,
         Throw,
+        Leave,
     }
 }

@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Controllers
+namespace Controllers.Objects.Game.Purchase
 {
     public class UnitPurchaser : MonoBehaviour
     {

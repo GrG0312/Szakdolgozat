@@ -20,9 +20,23 @@ namespace Model.UnityDependant
                 // MoveCommand: selectedUnit, {targetLocation}
                 = args => new MoveCommand<Vector3>((IMovable<Vector3>)args[0], (Vector3)args[1]);
 
-            creationCommands[typeof(AttackCommand<ulong>)]
+            creationCommands[typeof(AttackCommand<Vector3>)]
                 // AttackCommand : selectedUnit, {targetUnit}, roller
-                = (args) => new AttackCommand<ulong>((IWeaponUser<ulong>)args[0], (IDamagable<ulong>)args[1], (IDiceRoller)args[2]);
+                = (args) =>
+                {
+                    IWeaponUser<Vector3> initiator = (IWeaponUser<Vector3>)args[0];
+                    IDamageable<Vector3> target = (IDamageable<Vector3>)args[1];
+                    List<UsableWeapon> usableWeapons = new List<UsableWeapon>();
+                    foreach (UsableWeapon usableWeapon in initiator.UsableWeapons)
+                    {
+                        if (usableWeapon.CanDamage && initiator.DistanceTo(target) <= usableWeapon.Weapon.Constants.Range * Defines.RANGE_ADJUSTMENT)
+                        {
+                            usableWeapons.Add(usableWeapon);
+                        }
+                    }
+                    IDiceRoller roller = (IDiceRoller)args[2];
+                    return new AttackCommand<Vector3>(initiator, target, roller, usableWeapons);
+                };
         }
 
         public IUnitCommand Produce<T>(params object[] args) where T : IUnitCommand

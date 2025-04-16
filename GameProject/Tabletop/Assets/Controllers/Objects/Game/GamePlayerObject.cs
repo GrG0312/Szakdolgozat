@@ -66,7 +66,6 @@ namespace Controllers.Objects.Game
         #region Throwing viewpoint
         public async Task MoveToArena()
         {
-            Debug.Log("Camera: Moving");
             prevPosition = transform.position;
             await MoveAsync(ARENA_POSITION, ARENA_ROTATION);
         }
@@ -78,7 +77,6 @@ namespace Controllers.Objects.Game
 
         private async Task MoveAsync(Vector3 targetPos, Quaternion targetRot)
         {
-            Debug.Log("Start moving");
             Vector3 startPosition = transform.position;
             Quaternion startRotation = transform.rotation;
 

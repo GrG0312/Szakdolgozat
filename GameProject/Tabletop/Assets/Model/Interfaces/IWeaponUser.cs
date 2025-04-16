@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Model.Interfaces
 {
-    public interface IWeaponUser
+    public interface IWeaponUser<WorldPositionType> : ISidedObject, IMapObject<WorldPositionType>
     {
-        public IReadOnlyList<UsableWeapon> EquippedWeapons { get; }
-    }
+        public IReadOnlyList<UsableWeapon> UsableWeapons { get; }
 
-    public interface IWeaponUser<T> : IWeaponUser, IOwned<T> { }
+        public bool CanTarget(IDamageable<WorldPositionType> target);
+    }
 }
