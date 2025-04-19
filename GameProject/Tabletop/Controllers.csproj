@@ -83,6 +83,7 @@
     <Compile Include="Assets\Controllers\Objects\Game\Purchase\UnitPurchaser.cs" />
     <Compile Include="Assets\Controllers\Objects\Game\Purchase\PurchaserWindow.cs" />
     <Compile Include="Assets\Controllers\ProfileController.cs" />
+    <Compile Include="Assets\Controllers\Objects\Game\ControlPointController.cs" />
     <Compile Include="Assets\Controllers\MainMenuController.cs" />
     <Compile Include="Assets\Controllers\Data\ScreenType.cs" />
     <Compile Include="Assets\Controllers\Objects\Game\InfoPanel\UnitInfoPanel.cs" />

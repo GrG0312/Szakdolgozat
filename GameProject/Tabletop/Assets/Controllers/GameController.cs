@@ -34,6 +34,7 @@ namespace Controllers
 
         [SerializeField] private GamePlayerObject gamePlayerObjectPrefab;
         [SerializeField] private List<GameObject> spawnpoints;
+        [SerializeField] private List<ControlPointController> controlPoints;
         [SerializeField] private UnitModel unitPrefab;
         
         [SerializeField] private TMP_Text pointsNow;
@@ -160,7 +161,7 @@ namespace Controllers
                     index++;
                 }
                 gameModel = 
-                    new GameModel<ulong>(InterSceneData.Players, new UnityUnitFactory(sp, unitPrefab), new UnityCommandFactory(), diceRoller);
+                    new GameModel<ulong>(InterSceneData.Players, new UnityUnitFactory(sp, unitPrefab), new UnityCommandFactory(), diceRoller, controlPoints.Select(p => p.Model));
                 gameModel.PlayerPointsChanged += GameModel_PlayerPointsChanged;
                 gameModel.ActivePlayerChanged += GameModel_ActivePlayerChanged;
                 gameModel.PhaseChanged += GameModel_PhaseChanged;
@@ -694,7 +695,7 @@ namespace Controllers
         public void UndoWithButton()
         {
             ulong clientId = NetworkManager.Singleton.LocalClientId;
-
+            UndoCommand_ServerRpc(clientId);
         }
 
         [Rpc(SendTo.Server)]
@@ -778,6 +779,10 @@ namespace Controllers
         [Rpc(SendTo.Server)]
         private void ClientLeaves_ServerRpc(ulong clientId)
         {
+            if (gamePlayerObject.OwnerClientId == clientId)
+            {
+                gamePlayerObject.NetworkObject.ChangeOwnership(NetworkManager.Singleton.LocalClientId);
+            }
             gameModel.Forfeit(clientId);
         }
 
@@ -792,6 +797,9 @@ namespace Controllers
             if (IsHost)
             {
                 yield return new WaitUntil(() => NetworkManager.Singleton.ConnectedClients.Count == 1);
+            } else
+            {
+                yield return new WaitForSeconds(0.5f);
             }
             NetworkManager.Singleton.Shutdown(true);
             yield return new WaitForSeconds(0.5f);

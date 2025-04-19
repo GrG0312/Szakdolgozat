@@ -1,7 +1,9 @@
 {
     "name": "Persistence",
     "rootNamespace": "Persistence",
-    "references": [],
+    "references": [
+        "GUID:b6255595792b40d4ab7b8aaa89bfbdef"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

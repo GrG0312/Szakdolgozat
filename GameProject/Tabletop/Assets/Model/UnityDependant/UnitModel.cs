@@ -129,6 +129,7 @@ namespace Model.UnityDependant
             {
                 return;
             }
+            
             // Store the full calculated path
             NavMeshPath fullPath = new NavMeshPath();
             if (!NavAgent.CalculatePath(moveDestination, fullPath))
@@ -180,6 +181,7 @@ namespace Model.UnityDependant
             {
                 yield return null;
             }
+            NavAgent.ResetPath();
             Moving?.Invoke(this, false);
         }
         #endregion

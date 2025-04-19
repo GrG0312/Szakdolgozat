@@ -6,6 +6,8 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using Unity.Collections;
+using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace Controllers.Objects.Lobby
 {
@@ -18,9 +20,19 @@ namespace Controllers.Objects.Lobby
         private const string READY_RICH_TEXT = "<color=green>Ready";
         private const string NOT_READY_RICH_TEXT = "<color=orange>Not Ready";
         private const string CLOSED_RICH_TEXT = "<color=red>Closed";
+
+        private readonly IReadOnlyDictionary<Side, string> sideColors = new Dictionary<Side, string>()
+        {
+            { Side.Imperium, "#4242ff" },
+            { Side.Chaos, "#ff4242" }
+        };
         #endregion
 
         #region Serializations and network variables
+        [SerializeField] private Image slotBg;
+        private NetworkVariable<FixedString32Bytes> slotColorNetworkVar = 
+            new NetworkVariable<FixedString32Bytes>("#FFFFF");
+
         [SerializeField] private TMP_Text nameField;
         private NetworkVariable<FixedString32Bytes> nameFieldNetworkVar = 
             new NetworkVariable<FixedString32Bytes>(string.Empty, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -46,6 +58,7 @@ namespace Controllers.Objects.Lobby
         public void SetupInitialData(int id, Side side)
         {
             slotIdNetworkVar.Value = id;
+            slotColorNetworkVar.Value = sideColors[side];
             SlotModel = new LobbySlot(side);
             SlotModel.OccupantStatusChanged += OnOccupantChange;
             SlotModel.PlayerChanged += OnPlayerChanged;
@@ -55,6 +68,12 @@ namespace Controllers.Objects.Lobby
                 // Add closing option only to server
                 emptyDropdown.options.Add(new TMP_Dropdown.OptionData(CLOSED_OPTION));
             }
+        }
+
+        private void OnSlotColorNetVarValueChanged(FixedString32Bytes oldvalue, FixedString32Bytes newvalue)
+        {
+            ColorUtility.TryParseHtmlString(newvalue.ToString(), out Color c);
+            slotBg.color = c;
         }
         #endregion
 
@@ -69,6 +88,7 @@ namespace Controllers.Objects.Lobby
             emptyDropdownNetworkVar.OnValueChanged += OnEmptyNetVarValueChanged;
             readinessDropdownNetworkVar.OnValueChanged += OnReadyNetVarValueChanged;
             statusLabelNetworkVar.OnValueChanged += OnStatusNetVarValueChanged;
+            slotColorNetworkVar.OnValueChanged += OnSlotColorNetVarValueChanged;
 
             readinessDropdown.onValueChanged.AddListener(OnReadinessInput);
             emptyDropdown.onValueChanged.AddListener(OnOccupantInput);
@@ -242,6 +262,7 @@ namespace Controllers.Objects.Lobby
             OnEmptyNetVarValueChanged(default, emptyDropdownNetworkVar.Value);
             OnReadyNetVarValueChanged(default, readinessDropdownNetworkVar.Value);
             OnStatusNetVarValueChanged(default, statusLabelNetworkVar.Value);
+            OnSlotColorNetVarValueChanged(default, slotColorNetworkVar.Value);
         }
     }
 }

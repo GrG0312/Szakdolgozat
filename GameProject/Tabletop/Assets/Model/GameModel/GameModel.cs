@@ -150,9 +150,16 @@ namespace Model.GameModel
 
         #endregion
 
+        private List<ControlPointModel> controlPoints;
+
         #region Constructor
 
-        public GameModel(Dictionary<PlayerIdType, GamePlayerData> players, IUnitFactory<PlayerIdType> ufactory, ICommandFactory cfactory, IDiceRoller diceRoller)
+        public GameModel(
+            Dictionary<PlayerIdType, GamePlayerData> players, 
+            IUnitFactory<PlayerIdType> ufactory, 
+            ICommandFactory cfactory, 
+            IDiceRoller diceRoller, 
+            IEnumerable<ControlPointModel> controlpoints)
         {
             commandHistory = new History<IUnitCommand>();
             ConnectedPlayers = new Dictionary<PlayerIdType, GamePlayerData>(players);
@@ -164,6 +171,12 @@ namespace Model.GameModel
             commandFactory = cfactory;
             this.diceRoller = diceRoller;
             TurnCounter = 0;
+            this.controlPoints = new List<ControlPointModel>();
+            foreach (ControlPointModel cp in controlpoints)
+            {
+                cp.OwnerChanged += ControlPointOwnerChanged;
+                controlPoints.Add(cp);
+            }
         }
 
         #endregion
@@ -231,7 +244,7 @@ namespace Model.GameModel
             nextIndex = default;
 
             bool found = CollectionHelper.LoopbackSearch(
-                ConnectedPlayers.ToList(), p => !p.Value.IsDefeated, indexOfPlayer, out nextIndex);
+                ConnectedPlayers.ToList(), p => !p.Value.IsDefeated && p.Value.IsConnected, indexOfPlayer, out nextIndex);
 
             return found;
         }
@@ -435,6 +448,32 @@ namespace Model.GameModel
             return ActivePlayerId.CompareTo(id) == 0;
         }
 
-        
+        private void ControlPointOwnerChanged(object sender, int oldvalue)
+        {
+            ControlPointModel m = sender as ControlPointModel;
+            if (oldvalue != -1)
+            {
+                Side oldowner = (Side)oldvalue;
+                foreach (GamePlayerData data in ConnectedPlayers.Values)
+                {
+                    if (data.Side == oldowner)
+                    {
+                        data.CapturePoint(true);
+                    }
+                }
+            }
+            if (m.Owner != -1)
+            {
+                Side owner = (Side)m.Owner;
+                foreach (GamePlayerData data in ConnectedPlayers.Values)
+                {
+                    if (data.Side == owner)
+                    {
+                        data.CapturePoint();
+                    }
+                }
+            }
+        }
+
     }
 }

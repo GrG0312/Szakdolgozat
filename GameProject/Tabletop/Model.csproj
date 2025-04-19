@@ -71,6 +71,7 @@
     <Compile Include="Assets\Model\UnityDependant\UnityUnitFactory.cs" />
     <Compile Include="Assets\Model\UnityDependant\UnityCommandFactory.cs" />
     <Compile Include="Assets\Model\GameModel\Commands\MoveCommand.cs" />
+    <Compile Include="Assets\Model\GameModel\ControlPointModel.cs" />
     <Compile Include="Assets\Model\Interfaces\IWeaponUser.cs" />
     <Compile Include="Assets\Model\Interfaces\IMovable.cs" />
     <Compile Include="Assets\Model\Side.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Assets\Model\Interfaces\ISelectable.cs" />
     <Compile Include="Assets\Model\Interfaces\IMapObject.cs" />
     <Compile Include="Assets\Model\Weapons\WeaponConstants.cs" />
+    <Compile Include="Assets\Model\Profile.cs" />
     <Compile Include="Assets\Model\Interfaces\IUndoableCommand.cs" />
     <Compile Include="Assets\Model\GameModel\PlayerPointsChangedEventArgs.cs" />
     <Compile Include="Assets\Model\Interfaces\ISidedObject.cs" />

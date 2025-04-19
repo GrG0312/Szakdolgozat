@@ -7,9 +7,9 @@ namespace Model
 {
     public static partial class Defines
     {
-        public const int POINTS_ON_START = 1200;
+        public const int POINTS_ON_START = 1000;
         public const int POINTS_PER_TURN = 200;
-        public const int POINTS_PER_CAP = 100;
+        public const int POINTS_PER_CAP = 200;
 
         public static readonly IReadOnlyDictionary<WeaponIdentifier, WeaponConstants> Weapons = new Dictionary<WeaponIdentifier, WeaponConstants>()
         {
@@ -131,7 +131,7 @@ namespace Model
                     Side.Imperium,
                     UnitType.Tank,
                     2, // max: 2 (3)
-                    600, // cost: (480)
+                    750, // cost: (480)
                     12,
                     2,
                     24,
@@ -149,8 +149,8 @@ namespace Model
                 new UnitConstants(
                     Side.Imperium,
                     UnitType.Warmachine,
-                    2, // max: 3
-                    400, // cost: 130
+                    3, // max: 3
+                    450, // cost: 130
                     8,
                     2,
                     12,
@@ -170,10 +170,10 @@ namespace Model
                 new UnitConstants(
                     Side.Chaos,
                     UnitType.LightInfantry,
-                    20, // max: 40 (6)
+                    25, // max: 40 (6)
                     10, // cost: 5
                     6,
-                    6,
+                    5,
                     1,
                     1,
                     new List<UnitWeapon>()
@@ -191,7 +191,7 @@ namespace Model
                     50, // cost: 25
                     6,
                     3,
-                    2,
+                    3,
                     2,
                     new List<UnitWeapon>()
                     {
@@ -222,7 +222,7 @@ namespace Model
                     Side.Chaos,
                     UnitType.Tank,
                     4, // max: 6 (3)
-                    400, // cost: 150
+                    350, // cost: 150
                     10,
                     3,
                     11,
@@ -239,8 +239,8 @@ namespace Model
                 new UnitConstants(
                     Side.Chaos,
                     UnitType.Warmachine,
-                    2, // max: 4 (3)
-                    500, // cost: 190
+                    4, // max: 4 (3)
+                    450, // cost: 190
                     8,
                     3,
                     12,
