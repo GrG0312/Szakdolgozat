@@ -6,8 +6,6 @@ namespace Model.Weapons
     {
         public string Name { get; }
 
-        #region Statistics
-        
         /// <summary>
         /// How far can the weapon reach.
         /// </summary>
@@ -31,8 +29,7 @@ namespace Model.Weapons
         /// <summary>
         /// How much damage does 1 hit deal
         /// </summary>
-        public int Damage { get; }
-        #endregion
+        public int Damage { get; }  
 
         public WeaponConstants(string name, int range, int attacks, int ballistics, int armorPiercing, int damage)
         {
