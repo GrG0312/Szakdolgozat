@@ -19,6 +19,7 @@ namespace Controllers
             get { return UserProfile.DisplayName; }
             set { UserProfile.ChangeName(value); ProfileUpdated?.Invoke(this, EventArgs.Empty); }
         }
+
         public int GamesPlayed
         {
             get { return UserProfile.GamesPlayed; }
@@ -30,10 +31,10 @@ namespace Controllers
 
         public void GameFinished(bool didWin)
         {
-            UserProfile.AddPlayedGame();
+            UserProfile.GamesPlayed++;
             if (didWin)
             {
-                UserProfile.AddWonGame();
+                UserProfile.GamesWon++;
             }
             ProfileUpdated?.Invoke(this, EventArgs.Empty);
         }
@@ -53,7 +54,7 @@ namespace Controllers
 
             profileDataManager = new ProfileDataManager(Application.persistentDataPath);
             UserProfile = profileDataManager.Load();
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
         }
         public void OnApplicationQuit()
         {

@@ -85,7 +85,7 @@ namespace Controllers.Objects.Game
         public void RegisterThrower(DiceRoller r)
         {
             roller = r;
-            roller.Listeneres.Add(RollFinished);
+            roller.RollComplete += (o, e) => RollFinished(e);
         }
 
         public void RegisterAttacker(int a, int bs, int ap, int d)

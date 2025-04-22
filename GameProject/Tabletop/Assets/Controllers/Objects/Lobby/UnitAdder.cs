@@ -1,5 +1,6 @@
 using Model;
 using Model.Units;
+using Model.UnityDependant;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -36,7 +37,7 @@ namespace Controllers.Objects.Lobby
         {
             Identity = i;
             UnitVisualData data = Defines.UnitVisuals[Identity];
-            unitName.text = data.UnitName;
+            unitName.text = Defines.UnitValues[Identity].Name;
             image.sprite = Resources.Load<Sprite>(data.UnitProfileSprite);
             unitAmount.text = "0";
             unitLimit.text = "99"; // something

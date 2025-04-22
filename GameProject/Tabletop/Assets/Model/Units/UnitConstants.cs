@@ -15,6 +15,8 @@ namespace Model.Units
         /// </summary>
         public Side Side { get; }
 
+        public string Name { get; }
+
         #region Deck stats
 
         /// <summary>
@@ -64,6 +66,7 @@ namespace Model.Units
         #endregion
 
         public UnitConstants(
+            string name,
             Side side,
             UnitType type,
             int limit,
@@ -74,6 +77,7 @@ namespace Model.Units
             int objcont,
             IList<UnitWeapon> weapons)
         {
+            Name = name;
             Side = side;
 
             Type = type;

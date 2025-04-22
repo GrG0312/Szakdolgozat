@@ -68,6 +68,7 @@
     <Compile Include="Assets\Controllers\InputSystemActions.cs" />
     <Compile Include="Assets\Controllers\Objects\Game\Billboard\UnitBillboard.cs" />
     <Compile Include="Assets\Controllers\Objects\MenuElement.cs" />
+    <Compile Include="Assets\Controllers\FpsLimiter.cs" />
     <Compile Include="Assets\Controllers\Objects\Lobby\UnitAdder.cs" />
     <Compile Include="Assets\Controllers\Objects\Lobby\LobbyPlayerObject.cs" />
     <Compile Include="Assets\Controllers\Data\SelectedUnitData.cs" />
@@ -77,7 +78,7 @@
     <Compile Include="Assets\Controllers\BaseController.cs" />
     <Compile Include="Assets\Controllers\Data\InterSceneData.cs" />
     <Compile Include="Assets\Controllers\Objects\Game\InfoPanel\WeaponPanel.cs" />
-    <Compile Include="Assets\Controllers\Objects\Game\GamePlayerObject.cs" />
+    <Compile Include="Assets\Controllers\Objects\Game\CameraObject.cs" />
     <Compile Include="Assets\Controllers\GameController.cs" />
     <Compile Include="Assets\Controllers\Objects\Game\UnitController.cs" />
     <Compile Include="Assets\Controllers\Objects\Game\Purchase\UnitPurchaser.cs" />

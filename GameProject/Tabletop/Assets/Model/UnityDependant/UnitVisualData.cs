@@ -1,14 +1,12 @@
-﻿namespace Model.Units
+﻿namespace Model.UnityDependant
 {
     public class UnitVisualData
     {
-        public string UnitName { get; }
         public string UnitProfileSprite { get; }
         public string UnitFullSprite { get; }
 
-        public UnitVisualData(string name, string spritePath, string unitFullSprite)
+        public UnitVisualData(string spritePath, string unitFullSprite)
         {
-            UnitName = name;
             UnitProfileSprite = spritePath;
             UnitFullSprite = unitFullSprite;
         }

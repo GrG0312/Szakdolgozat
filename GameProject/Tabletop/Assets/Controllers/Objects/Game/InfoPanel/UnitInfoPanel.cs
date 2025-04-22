@@ -25,7 +25,7 @@ namespace Controllers.Objects.Game.InfoPanel
         public void UpdateValues(SelectedUnitData data)
         {
             UnitIdentifier id = (UnitIdentifier)data.UnitIdentifier;
-            unitName.text = Defines.UnitVisuals[id].UnitName;
+            unitName.text = Defines.UnitValues[id].Name;
             canMove.text = data.CanUnitMove ? "<color=green>Yes</color>" : "<color=red>No</color>";
             movement.text = Defines.UnitValues[id].Movement.ToString();
             armorsave.text = Defines.UnitValues[id].ArmorSave.ToString() + "+";

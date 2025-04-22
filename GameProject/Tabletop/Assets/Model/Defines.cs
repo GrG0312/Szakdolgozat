@@ -77,6 +77,7 @@ namespace Model
             {
                 UnitIdentifier.Kriegsman,
                 new UnitConstants(
+                    "Kriegsman",
                     Side.Imperium,
                     UnitType.LightInfantry,
                     16, // max: 36
@@ -94,6 +95,7 @@ namespace Model
             {
                 UnitIdentifier.TacticalMarine,
                 new UnitConstants(
+                    "Imperial Tactical Marine",
                     Side.Imperium,
                     UnitType.HeavyInfantry,
                     8, // max: 12
@@ -111,6 +113,7 @@ namespace Model
             {
                 UnitIdentifier.MarineCaptain,
                 new UnitConstants(
+                    "Imperial Marine Captain",
                     Side.Imperium,
                     UnitType.SpecialCharacter,
                     1, // max: 3
@@ -128,6 +131,7 @@ namespace Model
             {
                 UnitIdentifier.Baneblade,
                 new UnitConstants(
+                    "Baneblade Battle Tank",
                     Side.Imperium,
                     UnitType.Tank,
                     2, // max: 2 (3)
@@ -147,6 +151,7 @@ namespace Model
             {
                 UnitIdentifier.Ballistus,
                 new UnitConstants(
+                    "Ballistus-class Dreadnaught",
                     Side.Imperium,
                     UnitType.Warmachine,
                     3, // max: 3
@@ -168,6 +173,7 @@ namespace Model
             {
                 UnitIdentifier.ChaosCultist,
                 new UnitConstants(
+                    "Chaos Cultist mob",
                     Side.Chaos,
                     UnitType.LightInfantry,
                     25, // max: 40 (6)
@@ -185,6 +191,7 @@ namespace Model
             {
                 UnitIdentifier.ChaosLegionnaire,
                 new UnitConstants(
+                    "Chaos Legionnaire",
                     Side.Chaos,
                     UnitType.HeavyInfantry,
                     8, // max: 12
@@ -202,6 +209,7 @@ namespace Model
             {
                 UnitIdentifier.ChaosLord,
                 new UnitConstants(
+                    "Chaos Lord",
                     Side.Chaos,
                     UnitType.SpecialCharacter,
                     1, // max: 3
@@ -219,6 +227,7 @@ namespace Model
             {
                 UnitIdentifier.Predator,
                 new UnitConstants(
+                    "Predator (Chaos)",
                     Side.Chaos,
                     UnitType.Tank,
                     4, // max: 6 (3)
@@ -237,6 +246,7 @@ namespace Model
             {
                 UnitIdentifier.Forgefiend,
                 new UnitConstants(
+                    "Forgefiend",
                     Side.Chaos,
                     UnitType.Warmachine,
                     4, // max: 4 (3)

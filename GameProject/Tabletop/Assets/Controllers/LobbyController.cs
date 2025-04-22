@@ -35,11 +35,15 @@ namespace Controllers
         [SerializeField] private UnitAdder adderObject;
         #endregion
 
+        #region Fields
+
         private List<LobbyPlayerObject> clientSlots;
         private LobbyModel<ulong> lobbyModel;
         private List<UnitAdder> unitAdders;
 
         private Coroutine currentErrorMessage;
+
+        #endregion
 
         #region Lobby setup - Create, Join, Leave
         public void CreateSession()
@@ -235,7 +239,6 @@ namespace Controllers
             targetSlot.GetComponent<NetworkObject>().ChangeOwnership(clientId);
 
             lobbyModel.ReassignPlayerToSlot(clientId, targetSlotId);
-            lobbyModel.ResetDeckOfPlayer(clientId);
 
             SideDataDelivery_ClientRpc(targetSlot.SlotModel.Side, RpcTarget.Single(clientId, RpcTargetUse.Temp));
         }

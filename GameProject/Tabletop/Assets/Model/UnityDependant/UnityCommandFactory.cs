@@ -10,15 +10,15 @@ namespace Model.UnityDependant
 {
     public class UnityCommandFactory : ICommandFactory
     {
-        private Dictionary<Type, Func<object[], IUnitCommand>> creationCommands;
+        private Dictionary<Type, Func<object[], IGameCommand>> creationCommands;
 
         public UnityCommandFactory()
         {
-            creationCommands = new Dictionary<Type, Func<object[], IUnitCommand>>();
+            creationCommands = new Dictionary<Type, Func<object[], IGameCommand>>();
 
             creationCommands[typeof(MoveCommand<Vector3>)]
                 // MoveCommand: selectedUnit, {targetLocation}
-                = args => new MoveCommand<Vector3>((IMovable<Vector3>)args[0], (Vector3)args[1]);
+                = args => new MoveCommand<Vector3>((IMoveable<Vector3>)args[0], (Vector3)args[1]);
 
             creationCommands[typeof(AttackCommand<Vector3>)]
                 // AttackCommand : selectedUnit, {targetUnit}, roller
@@ -39,9 +39,9 @@ namespace Model.UnityDependant
                 };
         }
 
-        public IUnitCommand Produce<T>(params object[] args) where T : IUnitCommand
+        public IGameCommand Produce<T>(params object[] args) where T : IGameCommand
         {
-            if (creationCommands.TryGetValue(typeof(T), out Func<object[], IUnitCommand> func))
+            if (creationCommands.TryGetValue(typeof(T), out Func<object[], IGameCommand> func))
             {
                 object[] arr = FlattenArray(args).ToArray(); // flatten the array becasue in the model we also get a params object[] args
                 return func(arr);

@@ -4,7 +4,7 @@
     /// Represents an object which can move in the world
     /// </summary>
     /// <typeparam name="WorldPositionType">The type used by the implementing platform to identify a position in the world</typeparam>
-    public interface IMovable<WorldPositionType> : IMapObject<WorldPositionType>
+    public interface IMoveable<WorldPositionType> : IMapObject<WorldPositionType>
     {
         public bool CanMove { get; set; }
 

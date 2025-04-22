@@ -26,13 +26,14 @@ using UnityEngine.SceneManagement;
 
 namespace Controllers
 {
+#nullable enable
     public sealed class GameController : MenuControllerBase<GameController>
     {
         private const int MAX_CLICK_DISTANCE = 100;
 
         #region Serializations
 
-        [SerializeField] private GamePlayerObject gamePlayerObjectPrefab;
+        [SerializeField] private CameraObject cameraObjectPrefab;
         [SerializeField] private List<GameObject> spawnpoints;
         [SerializeField] private List<ControlPointController> controlPoints;
         [SerializeField] private UnitModel unitPrefab;
@@ -75,10 +76,10 @@ namespace Controllers
         private bool purchaseToggled = false;
         private bool leaveToggled = false;
 
-        private GamePlayerObject gamePlayerObject;
+        private CameraObject cameraObject;
         private GameModel<ulong> gameModel;
 
-        private TaskCompletionSource<WeaponIdentifier> orderTaskSource;
+        private TaskCompletionSource<WeaponIdentifier>? orderTaskSource;
 
         public Dictionary<ulong, string> UserColors { get; private set; }
 
@@ -145,8 +146,8 @@ namespace Controllers
 
             if (NetworkManager.Singleton.IsHost)
             {
-                gamePlayerObject = Instantiate(gamePlayerObjectPrefab);
-                gamePlayerObject.NetworkObject.Spawn(true);
+                cameraObject = Instantiate(cameraObjectPrefab);
+                cameraObject.NetworkObject.Spawn(true);
 
                 throwPanel.RegisterThrower(diceRoller);
 
@@ -173,7 +174,7 @@ namespace Controllers
                 SetupPurchasers();
                 SetupColors();
 
-                gamePlayerObject.NetworkObject.ChangeOwnership(gameModel.ActivePlayerId);
+                cameraObject.NetworkObject.ChangeOwnership(gameModel.ActivePlayerId);
 
                 gameModel.StartGame();
                 ForceUpdate_ClientRpc(PlayerNameNetVar.Value, TurnCounterNetVar.Value, PhaseNetVar.Value);
@@ -272,7 +273,7 @@ namespace Controllers
             {
                 return;
             }
-            gamePlayerObject.StartMoving(x, y);
+            cameraObject.StartMoving(x, y);
         }
 
 
@@ -289,7 +290,7 @@ namespace Controllers
             {
                 return;
             }
-            gamePlayerObject.StopMoving();
+            cameraObject.StopMoving();
         }
 
         #endregion
@@ -360,7 +361,7 @@ namespace Controllers
         [Rpc(SendTo.Server)]
         private void SelectUnit_ServerRpc(ulong clientId, Vector3 mousepos)
         {
-            Ray ray = gamePlayerObject.AttachedCamera.ScreenPointToRay(mousepos);
+            Ray ray = cameraObject.AttachedCamera.ScreenPointToRay(mousepos);
 
             // If the click hit a Unit
             if (Physics.Raycast(ray, out RaycastHit hit, MAX_CLICK_DISTANCE, unitLayer))
@@ -383,7 +384,7 @@ namespace Controllers
         {
             if (gameModel.SelectedUnit != null)
             {
-                UnitModel m = gameModel.SelectedUnit as UnitModel;
+                UnitModel m = (gameModel.SelectedUnit as UnitModel)!;
                 SelectedWeaponsNetVar.Clear();
                 foreach (UsableWeapon weapon in m.UsableWeapons)
                 {
@@ -439,7 +440,7 @@ namespace Controllers
         private void OrderUnit_ServerRpc(ulong clientId, Vector3 mousepos)
         {
             ShowWeaponSelector_ClientRpc(false, RpcTarget.Single(clientId, RpcTargetUse.Temp));
-            Ray ray = gamePlayerObject.AttachedCamera.ScreenPointToRay(mousepos);
+            Ray ray = cameraObject.AttachedCamera.ScreenPointToRay(mousepos);
             if (Physics.Raycast(ray, out RaycastHit hit, MAX_CLICK_DISTANCE, unitLayer))
             {
                 if (gameModel.CurrentPhase != Phase.Fighting)
@@ -454,7 +455,7 @@ namespace Controllers
                     throwPanel.RegisterDefender(attacked.Constants.ArmorSave);
                     // Create the still incomplete AttackCommand
                     gameModel.CreateCommand<AttackCommand<Vector3>>(clientId, attacked);
-                    AttackCommand<Vector3> cmd = gameModel.PendingCommand as AttackCommand<Vector3>;
+                    AttackCommand<Vector3> cmd = (gameModel.PendingCommand as AttackCommand<Vector3>)!;
                     if (cmd.UsableWeapons.Count == 0)
                     {
                         gameModel.AbortCommand();
@@ -480,7 +481,7 @@ namespace Controllers
                 Vector3 hitLocation = hit.point;
                 // I know this is wacky but as far as I know this is the only way to keep the model clean of any types depending on unity
                 gameModel.CreateCommand<MoveCommand<Vector3>>(clientId, hitLocation);
-                gameModel.ExecuteCommand();
+                _ = gameModel.ExecuteCommand();
             }
         }
 
@@ -503,24 +504,24 @@ namespace Controllers
         {
             WeaponIdentifier id = await WaitForAttackingWeapon(clientId);
             WeaponConstants used = Defines.Weapons[id];
-            AttackCommand<Vector3> cmd = gameModel.PendingCommand as AttackCommand<Vector3>;
+            AttackCommand<Vector3> cmd = (gameModel.PendingCommand as AttackCommand<Vector3>)!;
             cmd.RegisterUsedWeapon(id);
             int weaponCount = cmd.UsableWeapons.Single(w => w.Weapon.Identity == id).Weapon.Count;
             throwPanel.RegisterAttacker(used.Attacks * weaponCount, used.BallisticSkill, used.ArmorPiercing, used.Damage);
 
-            UnitModel m = gameModel.SelectedUnit as UnitModel;
+            UnitModel m = (gameModel.SelectedUnit as UnitModel)!;
 
             wasSpacePressed = false;
 
             SwitchActionMap_ClientRpc(false);
             ShownUI.Value = (int)ScreenType.Throw;
 
-            await gamePlayerObject.MoveToArena();
+            await cameraObject.MoveToArena();
             await gameModel.ExecuteCommand();
             ShowSpaceMessage_ClientRpc(true, RpcTarget.Single(clientId, RpcTargetUse.Temp));
             await WaitUntilSpacePressed();
             ShowSpaceMessage_ClientRpc(false, RpcTarget.Single(clientId, RpcTargetUse.Temp));
-            await gamePlayerObject.MoveToPrevious();
+            await cameraObject.MoveToPrevious();
 
             // Refresh the usable weapons' list. (I cant modify a single element so I have to reload the whole list)
             SelectedWeaponsNetVar.Clear();
@@ -551,7 +552,7 @@ namespace Controllers
         [Rpc(SendTo.Server, RequireOwnership = false)]
         public void AttackingWeaponSelected_ServerRpc(ulong clientId, WeaponIdentifier id)
         {
-            orderTaskSource.SetResult(id);
+            orderTaskSource?.SetResult(id);
         }
 
         private void NetworkScreenChange(int oldvalue, int newvalue)
@@ -625,7 +626,7 @@ namespace Controllers
         private void GameModel_ActivePlayerChanged(object sender, EventArgs e)
         {
             PlayerNameNetVar.Value = $"<color={UserColors[gameModel.ActivePlayerId]}>{gameModel.ActivePlayerData.Name}</color>";
-            gamePlayerObject.NetworkObject.ChangeOwnership(gameModel.ActivePlayerId);
+            cameraObject.NetworkObject.ChangeOwnership(gameModel.ActivePlayerId);
         }
 
         private void GameModel_PhaseChanged(object sender, EventArgs e)
@@ -684,8 +685,8 @@ namespace Controllers
             {
                 return;
             }
-            UnitModel m = gameModel.SelectedUnit as UnitModel;
-            gamePlayerObject.transform.position = m.Position;
+            UnitModel m = (gameModel.SelectedUnit as UnitModel)!;
+            cameraObject.transform.position = m.Position;
         }
 
         #endregion
@@ -731,7 +732,7 @@ namespace Controllers
             {
                 if (gameModel.SelectedUnit != null)
                 {
-                    UnitModel m = gameModel.SelectedUnit as UnitModel;
+                    UnitModel m = (gameModel.SelectedUnit as UnitModel)!;
                     Vector3 pos = m.Position;
                     RangeIndicatorPosition_ClientRpc(pos);
                 }
@@ -779,9 +780,9 @@ namespace Controllers
         [Rpc(SendTo.Server)]
         private void ClientLeaves_ServerRpc(ulong clientId)
         {
-            if (gamePlayerObject.OwnerClientId == clientId)
+            if (cameraObject.OwnerClientId == clientId)
             {
-                gamePlayerObject.NetworkObject.ChangeOwnership(NetworkManager.Singleton.LocalClientId);
+                cameraObject.NetworkObject.ChangeOwnership(NetworkManager.Singleton.LocalClientId);
             }
             gameModel.Forfeit(clientId);
         }

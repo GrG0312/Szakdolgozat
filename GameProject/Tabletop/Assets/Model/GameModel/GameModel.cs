@@ -8,15 +8,19 @@ using UnityEngine;
 
 namespace Model.GameModel
 {
+    #nullable enable
+
     /// <summary>
-    /// The GameModel is class responsible for handling turn changes, active player changes...
+    /// The main GameModel class of the application.
     /// </summary>
 
-    public sealed class GameModel<PlayerIdType> where PlayerIdType : IComparable<PlayerIdType>
+    public class GameModel<PlayerIdType> where PlayerIdType : IComparable<PlayerIdType>
     {
         private IUnitFactory<PlayerIdType> unitFactory;
         private ICommandFactory commandFactory;
         private IDiceRoller diceRoller;
+
+        private List<ControlPointModel> controlPoints;
 
         #region Events
 
@@ -25,6 +29,7 @@ namespace Model.GameModel
         /// This event fires after any player's points have been altered.
         /// </summary>
         public event EventHandler<PlayerPointsChangedEventArgs<PlayerIdType>>? PlayerPointsChanged;
+
         /// <summary>
         /// This event fires after <see cref="TurnCounter"/> is modified.
         /// </summary>
@@ -35,10 +40,19 @@ namespace Model.GameModel
         /// </summary>
         public event EventHandler? PhaseChanged;
 
+        /// <summary>
+        /// This event fires when a new value is assigned to <see cref="SelectedUnit"/>
+        /// </summary>
         public event EventHandler? SelectedUnitChanged;
 
+        /// <summary>
+        /// This event fires if at the end of a turn every conidition implemented in <see cref="IsGameOver(out Side)"/> is fulfilled.
+        /// </summary>
         public event EventHandler<Side>? GameOver;
 
+        /// <summary>
+        /// This event fires when a user cycled to the next available unit.
+        /// </summary>
         public event EventHandler? UnitCycled;
 
         #endregion
@@ -144,24 +158,24 @@ namespace Model.GameModel
 
         #region Command
 
-        private History<IUnitCommand> commandHistory;
+        private History<IGameCommand> commandHistory;
 
-        public IUnitCommand? PendingCommand { get; private set; }
+        public IGameCommand? PendingCommand { get; private set; }
 
         #endregion
 
-        private List<ControlPointModel> controlPoints;
-
         #region Constructor
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         public GameModel(
+#pragma warning restore CS8618
             Dictionary<PlayerIdType, GamePlayerData> players, 
             IUnitFactory<PlayerIdType> ufactory, 
             ICommandFactory cfactory, 
             IDiceRoller diceRoller, 
             IEnumerable<ControlPointModel> controlpoints)
         {
-            commandHistory = new History<IUnitCommand>();
+            commandHistory = new History<IGameCommand>();
             ConnectedPlayers = new Dictionary<PlayerIdType, GamePlayerData>(players);
             foreach (GamePlayerData player in ConnectedPlayers.Values)
             {
@@ -183,6 +197,9 @@ namespace Model.GameModel
 
         #region Turn manipulation
 
+        /// <summary>
+        /// Starts the game by setting the first active player, the turn counter, and assigning the necessary points upon gamestart.
+        /// </summary>
         public void StartGame()
         {
             ActivePlayerId = ConnectedPlayers.First().Key;
@@ -195,6 +212,9 @@ namespace Model.GameModel
             }
         }
 
+        /// <summary>
+        /// With this method, a player can leave the game early. This will delete his units and if he was the active player moves onto the next player.
+        /// </summary>
         public void Forfeit(PlayerIdType id)
         {
             ConnectedPlayers[id].Forfeit();
@@ -325,7 +345,7 @@ namespace Model.GameModel
 
         private void Player_PointsChanged(object sender, EventArgs e)
         {
-            GamePlayerData data = sender as GamePlayerData;
+            GamePlayerData data = (sender as GamePlayerData)!;
             PlayerIdType id = ConnectedPlayers.Single(kvp => kvp.Value == data).Key;
             PlayerPointsChanged?.Invoke(this, new PlayerPointsChangedEventArgs<PlayerIdType>(id, data.Currency, data.PointsGainedPerTurn));
         }
@@ -349,7 +369,7 @@ namespace Model.GameModel
             return false;
         }
 
-        public void SelectUnit(PlayerIdType id, ISelectable<PlayerIdType> unit)
+        public void SelectUnit(PlayerIdType id, ISelectable<PlayerIdType>? unit)
         {
             if (!IsCurrentPlayer(id))
             {
@@ -369,7 +389,7 @@ namespace Model.GameModel
             // If the selected is not null and it's owned by the player, then select a new unit after this one
             if (SelectedUnit != null && SelectedUnit.Owner.CompareTo(id) == 0)
             {
-                found = ActivePlayerData.Cycle(CurrentPhase, SelectedUnit as IUnit);
+                found = ActivePlayerData.Cycle(CurrentPhase, (SelectedUnit as IUnit)!);
             }
             // If not, then just select the first available
             else
@@ -399,7 +419,7 @@ namespace Model.GameModel
 
         #region Commands
 
-        public void CreateCommand<T>(PlayerIdType id, params object[] args) where T : IUnitCommand
+        public void CreateCommand<T>(PlayerIdType id, params object[] args) where T : IGameCommand
         {
             // AttackCommand : id, {targetUnit}
             // MoveCommand: id, {targetLocation}
@@ -412,6 +432,10 @@ namespace Model.GameModel
 
         public async Task ExecuteCommand()
         {
+            if (PendingCommand == null)
+            {
+                return;
+            }
             if (PendingCommand.CanExecute(CurrentPhase))
             {
                 await PendingCommand.Execute();
@@ -450,7 +474,7 @@ namespace Model.GameModel
 
         private void ControlPointOwnerChanged(object sender, int oldvalue)
         {
-            ControlPointModel m = sender as ControlPointModel;
+            ControlPointModel m = (sender as ControlPointModel)!;
             if (oldvalue != -1)
             {
                 Side oldowner = (Side)oldvalue;

@@ -13,8 +13,10 @@ using UnityEngine.AI;
 
 namespace Model.UnityDependant
 {
+#nullable enable
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public class UnitModel : NetworkBehaviour, 
-        IUnit, ISelectable<ulong>, IMovable<Vector3>, IDamageable<Vector3>, IArmored, IUsable, IWeaponUser<Vector3>
+        IUnit, ISidedObject, ISelectable<ulong>, IMoveable<Vector3>, IDamageable<Vector3>, IArmored, IUsable, IWeaponUser<Vector3>, IDisposable
     {
         #region Serializations
         [SerializeField] private LayerMask navigableLayer;
@@ -27,7 +29,7 @@ namespace Model.UnityDependant
 
         public bool CanTarget(IDamageable<Vector3> d)
         {
-            if (d.Side == this.Side)
+            if (d is ISidedObject s && s.Side == this.Side)
             {
                 return false;
             }
@@ -80,7 +82,7 @@ namespace Model.UnityDependant
             this.gameObject.layer = ignore;
         }
 
-        public void Delete()
+        public void Dispose()
         {
             Destroy(this.gameObject);
         }

@@ -23,7 +23,7 @@ namespace Controllers.Objects.Game.Billboard
             try
             {
                 // Get the camera's position
-                Vector3 target = GamePlayerObject.Instance.GetCameraPosition();
+                Vector3 target = CameraObject.Instance.GetCameraPosition();
                 // Set the height to the my height
                 target.y = transform.position.y;
                 // Look at the targeted position

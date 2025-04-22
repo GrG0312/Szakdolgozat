@@ -9,7 +9,7 @@ namespace Model.GameModel.Commands
     /// <summary>
     /// This class represents a command where a unit attacks an other with a specified weapon
     /// </summary>
-    public class AttackCommand<WorldPositionType> : IUnitCommand
+    public class AttackCommand<WorldPositionType> : IGameCommand
     {
         /// <summary>
         /// The Unit who starts the attacking

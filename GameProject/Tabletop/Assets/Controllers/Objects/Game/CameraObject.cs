@@ -6,12 +6,19 @@ using UnityEngine.InputSystem;
 
 namespace Controllers.Objects.Game
 {
-    public class GamePlayerObject : NetworkBehaviour
+    public class CameraObject : NetworkBehaviour
     {
         #region Static
+        public static CameraObject Instance { get; private set; }
 
-        public static GamePlayerObject Instance { get; private set; }
+        private const float MOVE_TIME = 1f;
+        private static readonly Vector3 ARENA_POSITION = new Vector3(190,0,50);
+        private static readonly Quaternion ARENA_ROTATION = new Quaternion(0, 0.707f, 0, 0.707f);
 
+        private const int MIN_X = 0;
+        private const int MAX_X = 100;
+        private const int MIN_Z = 0;
+        private const int MAX_Z = 100;
         #endregion
 
         #region Serializations
@@ -21,9 +28,6 @@ namespace Controllers.Objects.Game
 
         #endregion
 
-        private const float MOVE_TIME = 1f;
-        private static readonly Vector3 ARENA_POSITION = new Vector3(50,95,-19);
-        private static readonly Quaternion ARENA_ROTATION = new Quaternion(0, 1, 0, 0);
 
         private Vector3 prevPosition;
         public Camera AttachedCamera { get => attachedCamera; }
@@ -39,7 +43,7 @@ namespace Controllers.Objects.Game
         {
             if (Instance != null)
             {
-                Debug.LogWarning($"Multiple {nameof(GamePlayerObject)} instances found. Deleting duplicate...");
+                Debug.LogWarning($"Multiple {nameof(CameraObject)} instances found. Deleting duplicate...");
                 Destroy(Instance.gameObject);
             }
             else
@@ -49,6 +53,34 @@ namespace Controllers.Objects.Game
 
             attachedCamera.transform.LookAt(transform);
 
+        }
+
+        private void FixedUpdate()
+        {
+            Vector3 clampedPosition = new Vector3(
+                Mathf.Clamp(rb.position.x, MIN_X, MAX_X),
+                Mathf.Clamp(rb.position.z, MIN_Z, MAX_Z)
+            );
+
+            // If position was clamped, adjust velocity
+            if (rb.position != clampedPosition)
+            {
+                rb.MovePosition(clampedPosition);
+
+                // Cancel velocity in the direction we hit the boundary
+                if (rb.position.x == clampedPosition.x)
+                {
+                    rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, rb.linearVelocity.z);
+                }
+                if (rb.position.y == clampedPosition.y)
+                {
+                    rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+                }
+                if (rb.position.z == clampedPosition.z)
+                {
+                    rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y, 0);   
+                }
+            }
         }
         #endregion
 
@@ -100,6 +132,7 @@ namespace Controllers.Objects.Game
             // just to ensure exact values
             transform.position = targetPos;
             transform.rotation = targetRot;
+            return;
         }
         #endregion
 

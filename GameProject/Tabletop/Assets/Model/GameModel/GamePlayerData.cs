@@ -8,6 +8,10 @@ using UnityEngine;
 
 namespace Model.GameModel
 {
+#nullable enable
+    /// <summary>
+    /// Stores a single player's data, and implements logic for currency handling, leaving the game, unit purchasing
+    /// </summary>
     public class GamePlayerData
     {
         #region Data coming from lobby
@@ -67,8 +71,10 @@ namespace Model.GameModel
                 {
                     unitsInPlay.Remove(unit);
                 }
-                IDamageable d = unit as IDamageable;
-                d.Delete();
+                if (unit is IDisposable d)
+                {
+                    d.Dispose();
+                }
             }
             toBeDestroyed.Clear();
 
@@ -76,8 +82,10 @@ namespace Model.GameModel
             {
                 foreach (IUnit unit in unitsInPlay)
                 {
-                    IDamageable d = unit as IDamageable;
-                    d.Delete();
+                    if (unit is IDisposable d)
+                    {
+                        d.Dispose();
+                    }
                 }
                 unitsInPlay.Clear();
             }
@@ -181,7 +189,7 @@ namespace Model.GameModel
 
         #endregion
 
-        #region Units
+        #region Unit methods
 
         public bool BuyUnit(UnitIdentifier identity)
         {
@@ -202,8 +210,10 @@ namespace Model.GameModel
 
         public void GetUnit(IUnit unit)
         {
-            IDamageable d = unit as IDamageable;
-            d.UnitDestroyed += UnitDestroyed;
+            if (unit is IDamageable d)
+            {
+                d.UnitDestroyed += UnitDestroyed;
+            }
             unitsInPlay.Add(unit);
         }
 
@@ -223,8 +233,10 @@ namespace Model.GameModel
             IsConnected = false;
             foreach (IUnit unit in unitsInPlay)
             {
-                IDamageable d = unit as IDamageable;
-                d.Die();
+                if (unit is IDamageable d)
+                {
+                    d.Die();
+                }
             }
         }
     }

@@ -1,15 +1,22 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Model.Deck;
-using System;
-using Unity.Properties;
 
 namespace Model.Lobby
 {
+#nullable enable
+    /// <summary>
+    /// This exception will be thrown if there is an invalid state when trying to start the game.
+    /// </summary>
     public class StartException : Exception 
     { 
         public StartException(string message) : base(message) { }
     }
+
+    /// <summary>
+    /// The main model class for the lobby. Contains logic for adding or removing a player, player chaging slots etc.
+    /// </summary>
+    /// <typeparam name="PlayerIdType">The type which with the player's are represented</typeparam>
     public class LobbyModel<PlayerIdType> where PlayerIdType : IEquatable<PlayerIdType>
     {
         public const int LOBBY_SIZE = 4;
@@ -58,6 +65,7 @@ namespace Model.Lobby
             LobbySlot oldSlot = LobbySlots.Single(slot => slot.PlayerData == data);
             oldSlot.PlayerData = null;
             LobbySlots[slotid].PlayerData = data;
+            data.Deck.Clear();
         }
 
         public bool ReserveEmptySlot()
@@ -95,11 +103,10 @@ namespace Model.Lobby
 
         #endregion
 
-        public void ResetDeckOfPlayer(PlayerIdType id)
-        {
-            ConnectedClients[id].Deck.Clear();
-        }
-
+        /// <summary>
+        /// Returns the slot whose <see cref="LobbySlot.PlayerData"/> equals the player's data object.
+        /// Returns null if there is no such slot.
+        /// </summary>
         public LobbySlot? GetSlotOfPlayer(PlayerIdType id)
         {
             try
@@ -112,7 +119,7 @@ namespace Model.Lobby
             }
         }
 
-        public bool AreTeamsEqual()
+        private bool AreTeamsEqual()
         {
             int shouldBe = -1;
             foreach (Side side in Enum.GetValues(typeof(Side)))

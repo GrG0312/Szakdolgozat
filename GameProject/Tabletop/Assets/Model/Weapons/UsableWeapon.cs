@@ -1,19 +1,13 @@
 ﻿using Model.GameModel;
 using Model.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace Model.Weapons
 {
-    public class UsableWeapon : IDamageDealer, IUsable, IRanged<int>
+    public class UsableWeapon : IDamageDealer, IUsable
     {
         public bool CanDamage { get; set; }
-
-        public int Range { get => Weapon.Constants.Range; }
 
         public UnitWeapon Weapon { get; }
 

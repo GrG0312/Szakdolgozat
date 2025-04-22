@@ -37,7 +37,7 @@ namespace Model.UnityDependant
 
         private List<GameObject> diceList = new List<GameObject>();
 
-        public List<Action<int[]>> Listeneres = new List<Action<int[]>>();
+        public event EventHandler<int[]> RollComplete;
 
         #region Rolling
         public async Task<int[]> RollDice(int diceCount)
@@ -45,7 +45,7 @@ namespace Model.UnityDependant
             int[] values = new int[diceCount];
             if (diceCount == 0)
             {
-                NotifyListeners(values);
+                RollComplete.Invoke(this, values);
                 return values;
             }
 
@@ -94,7 +94,7 @@ namespace Model.UnityDependant
             {
                 values[i] = GetDiceValue(diceList[i]);
             }
-            NotifyListeners(values);
+            RollComplete.Invoke(this, values);
             
             // For some visual delay to process the results
             await Task.Delay(DELAY_MILISECONDS);
@@ -142,13 +142,6 @@ namespace Model.UnityDependant
             return faceDirectionValues.ElementAt(maxIndex).Value;
         }
 
-        private void NotifyListeners(int[] results)
-        {
-            foreach (Action<int[]> listener in Listeneres)
-            {
-                listener(results);
-            }
-        }
         #endregion
     }
 }

@@ -8,7 +8,7 @@ namespace Model.Interfaces
 {
 
     /// <summary>
-    /// An interface for objects which can be played on the map in-game.
+    /// An interface for objects which can be placed on the map in-game.
     /// </summary>
     /// <typeparam name="WorldPositionType">The type used by the implementing platform to identify a position in the world</typeparam>
     public interface IMapObject<WorldPositionType>

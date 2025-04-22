@@ -1,10 +1,5 @@
-﻿using Model.Units;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
+using Model.UnityDependant;
 
 namespace Controllers.Objects.Game.Billboard
 {
@@ -23,7 +18,7 @@ namespace Controllers.Objects.Game.Billboard
         private void FixedUpdate()
         {
             // Get the camera's position
-            Vector3 target = GamePlayerObject.Instance.GetCameraPosition();
+            Vector3 target = CameraObject.Instance.GetCameraPosition();
             // Set the height to the my height
             target.y = transform.position.y;
             // Look at the targeted position

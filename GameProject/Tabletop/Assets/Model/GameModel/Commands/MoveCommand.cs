@@ -10,11 +10,11 @@ namespace Model.GameModel.Commands
     public class MoveCommand<WorldPositionType> : IUndoableCommand
     {
         public Phase ExecutingPhase { get; }
-        public IMovable<WorldPositionType> TargetUnit { get; private set; }
+        public IMoveable<WorldPositionType> TargetUnit { get; private set; }
         public WorldPositionType StartPosition { get; private set; }
         public WorldPositionType EndLocation { get; private set; }
 
-        public MoveCommand(IMovable<WorldPositionType> unit, WorldPositionType end)
+        public MoveCommand(IMoveable<WorldPositionType> unit, WorldPositionType end)
         {
             TargetUnit = unit;
             StartPosition = unit.Position;

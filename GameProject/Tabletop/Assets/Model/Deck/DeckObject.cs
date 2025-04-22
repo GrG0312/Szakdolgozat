@@ -4,6 +4,9 @@ using Model.Units;
 
 namespace Model.Deck
 {
+    /// <summary>
+    /// An object that represent a single deck. Contains the entries of units and implements logic for modifying the storing list.
+    /// </summary>
     public class DeckObject
     {
         public List<DeckEntry> Entries { get; private set; }
@@ -13,6 +16,12 @@ namespace Model.Deck
             Entries = new List<DeckEntry>();
         }
 
+        /// <summary>
+        /// Checks if it is possible to add an other unit to the deck. 
+        /// If so, then creates a new entry if the unit is not already added,
+        /// or increments the existing entry's <see cref="DeckEntry.Amount"/> property.
+        /// </summary>
+        /// <returns>The final number of units</returns>
         public int Add(UnitIdentifier identity)
         {
             // Lin Search
@@ -43,6 +52,12 @@ namespace Model.Deck
             return entry.Amount;
         }
 
+        /// <summary>
+        /// Tries to remove a unit from the deck.
+        /// If the deck contains the unit, it decrements the existing entry's <see cref="DeckEntry.Amount"/> property.
+        /// Otherwise returns zero.
+        /// </summary>
+        /// <returns>The remaining number of units in the deck.</returns>
         public int Remove(UnitIdentifier identity)
         {
             // Lin Search

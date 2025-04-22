@@ -62,7 +62,6 @@
     <Analyzer Include="D:\Unity\Editor\6000.0.24f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Model\Units\ArmorType.cs" />
     <Compile Include="Assets\Model\Interfaces\IOwned.cs" />
     <Compile Include="Assets\Model\Weapons\WeaponIdentifier.cs" />
     <Compile Include="Assets\Model\Interfaces\IDamageDealer.cs" />
@@ -70,16 +69,15 @@
     <Compile Include="Assets\Model\GameModel\GamePlayerData.cs" />
     <Compile Include="Assets\Model\UnityDependant\UnityUnitFactory.cs" />
     <Compile Include="Assets\Model\UnityDependant\UnityCommandFactory.cs" />
+    <Compile Include="Assets\Model\Interfaces\IMoveable.cs" />
     <Compile Include="Assets\Model\GameModel\Commands\MoveCommand.cs" />
     <Compile Include="Assets\Model\GameModel\ControlPointModel.cs" />
     <Compile Include="Assets\Model\Interfaces\IWeaponUser.cs" />
-    <Compile Include="Assets\Model\Interfaces\IMovable.cs" />
     <Compile Include="Assets\Model\Side.cs" />
     <Compile Include="Assets\Model\Interfaces\IDamageable.cs" />
     <Compile Include="Assets\Model\GameModel\Phase.cs" />
     <Compile Include="Assets\Model\Defines.cs" />
     <Compile Include="Assets\Model\Interfaces\IUnitFactory.cs" />
-    <Compile Include="Assets\Model\Units\UnitVisualData.cs" />
     <Compile Include="Assets\Model\LobbyModel\SlotOccupantStatus.cs" />
     <Compile Include="Assets\Model\GameModel\Commands\AttackCommand.cs" />
     <Compile Include="Assets\Model\Interfaces\IArmored.cs" />
@@ -100,17 +98,17 @@
     <Compile Include="Assets\Model\Weapons\UsableWeapon.cs" />
     <Compile Include="Assets\Model\Interfaces\ICommandFactory.cs" />
     <Compile Include="Assets\Model\Deck\DeckObject.cs" />
-    <Compile Include="Assets\Model\Interfaces\IUnitCommand.cs" />
     <Compile Include="Assets\Model\Weapons\UnitWeapon.cs" />
     <Compile Include="Assets\Model\Units\UnitConstants.cs" />
+    <Compile Include="Assets\Model\Interfaces\IGameCommand.cs" />
     <Compile Include="Assets\Model\UnityDependant\Defines.Unity.cs" />
     <Compile Include="Assets\Model\GameModel\GameModel.cs" />
     <Compile Include="Assets\Model\GameModel\History.cs" />
     <Compile Include="Assets\Model\Interfaces\IUsable.cs" />
+    <Compile Include="Assets\Model\UnityDependant\UnitVisualData.cs" />
     <Compile Include="Assets\Model\Units\UnitType.cs" />
     <Compile Include="Assets\Model\Units\UnitIdentifier.cs" />
     <Compile Include="Assets\Model\CollectionHelper.cs" />
-    <Compile Include="Assets\Model\Interfaces\IRanged.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Model\Model.asmdef" />

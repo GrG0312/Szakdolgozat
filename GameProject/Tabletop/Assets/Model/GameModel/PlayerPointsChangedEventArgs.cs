@@ -1,6 +1,6 @@
 ﻿namespace Model.GameModel
 {
-    public struct PlayerPointsChangedEventArgs<T>
+    public readonly struct PlayerPointsChangedEventArgs<T>
     {
         public readonly T Owner;
         public readonly int Current;

@@ -1,6 +1,9 @@
 ﻿namespace Model.Interfaces
 {
-    public interface IUndoableCommand : IUnitCommand
+    /// <summary>
+    /// A command that can be undone.
+    /// </summary>
+    public interface IUndoableCommand : IGameCommand
     {
         public void Undo();
     }

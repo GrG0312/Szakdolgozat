@@ -2,6 +2,11 @@
 
 namespace Model.Deck
 {
+    /// <summary>
+    /// An entry for a certain unit. 
+    /// Only one entry will should exist for one unit because this includes the <see cref="Amount"/> property,
+    /// which tells how many of this unit have been added to the deck.
+    /// </summary>
     public class DeckEntry
     {
         public DeckEntry(UnitIdentifier target) 
