@@ -4,16 +4,20 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "Model"
+        "Model",
+        "Unity.Netcode.Editor",
+        "Unity.Netcode.Runtime"
     ],
     "includePlatforms": [
         "Editor"
     ],
     "excludePlatforms": [],
-    "allowUnsafeCode": false,
+    "allowUnsafeCode": true,
     "overrideReferences": true,
     "precompiledReferences": [
-        "nunit.framework.dll"
+        "nunit.framework.dll",
+        "Castle.Core.dll",
+        "Moq.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [

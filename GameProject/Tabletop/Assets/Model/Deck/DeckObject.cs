@@ -58,7 +58,7 @@ namespace Model.Deck
         /// Otherwise returns zero.
         /// </summary>
         /// <returns>The remaining number of units in the deck.</returns>
-        public int Remove(UnitIdentifier identity)
+        public int RemoveOne(UnitIdentifier identity)
         {
             // Lin Search
             int index = 0;

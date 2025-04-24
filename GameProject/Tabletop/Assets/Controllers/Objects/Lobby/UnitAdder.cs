@@ -1,6 +1,6 @@
+using Controllers.Data;
 using Model;
 using Model.Units;
-using Model.UnityDependant;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -36,7 +36,7 @@ namespace Controllers.Objects.Lobby
         public void Setup(UnitIdentifier i)
         {
             Identity = i;
-            UnitVisualData data = Defines.UnitVisuals[Identity];
+            UnitVisualData data = ControllerDefines.UnitVisuals[Identity];
             unitName.text = Defines.UnitValues[Identity].Name;
             image.sprite = Resources.Load<Sprite>(data.UnitProfileSprite);
             unitAmount.text = "0";

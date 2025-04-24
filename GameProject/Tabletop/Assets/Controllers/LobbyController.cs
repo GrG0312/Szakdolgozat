@@ -326,7 +326,7 @@ namespace Controllers
         [Rpc(SendTo.Server)]
         public void RemoveUnitFromDeck_ServerRpc(ulong clientId, UnitIdentifier identity)
         {
-            int remaining = lobbyModel.ConnectedClients[clientId].Deck.Remove(identity);
+            int remaining = lobbyModel.ConnectedClients[clientId].Deck.RemoveOne(identity);
             AmountDelivery_ClientRpc(remaining, identity, RpcTarget.Single(clientId, RpcTargetUse.Temp));
         }
         

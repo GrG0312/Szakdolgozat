@@ -15,7 +15,7 @@ namespace Model.UnityDependant
 {
 #nullable enable
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-    public class UnitModel : NetworkBehaviour, 
+    public class UnitModel : MonoBehaviour, 
         IUnit, ISidedObject, ISelectable<ulong>, IMoveable<Vector3>, IDamageable<Vector3>, IArmored, IUsable, IWeaponUser<Vector3>, IDisposable
     {
         #region Serializations
@@ -199,14 +199,7 @@ namespace Model.UnityDependant
         #endregion
 
         #region IOwned
-        public ulong Owner
-        {
-            get { return OwnerClientId; }
-            protected set
-            {
-                this.NetworkObject.ChangeOwnership(value);
-            }
-        }
+        public ulong Owner { get; private set; }
         #endregion
 
         #region ISidedObject
@@ -216,7 +209,9 @@ namespace Model.UnityDependant
         #endregion
 
         #region IUnit
+
         public UnitIdentifier Identity { get; protected set; }
+
         public UnitConstants Constants { get; protected set; }
 
         public void SetStartValues()

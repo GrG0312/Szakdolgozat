@@ -1,23 +1,25 @@
-﻿using Model.Units;
+﻿using Model;
 using Model.Interfaces;
+using Model.Units;
+using Model.UnityDependant;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine;
 
-namespace Model.UnityDependant
+namespace Tests
 {
-    public class UnityUnitFactory : IUnitFactory<ulong>
+    public class TestUnitFactory : IUnitFactory<ulong>
     {
         private readonly Dictionary<Side, Vector3> spawnPoints;
         private UnitModel unitPrefab;
 
-        public UnityUnitFactory(Dictionary<Side, GameObject> sp, UnitModel prefab)
+        public TestUnitFactory(Dictionary<Side, Vector3> sp, UnitModel prefab)
         {
             spawnPoints = new Dictionary<Side, Vector3>();
             unitPrefab = prefab;
-            foreach (KeyValuePair<Side, GameObject> kvp in sp)
+            foreach (KeyValuePair<Side, Vector3> kvp in sp)
             {
-                NavMesh.SamplePosition(kvp.Value.transform.position, out NavMeshHit hit, 500, 1);
+                NavMesh.SamplePosition(kvp.Value, out NavMeshHit hit, 500, 1);
                 spawnPoints.Add(kvp.Key, hit.position);
             }
         }

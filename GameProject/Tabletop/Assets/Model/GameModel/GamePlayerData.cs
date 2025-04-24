@@ -194,7 +194,15 @@ namespace Model.GameModel
         public bool BuyUnit(UnitIdentifier identity)
         {
             int price = Defines.UnitValues[identity].Price;
-            DeckEntry entry = Deck.Entries.Single(entry => entry.TargetUnit == identity);
+            DeckEntry entry;
+            try
+            {
+                entry = Deck.Entries.Single(entry => entry.TargetUnit == identity);
+            }
+            catch (InvalidOperationException) // no unit found
+            {
+                return false;
+            }
             if (Currency >= price && entry.Amount > 0)
             {
                 Currency -= price;

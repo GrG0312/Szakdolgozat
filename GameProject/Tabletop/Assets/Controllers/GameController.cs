@@ -217,11 +217,11 @@ namespace Controllers
                 switch (kvp.Value.Side)
                 {
                     case Side.Imperium:
-                        UserColors.Add(kvp.Key, Defines.BlueColors.ElementAt(blue));
+                        UserColors.Add(kvp.Key, ControllerDefines.BlueColors.ElementAt(blue));
                         blue++;
                         break;
                     case Side.Chaos:
-                        UserColors.Add(kvp.Key, Defines.RedColors.ElementAt(red));
+                        UserColors.Add(kvp.Key, ControllerDefines.RedColors.ElementAt(red));
                         red++;
                         break;
                     default:
@@ -782,6 +782,7 @@ namespace Controllers
         {
             if (cameraObject.OwnerClientId == clientId)
             {
+                // Temporary change to host
                 cameraObject.NetworkObject.ChangeOwnership(NetworkManager.Singleton.LocalClientId);
             }
             gameModel.Forfeit(clientId);
@@ -789,6 +790,7 @@ namespace Controllers
 
         private void BackToMenu(bool didWin)
         {
+            Debug.Log("Did win invoked!");
             ProfileController.Instance.GameFinished(didWin);
             StartCoroutine(ShutdownRoutine());
         }
@@ -815,12 +817,16 @@ namespace Controllers
             // Server side:
             foreach (KeyValuePair<ulong, GamePlayerData> kvp in gameModel.ConnectedPlayers)
             {
-                GameOver_ClientRpc(kvp.Value.Side == e);
+                if (!kvp.Value.IsConnected)
+                {
+                    continue;
+                }
+                GameOver_ClientRpc(kvp.Value.Side == e, RpcTarget.Single(kvp.Key, RpcTargetUse.Temp));
             }
         }
 
-        [Rpc(SendTo.ClientsAndHost)]
-        private void GameOver_ClientRpc(bool didWin)
+        [Rpc(SendTo.SpecifiedInParams)]
+        private void GameOver_ClientRpc(bool didWin, RpcParams param)
         {
             BackToMenu(didWin);
         }

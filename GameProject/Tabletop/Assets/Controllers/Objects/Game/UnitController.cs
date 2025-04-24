@@ -1,13 +1,11 @@
-﻿using Model.UnityDependant;
-using UnityEngine;
-using System;
-using Controllers.Objects.Game.Billboard;
-using Model;
-using Unity.Netcode;
-using Unity.Collections;
+﻿using Controllers.Objects.Game.Billboard;
 using Model.Units;
+using Model.UnityDependant;
+using System;
 using System.Collections.Generic;
-using TMPro;
+using Unity.Collections;
+using Unity.Netcode;
+using UnityEngine;
 
 namespace Controllers.Objects.Game
 {
@@ -37,6 +35,7 @@ namespace Controllers.Objects.Game
 
         private void Awake()
         {
+            this.NetworkObject.Spawn(true);
             selectedIndicator.gameObject.SetActive(false);
 
             model.SetupFinished += Model_SetupFinished;
@@ -60,7 +59,7 @@ namespace Controllers.Objects.Game
         #region Network Variable event handlers
         private void OnIdentityNetworkValueChanged(int oldvalue, int newvalue)
         {
-            billboard.SetupVisuals(Defines.UnitVisuals[(UnitIdentifier)newvalue]);
+            billboard.SetupVisuals(ControllerDefines.UnitVisuals[(UnitIdentifier)newvalue]);
         }
         private void OnColorNetworkValueChanged(FixedString32Bytes oldvalue, FixedString32Bytes newvalue)
         {
@@ -97,6 +96,8 @@ namespace Controllers.Objects.Game
             lineRenderer.startWidth = LineWidth;
             lineRenderer.endWidth = LineWidth;
             lineRenderer.positionCount = 0;
+
+            this.NetworkObject.ChangeOwnership(model.Owner);
         }
 
         private void Model_Selection(object sender, bool e)

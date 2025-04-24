@@ -4,11 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace Model.GameModel
 {
-    #nullable enable
+#nullable enable
 
     /// <summary>
     /// The main GameModel class of the application.
@@ -166,15 +165,14 @@ namespace Model.GameModel
 
         #region Constructor
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         public GameModel(
-#pragma warning restore CS8618
             Dictionary<PlayerIdType, GamePlayerData> players, 
             IUnitFactory<PlayerIdType> ufactory, 
             ICommandFactory cfactory, 
             IDiceRoller diceRoller, 
             IEnumerable<ControlPointModel> controlpoints)
         {
+            activePlayerId = default!;
             commandHistory = new History<IGameCommand>();
             ConnectedPlayers = new Dictionary<PlayerIdType, GamePlayerData>(players);
             foreach (GamePlayerData player in ConnectedPlayers.Values)
@@ -264,7 +262,10 @@ namespace Model.GameModel
             nextIndex = default;
 
             bool found = CollectionHelper.LoopbackSearch(
-                ConnectedPlayers.ToList(), p => !p.Value.IsDefeated && p.Value.IsConnected, indexOfPlayer, out nextIndex);
+                ConnectedPlayers.ToList(), 
+                p => !p.Value.IsDefeated && p.Value.IsConnected, 
+                indexOfPlayer, 
+                out nextIndex);
 
             return found;
         }
@@ -348,6 +349,33 @@ namespace Model.GameModel
             GamePlayerData data = (sender as GamePlayerData)!;
             PlayerIdType id = ConnectedPlayers.Single(kvp => kvp.Value == data).Key;
             PlayerPointsChanged?.Invoke(this, new PlayerPointsChangedEventArgs<PlayerIdType>(id, data.Currency, data.PointsGainedPerTurn));
+        }
+
+        private void ControlPointOwnerChanged(object sender, int oldvalue)
+        {
+            ControlPointModel m = (sender as ControlPointModel)!;
+            if (oldvalue != -1)
+            {
+                Side oldowner = (Side)oldvalue;
+                foreach (GamePlayerData data in ConnectedPlayers.Values)
+                {
+                    if (data.Side == oldowner)
+                    {
+                        data.CapturePoint(true);
+                    }
+                }
+            }
+            if (m.Owner != -1)
+            {
+                Side owner = (Side)m.Owner;
+                foreach (GamePlayerData data in ConnectedPlayers.Values)
+                {
+                    if (data.Side == owner)
+                    {
+                        data.CapturePoint();
+                    }
+                }
+            }
         }
 
         #endregion
@@ -471,33 +499,5 @@ namespace Model.GameModel
         {
             return ActivePlayerId.CompareTo(id) == 0;
         }
-
-        private void ControlPointOwnerChanged(object sender, int oldvalue)
-        {
-            ControlPointModel m = (sender as ControlPointModel)!;
-            if (oldvalue != -1)
-            {
-                Side oldowner = (Side)oldvalue;
-                foreach (GamePlayerData data in ConnectedPlayers.Values)
-                {
-                    if (data.Side == oldowner)
-                    {
-                        data.CapturePoint(true);
-                    }
-                }
-            }
-            if (m.Owner != -1)
-            {
-                Side owner = (Side)m.Owner;
-                foreach (GamePlayerData data in ConnectedPlayers.Values)
-                {
-                    if (data.Side == owner)
-                    {
-                        data.CapturePoint();
-                    }
-                }
-            }
-        }
-
     }
 }

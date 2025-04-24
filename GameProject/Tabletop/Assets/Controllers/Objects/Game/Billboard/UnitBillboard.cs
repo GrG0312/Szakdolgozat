@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Model.UnityDependant;
+using Controllers.Data;
 
 namespace Controllers.Objects.Game.Billboard
 {

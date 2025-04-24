@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PixelRect:
     serializedVersion: 2
-    x: 8
-    y: 51
-    width: 1904
-    height: 973
+    x: 0
+    y: 43
+    width: 1920
+    height: 997
   m_ShowMode: 4
-  m_Title: Project
+  m_Title: Inspector
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
-  m_Maximized: 0
+  m_Maximized: 1
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -44,8 +44,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1904
-    height: 973
+    width: 1920
+    height: 997
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
   m_UseTopView: 1
@@ -69,7 +69,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1904
+    width: 1920
     height: 36
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
@@ -90,8 +90,8 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
-    y: 953
-    width: 1904
+    y: 977
+    width: 1920
     height: 20
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
@@ -114,12 +114,12 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 36
-    width: 1904
-    height: 917
+    width: 1920
+    height: 941
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 105
+  controlID: 82
   draggingID: 0
 --- !u!114 &6
 MonoBehaviour:
@@ -140,12 +140,12 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1384
-    height: 917
+    width: 1396
+    height: 941
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 42
+  controlID: 43
   draggingID: 0
 --- !u!114 &7
 MonoBehaviour:
@@ -166,12 +166,12 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1384
-    height: 590
+    width: 1396
+    height: 605
   m_MinSize: {x: 200, y: 50}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 43
+  controlID: 44
   draggingID: 0
 --- !u!114 &8
 MonoBehaviour:
@@ -190,8 +190,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 331
-    height: 590
+    width: 334
+    height: 605
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 14}
@@ -214,10 +214,10 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 331
+    x: 334
     y: 0
-    width: 1053
-    height: 590
+    width: 1062
+    height: 605
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
@@ -242,9 +242,9 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
-    y: 590
-    width: 1384
-    height: 327
+    y: 605
+    width: 1396
+    height: 336
   m_MinSize: {x: 231, y: 276}
   m_MaxSize: {x: 10001, y: 10026}
   m_ActualView: {fileID: 16}
@@ -271,10 +271,10 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 1384
+    x: 1396
     y: 0
-    width: 520
-    height: 917
+    width: 524
+    height: 941
   m_MinSize: {x: 275, y: 50}
   m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 20}
@@ -321,7 +321,7 @@ MonoBehaviour:
     m_OverlaysVisible: 1
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: 106520
+  m_LastSelectedObjectID: 51008
 --- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -443,10 +443,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Hierarchy\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 8
-    y: 87
-    width: 330
-    height: 564
+    x: 0
+    y: 79
+    width: 333
+    height: 579
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -461,9 +461,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 10070000
+      m_SelectedIDs: 2ad10000
       m_LastClickedID: 0
-      m_ExpandedIDs: aef6ffff
+      m_ExpandedIDs: 5444faffd645faffbc9ffaff04a0faff6ca3fafff8a3faffa8a4faff54b2ffff9cb2ffffa4b5ffffd4b5ffff28b6ffff9cb9ffff30bbfffff6bdffff8cbfffff26c6ffff9cc7ffff68c8ffff00cfffff26d1ffffeed1ffff3cd4ffff06d7ffff3ad9ffff06daffff8ee3ffffaee5ffff8eefffffdefaffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -509,10 +509,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Scene\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 339
-    y: 87
-    width: 1051
-    height: 564
+    x: 334
+    y: 79
+    width: 1060
+    height: 579
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1089,15 +1089,15 @@ MonoBehaviour:
   m_OverrideSceneCullingMask: 6917529027641081856
   m_SceneIsLit: 1
   m_SceneLighting: 1
-  m_2DMode: 1
+  m_2DMode: 0
   m_isRotationLocked: 0
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 795.76434, y: 525.8565, z: 6997.0415}
+    m_Target: {x: 757.2245, y: 402.85886, z: 1102.9939}
     speed: 2
-    m_Value: {x: 795.76434, y: 525.8565, z: 6997.0415}
+    m_Value: {x: 757.2245, y: 402.85886, z: 1102.9939}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1143,17 +1143,17 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0, y: 0, z: 0, w: 1}
+    m_Target: {x: 0.016806245, y: 0.012641991, z: -0.0006166145, w: 1.0001056}
     speed: 2
-    m_Value: {x: 0, y: 0, z: 0, w: 1}
+    m_Value: {x: 0.016800754, y: 0.012637859, z: -0.00061641296, w: 0.9997788}
   m_Size:
-    m_Target: 645.41656
+    m_Target: 1140.2518
     speed: 2
-    m_Value: 645.41656
+    m_Value: 1140.2518
   m_Ortho:
-    m_Target: 1
+    m_Target: 0
     speed: 2
-    m_Value: 1
+    m_Value: 0
   m_CameraSettings:
     m_Speed: 1
     m_SpeedNormalized: 0.5
@@ -1167,7 +1167,7 @@ MonoBehaviour:
     m_FarClip: 10000
     m_DynamicClip: 1
     m_OcclusionCulling: 0
-  m_LastSceneViewRotation: {x: 0.048131727, y: 0.07698642, z: -0.0040986426, w: 0.9961807}
+  m_LastSceneViewRotation: {x: -0.08717229, y: 0.89959055, z: -0.21045254, w: -0.3726226}
   m_LastSceneViewOrtho: 0
   m_Viewpoint:
     m_SceneView: {fileID: 15}
@@ -1201,10 +1201,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Project\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 8
-    y: 677
-    width: 1383
-    height: 301
+    x: 0
+    y: 684
+    width: 1395
+    height: 310
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1227,7 +1227,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Model/GameModel/Commands
+    - Assets/Tests
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1237,16 +1237,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Model/GameModel/Commands
+  - Assets/Tests
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: "C:\\Users\\Gerg\u0151\\Desktop\\Programoz\xE1s\\Szakdolgozat\\GameProject\\Tabletop"
+  m_LastProjectPath: D:\Szakdolgozat\GameProject\Tabletop
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: e8d00000
-    m_LastClickedID: 53480
-    m_ExpandedIDs: 0000000064d00000c8d00000d8d0000000ca9a3b
+    scrollPos: {x: 0, y: 190}
+    m_SelectedIDs: 1ed10000
+    m_LastClickedID: 53534
+    m_ExpandedIDs: 00000000d2ce0000d4ce0000d6ce0000d8ce0000dace0000dcce0000dece0000e0ce00001ed1000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1275,7 +1275,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000064d00000
+    m_ExpandedIDs: 00000000d2ce0000d4ce0000d6ce0000d8ce0000dace0000dcce0000dece0000e0ce0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1354,10 +1354,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Console\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 8
-    y: 677
-    width: 1383
-    height: 301
+    x: 0
+    y: 684
+    width: 1395
+    height: 310
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1428,9 +1428,9 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 613
-    width: 1252
-    height: 381
+    y: 684
+    width: 1395
+    height: 310
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1443,22 +1443,22 @@ MonoBehaviour:
     m_ContainerData: []
     m_OverlaysVisible: 1
   m_Spl:
-    ID: 30496
-    splitterInitialOffset: 0
+    ID: 91
+    splitterInitialOffset: 199
     currentActiveSplitter: -1
     realSizes:
-    - 233
-    - 78
+    - 152
+    - 88
     relativeSizes:
-    - 0.75
-    - 0.25
+    - 0.6333333
+    - 0.36666667
     minSizes:
     - 32
     - 32
     maxSizes:
     - 0
     - 0
-    lastTotalSize: 311
+    lastTotalSize: 240
     splitSize: 6
     xOffset: 0
     m_Version: 1
@@ -1470,7 +1470,7 @@ MonoBehaviour:
   m_TestListGUIs:
   - m_Window: {fileID: 19}
     runProgress:
-      RunGuid: b18ef126-05ff-447b-93c6-fe9869fb07ce
+      RunGuid: e5604be5-a165-4eeb-93e3-cf2605748fea
       ExecutionSettings:
         m_TargetPlatform: 0
         m_HasTargetPlatform: 0
@@ -1497,7 +1497,7 @@ MonoBehaviour:
           disableNestedEnumeratorBugfix: 0
         randomOrderSeed: 0
       HasFinished: 1
-      Progress: 0.9999999
+      Progress: 0.99999994
       CurrentStepName: Unlock Reload Assemblies
       CurrentStageName: 
     m_NewResultList:
@@ -1505,7 +1505,7 @@ MonoBehaviour:
       uniqueId: '[Tabletop][suite]'
       name: Tabletop
       fullName: Tabletop
-      resultStatus: 1
+      resultStatus: 2
       duration: 0
       messages: 
       output: 
@@ -1517,11 +1517,11 @@ MonoBehaviour:
       categories: []
       parentId: 
       parentUniqueId: 
-    - id: 1005
+    - id: 1013
       uniqueId: '[Tests.dll][suite]'
       name: Tests.dll
       fullName: D:/Szakdolgozat/GameProject/Tabletop/Library/ScriptAssemblies/Tests.dll
-      resultStatus: 1
+      resultStatus: 2
       duration: 0
       messages: 
       output: 
@@ -1531,12 +1531,28 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1000
+      parentId: 1019
       parentUniqueId: '[Tabletop][suite]'
-    - id: 1006
+    - id: 1014
       uniqueId: 'Tests.dll/[Tests][suite]'
       name: Tests
       fullName: Tests
+      resultStatus: 2
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1013
+      parentUniqueId: '[Tests.dll][suite]'
+    - id: 1001
+      uniqueId: 'Tests.dll/Tests/[Tests][Tests.DeckTest][suite]'
+      name: DeckTest
+      fullName: Tests.DeckTest
       resultStatus: 1
       duration: 0
       messages: 
@@ -1547,9 +1563,155 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1005
-      parentUniqueId: '[Tests.dll][suite]'
-    - id: 1001
+      parentId: 1014
+      parentUniqueId: 'Tests.dll/[Tests][suite]'
+    - id: 1003
+      uniqueId: 'Tests.dll/Tests/DeckTest/[Tests][Tests.DeckTest.AddMultipleTest]'
+      name: AddMultipleTest
+      fullName: Tests.DeckTest.AddMultipleTest
+      resultStatus: 1
+      duration: 0.0338662
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1001
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.DeckTest][suite]'
+    - id: 1002
+      uniqueId: 'Tests.dll/Tests/DeckTest/[Tests][Tests.DeckTest.AddSingleTest]'
+      name: AddSingleTest
+      fullName: Tests.DeckTest.AddSingleTest
+      resultStatus: 1
+      duration: 0.0019345
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1001
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.DeckTest][suite]'
+    - id: 1003
+      uniqueId: 'Tests.dll/Tests/DeckTest/[Tests][Tests.DeckTest.RemoveTest]'
+      name: RemoveTest
+      fullName: Tests.DeckTest.RemoveTest
+      resultStatus: 1
+      duration: 0.0003257
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1001
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.DeckTest][suite]'
+    - id: 1005
+      uniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+      name: GameModelTest
+      fullName: Tests.GameModelTest
+      resultStatus: 2
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1014
+      parentUniqueId: 'Tests.dll/[Tests][suite]'
+    - id: 1006
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.BuyTest]'
+      name: BuyTest
+      fullName: Tests.GameModelTest.BuyTest
+      resultStatus: 2
+      duration: 0.0418985
+      messages: "  Expected: 0\r\n  But was:  1\r\n"
+      output: 'You are trying to create a MonoBehaviour using the ''new'' keyword. 
+        This is not allowed.  MonoBehaviours can only be added using AddComponent().
+        Alternatively, your script can inherit from ScriptableObject or no base class
+        at all
+
+        transform.position assign attempt for ''unitPrefab(Clone)''
+        is not valid. Input position is { Infinity, Infinity, Infinity }.
+
+'
+      stacktrace: 'at Tests.GameModelTest.BuyTest () [0x00089] in D:\Szakdolgozat\GameProject\Tabletop\Assets\Tests\GameModelTest.cs:54
+
+'
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1003
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1005
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.SelectTest]'
+      name: SelectTest
+      fullName: Tests.GameModelTest.SelectTest
+      resultStatus: 1
+      duration: 0.0046858
+      messages: 
+      output: 'Can''t add component ''Transform'' to Sp2 because such a component
+        is already added to the game object!
+
+        You are trying to create a
+        MonoBehaviour using the ''new'' keyword.  This is not allowed.  MonoBehaviours
+        can only be added using AddComponent(). Alternatively, your script can inherit
+        from ScriptableObject or no base class at all
+
+        You are trying to
+        create a MonoBehaviour using the ''new'' keyword.  This is not allowed. 
+        MonoBehaviours can only be added using AddComponent(). Alternatively, your
+        script can inherit from ScriptableObject or no base class at all
+
+'
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1003
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1004
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.StartGameTest]'
+      name: StartGameTest
+      fullName: Tests.GameModelTest.StartGameTest
+      resultStatus: 1
+      duration: 0.0014093
+      messages: 
+      output: 'You are trying to create a MonoBehaviour using the ''new'' keyword. 
+        This is not allowed.  MonoBehaviours can only be added using AddComponent().
+        Alternatively, your script can inherit from ScriptableObject or no base class
+        at all
+
+'
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1003
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1009
       uniqueId: 'Tests.dll/Tests/[Tests][Tests.HistoryTest][suite]'
       name: HistoryTest
       fullName: Tests.HistoryTest
@@ -1563,14 +1725,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1006
+      parentId: 1014
       parentUniqueId: 'Tests.dll/[Tests][suite]'
     - id: 1004
       uniqueId: 'Tests.dll/Tests/HistoryTest/[Tests][Tests.HistoryTest.DroppingOldestTest]'
       name: DroppingOldestTest
       fullName: Tests.HistoryTest.DroppingOldestTest
       resultStatus: 1
-      duration: 0.0355478
+      duration: 0.0013726
       messages: 
       output: 
       stacktrace: 
@@ -1587,7 +1749,7 @@ MonoBehaviour:
       name: PeekPopTest
       fullName: Tests.HistoryTest.PeekPopTest
       resultStatus: 1
-      duration: 0.0005114
+      duration: 0.0009265
       messages: 
       output: 
       stacktrace: 
@@ -1604,7 +1766,7 @@ MonoBehaviour:
       name: SizeTest
       fullName: Tests.HistoryTest.SizeTest
       resultStatus: 1
-      duration: 0.0001179
+      duration: 0.0001234
       messages: 
       output: 
       stacktrace: 
@@ -1616,13 +1778,22 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1001
       parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.HistoryTest][suite]'
-    m_ResultText: DroppingOldestTest (0,036s)
-    m_ResultStacktrace: 
+    m_ResultText: "BuyTest (0,042s)\n---\n  Expected: 0\r\n  But was:  1\r\n\n---\nat
+      Tests.GameModelTest.BuyTest () [0x00089] in <color=#40a0ff><a href=\"D:\\Szakdolgozat\\GameProject\\Tabletop\\Assets\\Tests\\GameModelTest.cs\"
+      line=\"54\r\">Assets\\Tests\\GameModelTest.cs:54\r</a></color>\n\n---\nYou
+      are trying to create a MonoBehaviour using the 'new' keyword.  This is not
+      allowed.  MonoBehaviours can only be added using AddComponent(). Alternatively,
+      your script can inherit from ScriptableObject or no base class at all\r\ntransform.position
+      assign attempt for 'unitPrefab(Clone)' is not valid. Input position is { Infinity,
+      Infinity, Infinity }."
+    m_ResultStacktrace: 'at Tests.GameModelTest.BuyTest () [0x00089] in D:\Szakdolgozat\GameProject\Tabletop\Assets\Tests\GameModelTest.cs:54
+
+'
     m_TestListState:
-      scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 073a20c0
-      m_LastClickedID: -1071629817
-      m_ExpandedIDs: e557abf7f702fd23c6c1aa2e8359db41ffffff7f
+      scrollPos: {x: 0, y: 44}
+      m_SelectedIDs: 41dc2429
+      m_LastClickedID: 690281537
+      m_ExpandedIDs: 635e12b5e557abf7f702fd238359db4177cfc253ffffff7f
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1652,7 +1823,7 @@ MonoBehaviour:
     m_SelectedOption: 0
   - m_Window: {fileID: 0}
     runProgress:
-      RunGuid: b18ef126-05ff-447b-93c6-fe9869fb07ce
+      RunGuid: e5604be5-a165-4eeb-93e3-cf2605748fea
       ExecutionSettings:
         m_TargetPlatform: 0
         m_HasTargetPlatform: 0
@@ -1679,7 +1850,7 @@ MonoBehaviour:
           disableNestedEnumeratorBugfix: 0
         randomOrderSeed: 0
       HasFinished: 1
-      Progress: 0.9999999
+      Progress: 0.99999994
       CurrentStepName: Unlock Reload Assemblies
       CurrentStageName: 
     m_NewResultList: []
@@ -1718,7 +1889,7 @@ MonoBehaviour:
     m_SelectedOption: 0
   - m_Window: {fileID: 0}
     runProgress:
-      RunGuid: b18ef126-05ff-447b-93c6-fe9869fb07ce
+      RunGuid: e5604be5-a165-4eeb-93e3-cf2605748fea
       ExecutionSettings:
         m_TargetPlatform: 0
         m_HasTargetPlatform: 0
@@ -1745,7 +1916,7 @@ MonoBehaviour:
           disableNestedEnumeratorBugfix: 0
         randomOrderSeed: 0
       HasFinished: 1
-      Progress: 0.9999999
+      Progress: 0.99999994
       CurrentStepName: Unlock Reload Assemblies
       CurrentStageName: 
     m_NewResultList: []
@@ -1803,10 +1974,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Inspector\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1392
-    y: 87
-    width: 519
-    height: 891
+    x: 1396
+    y: 79
+    width: 523
+    height: 915
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1825,7 +1996,7 @@ MonoBehaviour:
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
   m_LastInspectedObjectInstanceID: -1
-  m_LastVerticalScrollValue: 0
+  m_LastVerticalScrollValue: 510
   m_GlobalObjectId: 
   m_InspectorMode: 0
   m_LockTracker:

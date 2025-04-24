@@ -1,4 +1,4 @@
-﻿namespace Model.UnityDependant
+﻿namespace Controllers.Data
 {
     public class UnitVisualData
     {

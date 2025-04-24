@@ -55,33 +55,6 @@ namespace Controllers.Objects.Game
 
         }
 
-        private void FixedUpdate()
-        {
-            Vector3 clampedPosition = new Vector3(
-                Mathf.Clamp(rb.position.x, MIN_X, MAX_X),
-                Mathf.Clamp(rb.position.z, MIN_Z, MAX_Z)
-            );
-
-            // If position was clamped, adjust velocity
-            if (rb.position != clampedPosition)
-            {
-                rb.MovePosition(clampedPosition);
-
-                // Cancel velocity in the direction we hit the boundary
-                if (rb.position.x == clampedPosition.x)
-                {
-                    rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, rb.linearVelocity.z);
-                }
-                if (rb.position.y == clampedPosition.y)
-                {
-                    rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-                }
-                if (rb.position.z == clampedPosition.z)
-                {
-                    rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y, 0);   
-                }
-            }
-        }
         #endregion
 
         #region Input

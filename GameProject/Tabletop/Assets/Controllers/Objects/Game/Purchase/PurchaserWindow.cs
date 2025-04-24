@@ -1,10 +1,6 @@
-﻿using Model;
-using Model.Units;
-using System;
+﻿using Model.Units;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Controllers.Objects.Game.Purchase
@@ -23,7 +19,7 @@ namespace Controllers.Objects.Game.Purchase
                 purchasers = new List<UnitPurchaser>();
             }
             UnitPurchaser p = Instantiate(purchaserPrefab);
-            Sprite sprite = Resources.Load<Sprite>(Defines.UnitVisuals[id].UnitProfileSprite);
+            Sprite sprite = Resources.Load<Sprite>(ControllerDefines.UnitVisuals[id].UnitProfileSprite);
             p.Setup(id, sprite, amount, price);
             purchasers.Add(p);
             p.transform.SetParent(content.transform);
