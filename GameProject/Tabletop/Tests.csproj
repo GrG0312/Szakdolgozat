@@ -66,8 +66,6 @@
     <Compile Include="Assets\Tests\DeckTest.cs" />
     <Compile Include="Assets\Tests\HistoryTest.cs" />
     <Compile Include="Assets\Tests\GameModelTest.cs" />
-    <Compile Include="Assets\Tests\TestUnitFactory.cs" />
-    <Compile Include="Assets\Tests\FactoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Tests\Plugins\Castle.Core.dll" />

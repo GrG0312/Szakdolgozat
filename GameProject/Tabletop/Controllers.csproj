@@ -62,7 +62,6 @@
     <Analyzer Include="D:\Unity\Editor\6000.0.24f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Controllers\Data\UnitVisualData.cs" />
     <Compile Include="Assets\Controllers\Objects\Game\WeaponSelection\WeaponButton.cs" />
     <Compile Include="Assets\Controllers\Objects\ProfileDisplayer.cs" />
     <Compile Include="Assets\Controllers\Objects\Game\RangeIndicator.cs" />
@@ -74,6 +73,7 @@
     <Compile Include="Assets\Controllers\Objects\Lobby\LobbyPlayerObject.cs" />
     <Compile Include="Assets\Controllers\Data\SelectedUnitData.cs" />
     <Compile Include="Assets\Controllers\Objects\Game\ThrowStatPanel.cs" />
+    <Compile Include="Assets\Controllers\Data\UnitVisualData.cs" />
     <Compile Include="Assets\Controllers\Data\WeaponInfoData.cs" />
     <Compile Include="Assets\Controllers\LobbyController.cs" />
     <Compile Include="Assets\Controllers\BaseController.cs" />
@@ -611,6 +611,14 @@
       <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil\Mono.Cecil.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>Assets\Tests\Plugins\Castle.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>Assets\Tests\Plugins\Moq.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="netstandard">
       <HintPath>D:\Unity\Editor\6000.0.24f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
       <Private>False</Private>
@@ -977,6 +985,10 @@
     </Reference>
     <Reference Include="System.Threading.Tasks">
       <HintPath>D:\Unity\Editor\6000.0.24f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Tasks.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions">
+      <HintPath>D:\Unity\Editor\6000.0.24f1\Editor\Data\NetStandard\compat\2.1.0\shims\netstandard\System.Threading.Tasks.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Threading.Tasks.Parallel">
