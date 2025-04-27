@@ -20,6 +20,6 @@ namespace Model.Interfaces
         /// <summary>
         /// Reset the unit's values to their original values at the beginning of a turn.
         /// </summary>
-        public void SetStartValues();
+        public void ResetToStartValues();
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Controllers.Objects
 {
-    public class ProfileDisplayer : MonoBehaviour
+    public class ProfileView : MonoBehaviour
     {
         [SerializeField] private TMP_InputField nameInput;
         [SerializeField] private TMP_Text gamePlayed;

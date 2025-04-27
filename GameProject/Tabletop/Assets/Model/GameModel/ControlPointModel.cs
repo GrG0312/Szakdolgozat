@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace Model.GameModel
 {
@@ -42,19 +41,14 @@ namespace Model.GameModel
 
         public void ContesterChanged(IUnit contester, bool didArrive)
         {
-            Debug.Log($"<color=aqua>Contester changed, did arrive? {didArrive}</color>");
             if (contester is ISidedObject s)
             {
                 if (didArrive)
                 {
-                    Debug.Log($"<color=aqua>Side's value before the adding: {sideValues[s.Side]}</color>");
                     sideValues[s.Side] += contester.Constants.ObjectiveControl;
-                    Debug.Log($"<color=aqua>Side's value after the adding: {sideValues[s.Side]}</color>");
                 } else
                 {
-                    Debug.Log($"<color=aqua>Side's value before the subtracting: {sideValues[s.Side]}</color>");
                     sideValues[s.Side] -= contester.Constants.ObjectiveControl;
-                    Debug.Log($"<color=aqua>Side's value after the subtracting: {sideValues[s.Side]}</color>");
                 }
                 CalculateControl();
             }
@@ -62,16 +56,13 @@ namespace Model.GameModel
 
         public void CalculateControl()
         {
-            Debug.Log($"<color=aqua>Current owner: {Owner}</color>");
             int max = 0; // zero because there is no guarantee to have units capping the point
             int owner = -1;
             for (int i = 0; i < sideValues.Count; i++)
             {
-                Debug.Log($"<color=aqua>Now evaluating: {sideValues.ElementAt(i).Key}</color>");
                 // If max is lower
                 if (max < sideValues.ElementAt(i).Value)
                 {
-                    Debug.Log($"<color=aqua>Currently selected max: {sideValues.ElementAt(i).Key}</color>");
                     max = sideValues.ElementAt(i).Value;
                     owner = (int)sideValues.ElementAt(i).Key;
                 }
@@ -82,7 +73,6 @@ namespace Model.GameModel
                 owner = Owner;
             }
 
-            Debug.Log($"<color=aqua>Changed owner: {owner}</color>");
             Owner = owner;
         }
     }

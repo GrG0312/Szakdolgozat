@@ -23,7 +23,7 @@ namespace Controllers
 
         #region Serializations
         [SerializeField] private GameObject networkManagerPrefab;
-        [SerializeField] private LobbyPlayerObject playerObjectPrefab;
+        [SerializeField] private LobbySlotController playerObjectPrefab;
 
         [SerializeField] private GameObject playerNamesParent;
         [SerializeField] private GameObject clientViewBlocker;
@@ -37,7 +37,7 @@ namespace Controllers
 
         #region Fields
 
-        private List<LobbyPlayerObject> clientSlots;
+        private List<LobbySlotController> clientSlots;
         private LobbyModel<ulong> lobbyModel;
         private List<UnitAdder> unitAdders;
 
@@ -64,7 +64,7 @@ namespace Controllers
             for (int i = 0; i < LobbyModel<ulong>.LOBBY_SIZE; i++)
             {
                 // 150 is the height
-                LobbyPlayerObject slotobj = Instantiate(playerObjectPrefab);
+                LobbySlotController slotobj = Instantiate(playerObjectPrefab);
                 slotobj.NetworkObject.Spawn(true);
                 slotobj.transform.SetParent(playerNamesParent.transform);
                 clientSlots.Add(slotobj);
@@ -73,7 +73,7 @@ namespace Controllers
 
             lobbyModel = new();
 
-            foreach (LobbyPlayerObject obj in clientSlots)
+            foreach (LobbySlotController obj in clientSlots)
             {
                 // Add slot to model
                 lobbyModel.LobbySlots.Add(obj.SlotModel);
@@ -81,6 +81,7 @@ namespace Controllers
 
             // Assign Host data to slot
             // This adds the Player to the model and assigns it to the first slot
+            lobbyModel.ReserveEmptySlot();
             lobbyModel.AddNewPlayer(NetworkManager.Singleton.LocalClientId, ProfileController.Instance.DisplayName);
             // Change ownership of the slot object, just in case. It can be source for problems
             clientSlots.First().GetComponent<NetworkObject>().ChangeOwnership(NetworkManager.Singleton.LocalClientId);
@@ -172,7 +173,7 @@ namespace Controllers
             LobbySlot slotOfClient = lobbyModel.GetSlotOfPlayer(clientId);
             if (slotOfClient != null) // which shouldnt be
             {
-                LobbyPlayerObject obj = clientSlots.Single(slot => slot.SlotModel == slotOfClient);
+                LobbySlotController obj = clientSlots.Single(slot => slot.SlotModel == slotOfClient);
                 obj.GetComponent<NetworkObject>().RemoveOwnership(); // give back ownership to host
                 lobbyModel.RemovePlayer(clientId);
                 ClientDisconnectFinish_ClientRpc(RpcTarget.Single(clientId, RpcTargetUse.Temp));
@@ -209,7 +210,7 @@ namespace Controllers
             int slotIndex = lobbyModel.FindReservedSlot();
             if (slotIndex != -1) // which it shouldnt be here, under no circumstances
             {
-                LobbyPlayerObject reserved = clientSlots[slotIndex];
+                LobbySlotController reserved = clientSlots[slotIndex];
 
                 reserved.GetComponent<NetworkObject>().ChangeOwnership(clientId);
                 reserved.ForceRefresh();
@@ -232,8 +233,8 @@ namespace Controllers
         [Rpc(SendTo.Server, RequireOwnership = false)]
         private void SwitchPlayerSlot_ServerRpc(ulong clientId, int targetSlotId)
         {
-            LobbyPlayerObject targetSlot = clientSlots[targetSlotId];
-            LobbyPlayerObject currentSlot = clientSlots.Single(obj => obj.SlotModel == lobbyModel.GetSlotOfPlayer(clientId));
+            LobbySlotController targetSlot = clientSlots[targetSlotId];
+            LobbySlotController currentSlot = clientSlots.Single(obj => obj.SlotModel == lobbyModel.GetSlotOfPlayer(clientId));
 
             currentSlot.GetComponent<NetworkObject>().RemoveOwnership();
             targetSlot.GetComponent<NetworkObject>().ChangeOwnership(clientId);
@@ -253,7 +254,7 @@ namespace Controllers
         [Rpc(SendTo.Server, RequireOwnership = false)]
         private void ClientReady_ServerRpc(ulong clientId, int readyValue)
         {
-            LobbyPlayerObject obj = clientSlots.Single(slot => slot.SlotModel == lobbyModel.GetSlotOfPlayer(clientId));
+            LobbySlotController obj = clientSlots.Single(slot => slot.SlotModel == lobbyModel.GetSlotOfPlayer(clientId));
             obj.OnReadinessInput(readyValue);
         }
         #endregion
@@ -354,7 +355,7 @@ namespace Controllers
                         NetworkManager.Singleton.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
                     }
                 }
-                catch (StartException e)
+                catch (TabletopException e)
                 {
                     if (currentErrorMessage != null)
                     {
@@ -362,7 +363,6 @@ namespace Controllers
                     }
                     currentErrorMessage = StartCoroutine(DisplayErrorMessage(e.Message));
                 }
-                // TODO
             } else
             {
                 if (currentErrorMessage != null)

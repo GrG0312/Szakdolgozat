@@ -5,13 +5,6 @@ using System.Linq;
 namespace Model.Lobby
 {
 #nullable enable
-    /// <summary>
-    /// This exception will be thrown if there is an invalid state when trying to start the game.
-    /// </summary>
-    public class StartException : Exception 
-    { 
-        public StartException(string message) : base(message) { }
-    }
 
     /// <summary>
     /// The main model class for the lobby. Contains logic for adding or removing a player, player chaging slots etc.
@@ -33,34 +26,59 @@ namespace Model.Lobby
         {
             if (!ConnectedClients.All(kvp => kvp.Value.IsReady))
             {
-                throw new StartException("Not all players are ready");
+                throw new TabletopException("Not all players are ready");
             }
             if (!ConnectedClients.All(kvp => !kvp.Value.Deck.IsEmpty()))
             {
-                throw new StartException("Not everyone have units selected in their deck");
+                throw new TabletopException("Not everyone have units selected in their deck");
             }
             if (!AreTeamsEqual())
             {
-                throw new StartException("The teams are not equal");
+                throw new TabletopException("The teams are not equal");
             }
             return true;
         }
 
         #region Adding / removing Players
 
+        /// <summary>
+        /// Adds a new player to a reserved slot.
+        /// </summary>
+        /// <param name="id">ID of the new player</param>
+        /// <param name="name">Name of the nem player</param>
+        /// <param name="slotId">Which slot to add to</param>
+        /// <exception cref="TabletopException"></exception>
         public void AddNewPlayer(PlayerIdType id, string name, int slotId = 0)
         {
             if (ConnectedClients.ContainsKey(id))
             {
-                throw new ArgumentException("A player already exists with this ID!");
+                throw new TabletopException("A player already exists with this ID.");
+            }
+            if (LobbySlots[slotId].OccupantStatus != SlotOccupantStatus.Reserved)
+            {
+                throw new TabletopException("The slot must be reserved in order to assign a player to it.");
             }
             LobbyPlayerData data = new LobbyPlayerData(name);
             ConnectedClients.Add(id, data);
             LobbySlots[slotId].PlayerData = data;
         }
 
+        /// <summary>
+        /// Reassigns a played to an other, open slot
+        /// </summary>
+        /// <param name="pid">ID of the player to be reassigned</param>
+        /// <param name="slotid">Which slot to assign to</param>
+        /// <exception cref="TabletopException"></exception>
         public void ReassignPlayerToSlot(PlayerIdType pid, int slotid)
         {
+            if (LobbySlots[slotid].OccupantStatus != SlotOccupantStatus.Open)
+            {
+                throw new TabletopException("Cannot switch to slot that is not open.");
+            }
+            if (!ConnectedClients.ContainsKey(pid))
+            {
+                throw new TabletopException("There is no player with the provided ID.");
+            }
             LobbyPlayerData data = ConnectedClients[pid];
             LobbySlot oldSlot = LobbySlots.Single(slot => slot.PlayerData == data);
             oldSlot.PlayerData = null;
@@ -68,6 +86,10 @@ namespace Model.Lobby
             data.Deck.Clear();
         }
 
+        /// <summary>
+        /// Reserves a slot for a joining player.
+        /// </summary>
+        /// <returns>If the reservation was successful or not</returns>
         public bool ReserveEmptySlot()
         {
             foreach (LobbySlot slot in LobbySlots)
@@ -81,6 +103,9 @@ namespace Model.Lobby
             return false;
         }
 
+        /// <summary>
+        /// Finds and returns the index of a reserved slot. Returns -1 if there were no reserved slots.
+        /// </summary>
         public int FindReservedSlot()
         {
             for (int i = 0; i < LobbySlots.Count; i++)
@@ -93,10 +118,21 @@ namespace Model.Lobby
             return -1;
         }
 
+        /// <summary>
+        /// Removes and returns the Data of a player from a slot
+        /// </summary>
         public LobbyPlayerData RemovePlayer(PlayerIdType id)
         {
+            if (!ConnectedClients.ContainsKey(id))
+            {
+                throw new TabletopException("There is no player present with the provided ID");
+            }
+            LobbySlot? slotOfPlayer = GetSlotOfPlayer(id);
+            if (slotOfPlayer == null)
+            {
+                throw new TabletopException("There is no slot that has this player assigned to it");
+            }
             ConnectedClients.Remove(id, out LobbyPlayerData data);
-            LobbySlot slotOfPlayer = LobbySlots.Single(slot => slot.PlayerData == data);
             slotOfPlayer.PlayerData = null;
             return data;
         }
@@ -109,6 +145,10 @@ namespace Model.Lobby
         /// </summary>
         public LobbySlot? GetSlotOfPlayer(PlayerIdType id)
         {
+            if (!ConnectedClients.ContainsKey(id))
+            {
+                throw new TabletopException("There is no player with the provided ID");
+            }
             try
             {
                 return LobbySlots.Single(slot => slot.PlayerData == ConnectedClients[id]);

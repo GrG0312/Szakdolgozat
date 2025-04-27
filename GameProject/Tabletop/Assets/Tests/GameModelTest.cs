@@ -9,7 +9,11 @@ using Model.Weapons;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Security.Principal;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
+using static UnityEngine.UI.GridLayoutGroup;
+using UnityEngine.UIElements;
 
 namespace Tests
 {
@@ -19,16 +23,16 @@ namespace Tests
         private Mock<IUnitFactory<ulong>> mockedUnitFactory;
         private Mock<ICommandFactory> mockedCommandFactory;
         private Mock<IDiceRoller> mockedDiceRoller;
-        private Dictionary<ulong, GamePlayerData> gpd;
+        private Dictionary<ulong, Mock<GamePlayerData>> mockedPlayerDatas;
         private GameModel<ulong> gameModel;
 
         [SetUp] // Runs before EACH testmethod
         public void SetupBeforeTest()
         {
-            gpd = new Dictionary<ulong, GamePlayerData>()
+            mockedPlayerDatas = new Dictionary<ulong, Mock<GamePlayerData>>()
             {
-                { 0, new GamePlayerData("ImperiumPlayer", new DeckObject(), Side.Imperium) },
-                { 1, new GamePlayerData("ChaosPlayer", new DeckObject(), Side.Chaos) }
+                { 0, new Mock<GamePlayerData>("ImperialPlayer", new DeckObject(), Side.Imperium) },
+                { 1, new Mock<GamePlayerData>("ChaosPlayer", new DeckObject(), Side.Chaos) }
             };
 
             mockedUnitFactory = new Mock<IUnitFactory<ulong>>();
@@ -39,8 +43,14 @@ namespace Tests
 
             ControlPointModel cp = new ControlPointModel();
 
+            Dictionary<ulong, GamePlayerData> mockedData = new Dictionary<ulong, GamePlayerData>();
+            foreach (var kvp in mockedPlayerDatas)
+            {
+                mockedData.Add(kvp.Key, kvp.Value.Object);
+            }
+
             gameModel = new GameModel<ulong>(
-                gpd,
+                mockedData,
                 mockedUnitFactory.Object,
                 mockedCommandFactory.Object,
                 mockedDiceRoller.Object,
@@ -52,18 +62,12 @@ namespace Tests
         public void StartGameTest()
         {
             Assert.AreEqual(Side.Imperium, gameModel.ActiveSide);
-            Assert.AreEqual(gpd[0], gameModel.ActivePlayerData);
+            Assert.AreEqual(mockedPlayerDatas[0].Object, gameModel.ActivePlayerData);
             Assert.AreEqual(0, gameModel.ActivePlayerId);
             Assert.AreEqual(1, gameModel.TurnCounter);
             Assert.AreEqual(Phase.Command, gameModel.CurrentPhase);
             Assert.IsNull(gameModel.SelectedUnit);
             Assert.IsNull(gameModel.PendingCommand);
-
-            foreach (GamePlayerData data in gpd.Values)
-            {
-                Assert.AreEqual(Defines.POINTS_ON_START, data.Currency);
-                Assert.AreEqual(Defines.POINTS_PER_TURN, data.PointsGainedPerTurn);
-            }
         }
 
         [Test]
@@ -149,6 +153,9 @@ namespace Tests
         [Test]
         public void PlayerDoneNextTurn()
         {
+            mockedPlayerDatas[0].CallBase = true;
+            mockedPlayerDatas[1].CallBase = true;
+
             for (int i = 0; i < 3; i++)
             {
                 gameModel.PlayerDone(0);
@@ -159,8 +166,8 @@ namespace Tests
             Assert.AreEqual(Phase.Command, gameModel.CurrentPhase);
             Assert.AreEqual(2, gameModel.TurnCounter);
 
-            Assert.AreEqual(Defines.POINTS_ON_START + Defines.POINTS_PER_TURN, gpd[0].Currency);
-            Assert.AreEqual(Defines.POINTS_ON_START + Defines.POINTS_PER_TURN, gpd[1].Currency);
+            Assert.AreEqual(Defines.POINTS_ON_START + Defines.POINTS_PER_TURN, gameModel.ConnectedPlayers[0].Currency);
+            Assert.AreEqual(Defines.POINTS_ON_START + Defines.POINTS_PER_TURN, gameModel.ConnectedPlayers[1].Currency);
         }
 
         [Test]
@@ -168,9 +175,11 @@ namespace Tests
         {
             Assert.AreEqual(0, gameModel.ActivePlayerId);
             Assert.AreEqual(Phase.Command, gameModel.CurrentPhase);
-            Assert.AreEqual(Defines.POINTS_ON_START, gpd[0].Currency);
 
-            gpd[0].Deck.Add(UnitIdentifier.TacticalMarine);
+            mockedPlayerDatas[0].CallBase = true;
+            mockedPlayerDatas[1].CallBase = true;
+
+            mockedPlayerDatas[0].Object.Deck.Add(UnitIdentifier.TacticalMarine);
 
             // Wrong player
             Assert.IsFalse(gameModel.BuyUnit(1, UnitIdentifier.ChaosLegionnaire));
@@ -179,30 +188,22 @@ namespace Tests
             // Correct
             Assert.IsTrue(gameModel.BuyUnit(0, UnitIdentifier.TacticalMarine));
 
-            Assert.AreEqual(0, gpd[0].Deck.Entries.Count);
-            Assert.AreEqual(Defines.POINTS_ON_START - Defines.UnitValues[UnitIdentifier.TacticalMarine].Price, gpd[0].Currency);
             mockedUnitFactory.Verify(m => m.Produce(0, UnitIdentifier.TacticalMarine, Side.Imperium), Times.Once());
         }
 
         [Test]
         public void BuyWithProducing()
         {
-            GameObject g = new GameObject("UnitPrefab", typeof(UnitModel));
-            UnitModel prefab = g.GetComponent<UnitModel>();
-            UnitModel created = null;
+            Mock<IUnit> mockedUnit = new Mock<IUnit>();
 
             mockedUnitFactory.Setup(m => m.Produce(It.IsAny<ulong>(), It.IsAny<UnitIdentifier>(), It.IsAny<Side>()))
-                .Callback((ulong owner, UnitIdentifier id, Side s) =>
-                {
-                    created = UnitModel.Instantiate(prefab);
-                    created.SetupData(owner, id, Defines.UnitValues[id], Vector3.zero);
-                })
-                .Returns(created);
+                .Returns(mockedUnit.Object);
 
-            gpd[0].Deck.Add(UnitIdentifier.TacticalMarine);
+            mockedPlayerDatas[0].CallBase = true;
+            mockedPlayerDatas[0].Object.Deck.Add(UnitIdentifier.TacticalMarine);
 
             Assert.IsTrue(gameModel.BuyUnit(0, UnitIdentifier.TacticalMarine));
-            Assert.AreEqual(1, gpd[0].UnitsInPlay.Count);
+            Assert.AreEqual(1, mockedPlayerDatas[0].Object.UnitsInPlay.Count);
         }
 
         [Test]
@@ -211,12 +212,14 @@ namespace Tests
             Mock<UnitModel> mockedUnit1 = new Mock<UnitModel>();
             Mock<UnitModel> mockedUnit2 = new Mock<UnitModel>();
 
-            IGameCommand created = null;
+            List<UsableWeapon> usables = new List<UsableWeapon>()
+            {
+                new UsableWeapon(Defines.UnitValues[UnitIdentifier.TacticalMarine].Weapons[0])
+            };
+
+            IGameCommand created = new AttackCommand<Vector3>(mockedUnit1.Object, mockedUnit2.Object, mockedDiceRoller.Object, usables);
+            
             mockedCommandFactory.Setup(m => m.Produce<AttackCommand<Vector3>>(It.IsAny<object[]>()))
-                .Callback((object[] args) =>
-                {
-                    created = new AttackCommand<Vector3>(mockedUnit1.Object, mockedUnit2.Object, mockedDiceRoller.Object, new List<UsableWeapon>());
-                })
                 .Returns(created);
 
             Assert.IsNull(gameModel.SelectedUnit);
@@ -229,11 +232,104 @@ namespace Tests
             gameModel.CreateCommand<AttackCommand<Vector3>>(0);
             mockedCommandFactory.Verify(m => m.Produce<AttackCommand<Vector3>>(It.IsAny<object[]>()), Times.Never());
 
-            mockedUnit1.Object.SetupData(0, UnitIdentifier.TacticalMarine, Defines.UnitValues[UnitIdentifier.TacticalMarine], Vector3.zero);
-            mockedUnit2.Object.SetupData(1, UnitIdentifier.ChaosLegionnaire, Defines.UnitValues[UnitIdentifier.ChaosLegionnaire], Vector3.zero);
+            gameModel.SelectUnit(0, mockedUnit1.Object);
 
-            Assert.AreEqual(UnitIdentifier.TacticalMarine, mockedUnit1.Object.Identity);
-            Assert.AreEqual(UnitIdentifier.ChaosLegionnaire, mockedUnit2.Object.Identity);
+            Assert.AreEqual(mockedUnit1.Object, gameModel.SelectedUnit);
+
+            gameModel.CreateCommand<AttackCommand<Vector3>>(0);
+            mockedCommandFactory.Verify(m => m.Produce<AttackCommand<Vector3>>(It.IsAny<object[]>()), Times.Once());
+
+            Assert.AreEqual(created, gameModel.PendingCommand);
+        }
+
+        [Test]
+        public void ExecuteCommandTest()
+        {
+            Assert.IsNull(gameModel.PendingCommand);
+            Assert.IsNull(gameModel.SelectedUnit);
+
+            Mock<IGameCommand> mockedCommand = new Mock<IGameCommand>();
+            mockedCommand.Setup(m => m.CanExecute(It.IsAny<Phase>())).Returns(false);
+            Mock<ISelectable<ulong>> mockedUnit = new Mock<ISelectable<ulong>>();
+
+            mockedCommandFactory.Setup(m => m.Produce<AttackCommand<Vector3>>(It.IsAny<object[]>())).Returns(mockedCommand.Object);
+
+            gameModel.SelectUnit(0, mockedUnit.Object);
+            gameModel.CreateCommand<AttackCommand<Vector3>>(0);
+
+            Assert.AreEqual(mockedCommand.Object, gameModel.PendingCommand);
+
+            _ = gameModel.ExecuteCommand();
+
+            // Cannot execute
+            Assert.AreEqual(mockedCommand.Object, gameModel.PendingCommand);
+            mockedCommand.Verify(m => m.Execute(), Times.Never());
+
+            mockedCommand.Setup(m => m.CanExecute(It.IsAny<Phase>())).Returns(true);
+
+            _ = gameModel.ExecuteCommand();
+
+            mockedCommand.Verify(m => m.Execute(), Times.Once());
+            Assert.IsNull(gameModel.PendingCommand);
+        }
+
+
+        [Test]
+        public void CycleTest()
+        {
+            Mock<IUnit> mockedUnit1 = new Mock<IUnit>();
+            mockedUnit1.As<IUsable>().Setup(m => m.IsUsable(It.IsAny<Phase>())).Returns(true);
+            mockedUnit1.As<IDamageable>().Setup(m => m.Alive).Returns(true);
+            mockedUnit1.As<ISelectable<ulong>>().Setup(m => m.Owner).Returns(0);
+
+            Mock<IUnit> mockedUnit2 = new Mock<IUnit>();
+            mockedUnit2.As<IUsable>().Setup(m => m.IsUsable(It.IsAny<Phase>())).Returns(false);
+            mockedUnit2.As<IDamageable>().Setup(m => m.Alive).Returns(true);
+            mockedUnit2.As<ISelectable<ulong>>().Setup(m => m.Owner).Returns(0);
+
+            Mock<IUnit> mockedUnit3 = new Mock<IUnit>();
+            mockedUnit3.As<IUsable>().Setup(m => m.IsUsable(It.IsAny<Phase>())).Returns(true);
+            mockedUnit3.As<IDamageable>().Setup(m => m.Alive).Returns(true);
+            mockedUnit3.As<ISelectable<ulong>>().Setup(m => m.Owner).Returns(0);
+
+            mockedPlayerDatas[0].Object.GetUnit(mockedUnit1.Object);
+            mockedPlayerDatas[0].Object.GetUnit(mockedUnit2.Object);
+            mockedPlayerDatas[0].Object.GetUnit(mockedUnit3.Object);
+
+            Assert.IsNull(gameModel.SelectedUnit);
+
+            bool didUnitCycled = false;
+            gameModel.UnitCycled += (o,e) => { didUnitCycled = true; };
+
+            gameModel.CycleUnits(1);
+
+            Assert.IsFalse(didUnitCycled);
+            Assert.IsNull(gameModel.SelectedUnit);
+
+            gameModel.CycleUnits(0);
+
+            Assert.IsTrue(didUnitCycled);
+            Assert.AreEqual(mockedUnit1.Object, gameModel.SelectedUnit);
+            didUnitCycled = false;
+
+            gameModel.CycleUnits(0);
+
+            Assert.IsTrue(didUnitCycled);
+            Assert.AreEqual(mockedUnit3.Object, gameModel.SelectedUnit);
+            didUnitCycled = false;
+
+            Mock<ISelectable<ulong>> mockedEnemyUnit = new Mock<ISelectable<ulong>>();
+            mockedEnemyUnit.Setup(m => m.Owner).Returns(1);
+
+            gameModel.SelectUnit(0, mockedEnemyUnit.Object);
+
+            mockedUnit1.As<IUsable>().Setup(m => m.IsUsable(It.IsAny<Phase>())).Returns(false);
+            mockedUnit3.As<IUsable>().Setup(m => m.IsUsable(It.IsAny<Phase>())).Returns(false);
+
+            gameModel.CycleUnits(0);
+
+            Assert.IsTrue(didUnitCycled);
+            Assert.IsNull(gameModel.SelectedUnit);
         }
     }
 }

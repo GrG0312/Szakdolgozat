@@ -28,11 +28,9 @@ namespace Controllers.Objects.Game
             {
                 return;
             }
-            Debug.Log($"<color=aqua>Unit entered</color>");
             UnitModel model = other.GetComponent<UnitModel>();
             if (model != null)
             {
-                Debug.Log($"<color=aqua>UnitModel is not null</color>");
                 Model.ContesterChanged(model, true);
             }
         }
@@ -43,11 +41,9 @@ namespace Controllers.Objects.Game
             {
                 return;
             }
-            Debug.Log($"<color=aqua>Unit left</color>");
             UnitModel model = other.GetComponent<UnitModel>();
             if (model != null)
             {
-                Debug.Log($"<color=aqua>UnitModel is not null</color>");
                 Model.ContesterChanged(model, false);
             }
         }
@@ -59,7 +55,6 @@ namespace Controllers.Objects.Game
 
         private void OnMaterialIndexChanged(int oldvalue, int newvalue)
         {
-            Debug.Log($"<color=aqua>Model's owner changed: {newvalue}</color>");
             Renderer r = GetComponentInChildren<Renderer>();
             if (newvalue == -1)
             {

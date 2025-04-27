@@ -57,7 +57,7 @@ namespace Model.GameModel
                     toBeDestroyed.Add(unit);
                 } else
                 {
-                    unit.SetStartValues();
+                    unit.ResetToStartValues();
                 }
             }
             DeleteUnits();

@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace Controllers.Objects.Lobby
 {
-    public class LobbyPlayerObject : NetworkBehaviour
+    public class LobbySlotController : NetworkBehaviour
     {
         #region Constants
         private const string CLOSED_OPTION = "Closed";

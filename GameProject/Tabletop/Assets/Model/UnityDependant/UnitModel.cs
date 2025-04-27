@@ -7,14 +7,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace Model.UnityDependant
 {
 #nullable enable
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public class UnitModel : MonoBehaviour, 
         IUnit, ISidedObject, ISelectable<ulong>, IMoveable<Vector3>, IDamageable<Vector3>, IArmored, IUsable, IWeaponUser<Vector3>, IDisposable
     {
@@ -25,7 +23,7 @@ namespace Model.UnityDependant
 
         #region IWeaponUser
 
-        public IReadOnlyList<UsableWeapon> UsableWeapons { get; private set; }
+        public IReadOnlyList<UsableWeapon>? UsableWeapons { get; private set; }
 
         public bool CanTarget(IDamageable<Vector3> d)
         {
@@ -95,7 +93,7 @@ namespace Model.UnityDependant
         {
             int[] results = await roller.RollDice(amount);
 
-            int threshold = Constants.ArmorSave + armorPiercing;
+            int threshold = armorPiercing + (Constants == null ? 0 : Constants.ArmorSave);
             int evaded = results.Count(roll => roll > threshold);
             return evaded;
         }
@@ -119,7 +117,7 @@ namespace Model.UnityDependant
         #endregion
 
         #region IMovable
-        public NavMeshAgent NavAgent { get; private set; }
+        public NavMeshAgent? NavAgent { get; private set; }
 
         public event EventHandler<bool>? Moving;
 
@@ -130,6 +128,11 @@ namespace Model.UnityDependant
             if (!Alive)
             {
                 return;
+            }
+
+            if (NavAgent == null || Constants == null)
+            {
+                throw new InvalidOperationException("NavAgent and Constants cannot be null! Use the SetupData method before moving the Unit.");
             }
             
             // Store the full calculated path
@@ -179,7 +182,7 @@ namespace Model.UnityDependant
         private IEnumerator DetectAgentStop()
         {
             yield return new WaitForSeconds(0.5f);
-            while (NavAgent.velocity.magnitude >= 0.15f)
+            while (NavAgent!.velocity.magnitude >= 0.15f)
             {
                 yield return null;
             }
@@ -204,7 +207,17 @@ namespace Model.UnityDependant
 
         #region ISidedObject
 
-        public Side Side { get => Constants.Side; }
+        public Side Side 
+        { 
+            get
+            {
+                if (Constants == null)
+                {
+                    throw new InvalidOperationException("Constants are null!");
+                }
+                return Constants.Side;
+            } 
+        }
 
         #endregion
 
@@ -212,10 +225,14 @@ namespace Model.UnityDependant
 
         public UnitIdentifier Identity { get; protected set; }
 
-        public UnitConstants Constants { get; protected set; }
+        public UnitConstants? Constants { get; protected set; }
 
-        public void SetStartValues()
+        public void ResetToStartValues()
         {
+            if (UsableWeapons == null)
+            {
+                throw new InvalidOperationException("Usable weapons is null!");
+            }
             CanMove = true;
             foreach (UsableWeapon w in UsableWeapons)
             {

@@ -19,7 +19,7 @@ namespace Model.Interfaces
         public event EventHandler UnitDestroyed;
 
         /// <summary>
-        /// This method should be called when this unit takes damage / hit.
+        /// This method should be called when this unit takes damage.
         /// </summary>
         /// <param name="amount">How much damage should be done</param>
         public void TakeDamage(int amount);
