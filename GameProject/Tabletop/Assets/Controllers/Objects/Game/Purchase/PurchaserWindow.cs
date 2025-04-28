@@ -19,7 +19,7 @@ namespace Controllers.Objects.Game.Purchase
                 purchasers = new List<UnitPurchaser>();
             }
             UnitPurchaser p = Instantiate(purchaserPrefab);
-            Sprite sprite = Resources.Load<Sprite>(ControllerDefines.UnitVisuals[id].UnitProfileSprite);
+            Sprite sprite = Resources.Load<Sprite>(ViewDefines.UnitVisuals[id].UnitProfileSprite);
             p.Setup(id, sprite, amount, price);
             purchasers.Add(p);
             p.transform.SetParent(content.transform);

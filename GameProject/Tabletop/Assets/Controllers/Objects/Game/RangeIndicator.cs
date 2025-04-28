@@ -36,7 +36,7 @@ namespace Controllers.Objects.Game
             meshFilter.mesh = CreateSegmentedRangeMesh(range * Defines.RANGE_ADJUSTMENT);
             meshRenderer.material = new Material(rangeMaterial)
             {
-                color = GetRangeColor(range)
+                color = new Color(1, 1, 1, 0.4f)
             };
         }
 
@@ -58,22 +58,22 @@ namespace Controllers.Objects.Game
                 Vector3 nextDir = Quaternion.Euler(0, nextAngle, 0) * Vector3.forward;
 
                 // Outer vertices
-                int vIndex = i * 4;
-                vertices[vIndex] = dir * radius;
-                vertices[vIndex + 1] = nextDir * radius;
+                int vertexIndex = i * 4;
+                vertices[vertexIndex] = dir * radius;
+                vertices[vertexIndex + 1] = nextDir * radius;
 
                 // Inner vertices
-                vertices[vIndex + 2] = dir * (radius - LINE_WIDTH);
-                vertices[vIndex + 3] = nextDir * (radius - LINE_WIDTH);
+                vertices[vertexIndex + 2] = dir * (radius - LINE_WIDTH);
+                vertices[vertexIndex + 3] = nextDir * (radius - LINE_WIDTH);
 
                 // Triangles
-                int tIndex = i * 6;
-                triangles[tIndex] = vIndex;
-                triangles[tIndex + 1] = vIndex + 2;
-                triangles[tIndex + 2] = vIndex + 1;
-                triangles[tIndex + 3] = vIndex + 1;
-                triangles[tIndex + 4] = vIndex + 2;
-                triangles[tIndex + 5] = vIndex + 3;
+                int triangleIndex = i * 6;
+                triangles[triangleIndex] = vertexIndex;
+                triangles[triangleIndex + 1] = vertexIndex + 2;
+                triangles[triangleIndex + 2] = vertexIndex + 1;
+                triangles[triangleIndex + 3] = vertexIndex + 1;
+                triangles[triangleIndex + 4] = vertexIndex + 2;
+                triangles[triangleIndex + 5] = vertexIndex + 3;
             }
 
             mesh.vertices = vertices;
@@ -81,20 +81,6 @@ namespace Controllers.Objects.Game
             mesh.RecalculateNormals();
 
             return mesh;
-        }
-
-        private Color GetRangeColor(int range)
-        {
-            // Color coding based on range
-            return range switch
-            {
-                6 => new Color(1, 0, 0, 0.4f),     // Red for shortest range
-                12 => new Color(1, 0.5f, 0, 0.4f),  // Orange
-                24 => new Color(1, 1, 0, 0.4f),     // Yellow
-                32 => new Color(0, 1, 0, 0.4f),     // Green
-                48 => new Color(0, 0, 1, 0.4f),     // Blue for longest range
-                _ => new Color(1, 1, 1, 0.4f)       // Default white
-            };
         }
     }
 }

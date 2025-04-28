@@ -9,16 +9,9 @@ namespace Controllers.Objects.Game
     public class CameraObject : NetworkBehaviour
     {
         #region Static
+
         public static CameraObject Instance { get; private set; }
 
-        private const float MOVE_TIME = 1f;
-        private static readonly Vector3 ARENA_POSITION = new Vector3(190,0,50);
-        private static readonly Quaternion ARENA_ROTATION = new Quaternion(0, 0.707f, 0, 0.707f);
-
-        private const int MIN_X = 0;
-        private const int MAX_X = 100;
-        private const int MIN_Z = 0;
-        private const int MAX_Z = 100;
         #endregion
 
         #region Serializations
@@ -35,6 +28,9 @@ namespace Controllers.Objects.Game
         #region Constants
 
         private const int MOVE_SPEED = 50;
+        private const float MOVE_TIME = 1f;
+        private static readonly Vector3 ARENA_POSITION = new Vector3(190, 0, 50);
+        private static readonly Quaternion ARENA_ROTATION = new Quaternion(0, 0.707f, 0, 0.707f);
 
         #endregion
 

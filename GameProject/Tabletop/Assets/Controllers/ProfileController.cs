@@ -41,7 +41,7 @@ namespace Controllers
         #endregion
 
         #region Unity Messages
-        public void Awake()
+        private void Awake()
         {
             if (Instance == null)
             {
@@ -56,7 +56,7 @@ namespace Controllers
             UserProfile = profileDataManager.Load();
             DontDestroyOnLoad(gameObject);
         }
-        public void OnApplicationQuit()
+        private void OnApplicationQuit()
         {
             profileDataManager.Save(UserProfile);
         }

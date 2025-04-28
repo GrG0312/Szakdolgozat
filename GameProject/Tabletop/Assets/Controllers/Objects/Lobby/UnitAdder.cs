@@ -36,7 +36,7 @@ namespace Controllers.Objects.Lobby
         public void Setup(UnitIdentifier i)
         {
             Identity = i;
-            UnitVisualData data = ControllerDefines.UnitVisuals[Identity];
+            UnitVisualData data = ViewDefines.UnitVisuals[Identity];
             unitName.text = Defines.UnitValues[Identity].Name;
             image.sprite = Resources.Load<Sprite>(data.UnitProfileSprite);
             unitAmount.text = "0";

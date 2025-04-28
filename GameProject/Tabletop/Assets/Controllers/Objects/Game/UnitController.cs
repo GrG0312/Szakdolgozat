@@ -61,7 +61,7 @@ namespace Controllers.Objects.Game
         #region Network Variable event handlers
         private void OnIdentityNetworkValueChanged(int oldvalue, int newvalue)
         {
-            billboard.SetupVisuals(ControllerDefines.UnitVisuals[(UnitIdentifier)newvalue]);
+            billboard.SetupVisuals(ViewDefines.UnitVisuals[(UnitIdentifier)newvalue]);
         }
         private void OnColorNetworkValueChanged(FixedString32Bytes oldvalue, FixedString32Bytes newvalue)
         {

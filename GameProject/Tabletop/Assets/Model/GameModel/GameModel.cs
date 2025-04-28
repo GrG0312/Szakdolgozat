@@ -319,41 +319,32 @@ namespace Model.GameModel
         }
         private bool IsGameOver(out Side winner)
         {
-            Debug.Log("Is game over");
             winner = default;
             int remainingImp = 0;
             int remainingChaos = 0;
 
             foreach (GamePlayerData data in ConnectedPlayers.Values)
             {
-                Debug.Log($"Checking: {data.Name}");
-                Debug.Log($"Is defeated: {data.IsDefeated}");
                 if (!data.IsDefeated)
                 {
                     if (data.Side == Side.Imperium)
                     {
-                        Debug.Log("+1 to imps defeated");
                         remainingImp++;
                     } else
                     {
-                        Debug.Log("+1 to chaos defeated");
                         remainingChaos++;
                     }
                 }
             }
-            Debug.Log($"Results: Imp:{remainingImp} Chaos: {remainingChaos}");
 
             if (remainingImp == 0)
             {
-                Debug.Log("Imperium is zero");
                 winner = Side.Chaos;
             }
             else if(remainingChaos == 0)
             {
-                Debug.Log("Chaos is zero");
                 winner = Side.Imperium;
             }
-            Debug.Log($"Is game over? {remainingImp == 0 || remainingChaos == 0}");
             return remainingImp == 0 || remainingChaos == 0;
         }
 

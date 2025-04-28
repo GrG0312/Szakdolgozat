@@ -18,7 +18,6 @@ namespace Controllers.Objects
 
         private void UpdateFields()
         {
-            Debug.Log($"Profile updated. Previous values: {nameInput.text} {gamePlayed.text} {gameWon.text}");
             nameInput.text = ProfileController.Instance.DisplayName;
             gamePlayed.text = ProfileController.Instance.GamesPlayed.ToString();
             gameWon.text = ProfileController.Instance.GamesWon.ToString();

@@ -35,6 +35,7 @@ namespace Controllers.Objects.Game.Purchase
         }
         
         #endregion
+
         public void Setup(UnitIdentifier id, Sprite sprite, int amount, int price)
         {
             Identity = id;
@@ -50,7 +51,6 @@ namespace Controllers.Objects.Game.Purchase
 
         private void Start()
         {
-            
             button.onClick.AddListener(PurchaseBegin);
         }
     }

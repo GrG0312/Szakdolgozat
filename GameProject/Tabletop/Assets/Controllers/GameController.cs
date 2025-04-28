@@ -49,7 +49,6 @@ namespace Controllers
 
         [SerializeField] private LayerMask unitLayer;
         [SerializeField] private LayerMask groundLayer;
-        [SerializeField] private LayerMask uiLayer;
 
         [SerializeField] private InputActionAsset inputActionAsset;
         [SerializeField] private InputActionReference moveAction;
@@ -62,10 +61,7 @@ namespace Controllers
         [SerializeField] private WeaponSelector selector;
         [SerializeField] private DiceRoller diceRoller;
         [SerializeField] private UnitInfoPanel infopanel;
-
-        [SerializeField] private GameObject buttonControlPanel;
         [SerializeField] private ThrowStatPanel throwPanel;
-
         [SerializeField] private RangeIndicator rangeIndicatorObject;
 
         #endregion
@@ -87,15 +83,15 @@ namespace Controllers
 
         #region Network Variables
 
-        NetworkVariable<FixedString64Bytes> PlayerNameNetVar = new NetworkVariable<FixedString64Bytes>(string.Empty);
-        NetworkVariable<int> TurnCounterNetVar = new NetworkVariable<int>(0);
-        NetworkVariable<int> PhaseNetVar = new NetworkVariable<int>(-1);
+        private NetworkVariable<FixedString64Bytes> PlayerNameNetVar = new NetworkVariable<FixedString64Bytes>(string.Empty);
+        private NetworkVariable<int> TurnCounterNetVar = new NetworkVariable<int>(0);
+        private NetworkVariable<int> PhaseNetVar = new NetworkVariable<int>(-1);
 
-        NetworkVariable<int> ShownUI = new NetworkVariable<int>(-1);
+        private NetworkVariable<int> ShownUI = new NetworkVariable<int>(-1);
 
-        NetworkVariable<SelectedUnitData> SelectedUnitNetVar = new NetworkVariable<SelectedUnitData>(SelectedUnitData.Empty);
-        NetworkList<WeaponInfoData> SelectedWeaponsNetVar = new NetworkList<WeaponInfoData>();
-        NetworkList<int> AttackingWeaponsNetVar = new NetworkList<int>(); 
+        private NetworkVariable<SelectedUnitData> SelectedUnitNetVar = new NetworkVariable<SelectedUnitData>(SelectedUnitData.Empty);
+        private NetworkList<WeaponInfoData> SelectedWeaponsNetVar = new NetworkList<WeaponInfoData>();
+        private NetworkList<int> AttackingWeaponsNetVar = new NetworkList<int>(); 
 
         #endregion
 
@@ -198,9 +194,14 @@ namespace Controllers
             TurnCounterNetVar.OnValueChanged -= TurnValueChanged;
             PhaseNetVar.OnValueChanged -= PhaseValueChanged;
         }
+
         #endregion
 
         #region Setup methods
+
+        /// <summary>
+        /// Updates clients' display at the start of the game since the network variable's updates fire too fast
+        /// </summary>
         [Rpc(SendTo.NotServer)]
         private void ForceUpdate_ClientRpc(FixedString64Bytes name, int turncount, int current)
         {
@@ -209,6 +210,9 @@ namespace Controllers
             PhaseValueChanged(current, current);
         }
 
+        /// <summary>
+        /// Sets up unique colors for each player's name and units
+        /// </summary>
         private void SetupColors()
         {
             UserColors = new Dictionary<ulong, string>();
@@ -219,11 +223,11 @@ namespace Controllers
                 switch (kvp.Value.Side)
                 {
                     case Side.Imperium:
-                        UserColors.Add(kvp.Key, ControllerDefines.BlueColors.ElementAt(blue));
+                        UserColors.Add(kvp.Key, ViewDefines.BlueColors.ElementAt(blue));
                         blue++;
                         break;
                     case Side.Chaos:
-                        UserColors.Add(kvp.Key, ControllerDefines.RedColors.ElementAt(red));
+                        UserColors.Add(kvp.Key, ViewDefines.RedColors.ElementAt(red));
                         red++;
                         break;
                     default:
@@ -232,6 +236,9 @@ namespace Controllers
             }
         }
 
+        /// <summary>
+        /// Sets up the purchaser objects that can be used to buy units
+        /// </summary>
         private void SetupPurchasers()
         {
             foreach (KeyValuePair<ulong, GamePlayerData> kvp in gameModel.ConnectedPlayers)
@@ -249,7 +256,9 @@ namespace Controllers
             }
         }
 
-
+        /// <summary>
+        /// Notifies clients about adding purchasers
+        /// </summary>
         [Rpc(SendTo.SpecifiedInParams)]
         private void AddUnitPurchaser_ClientRpc(UnitIdentifier id, int amount, int price, RpcParams param)
         {
@@ -815,7 +824,6 @@ namespace Controllers
         #region Game over
         private void GameModel_GameOver(object sender, Side e)
         {
-            Debug.Log($"Game over: winner: {e}");
             // Server side:
             foreach (KeyValuePair<ulong, GamePlayerData> kvp in gameModel.ConnectedPlayers)
             {

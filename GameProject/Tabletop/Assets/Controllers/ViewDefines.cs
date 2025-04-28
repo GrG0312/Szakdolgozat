@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Controllers
 {
-    public static class ControllerDefines
+    public static class ViewDefines
     {
         public static readonly IReadOnlyList<string> BlueColors = new List<string>
         {

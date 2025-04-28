@@ -11,6 +11,9 @@ using System.Collections.Generic;
 
 namespace Controllers.Objects.Lobby
 {
+    /// <summary>
+    /// Controller class for each slot that shows up in the lobby
+    /// </summary>
     public class LobbySlotController : NetworkBehaviour
     {
         #region Constants
@@ -55,6 +58,12 @@ namespace Controllers.Objects.Lobby
         #endregion
 
         #region Initial data setup
+
+        /// <summary>
+        /// Acts as the class's constructor method, since Behaviours cannot be constructed. Sets all the necessary data and event handlers
+        /// </summary>
+        /// <param name="id">The ID of this slot</param>
+        /// <param name="side">The side this slot represents</param>
         public void SetupInitialData(int id, Side side)
         {
             slotIdNetworkVar.Value = id;
@@ -70,6 +79,9 @@ namespace Controllers.Objects.Lobby
             }
         }
 
+        /// <summary>
+        /// Sets the color of the dot next to the player's name.
+        /// </summary>
         private void OnSlotColorNetVarValueChanged(FixedString32Bytes oldvalue, FixedString32Bytes newvalue)
         {
             ColorUtility.TryParseHtmlString(newvalue.ToString(), out Color c);
@@ -106,6 +118,10 @@ namespace Controllers.Objects.Lobby
         #endregion
 
         #region Startpoint - Calling controller methods
+
+        /// <summary>
+        /// Gets invoked when the user changes readiness values
+        /// </summary>
         public void OnReadinessInput(int value)
         {
             if (IsServer)
@@ -118,6 +134,9 @@ namespace Controllers.Objects.Lobby
             }
         }
 
+        /// <summary>
+        /// Gets invoked when the user changes the value of the <see cref="emptyDropdown"/>
+        /// </summary>
         private void OnOccupantInput(int value)
         {
             switch (value)
@@ -154,6 +173,9 @@ namespace Controllers.Objects.Lobby
             }
         }
 
+        /// <summary>
+        /// Removes a specific dropdown option
+        /// </summary>
         private void RemoveDropdownOption(string text)
         {
             try
@@ -163,12 +185,16 @@ namespace Controllers.Objects.Lobby
 
             } catch (Exception) { /* Couldn't find a matching option. No problem. */ }
         }
+
         #endregion
 
         #region Endpoint - Recieving updates from model / network
 
         #region SlotModel event handlers
 
+        /// <summary>
+        /// Event handler for the model's <see cref="LobbySlot.PlayerChanged"/> event.
+        /// </summary>
         private void OnPlayerChanged(object sender, bool isPlayerNotNull)
         {
             // This can only happen on server-side:
@@ -177,6 +203,11 @@ namespace Controllers.Objects.Lobby
             statusLabelNetworkVar.Value = SlotModel.IsPlayerReady() ? READY_RICH_TEXT : NOT_READY_RICH_TEXT;
         }
 
+        /// <summary>
+        /// Event handler for the model's <see cref="LobbySlot.OccupantStatusChanged"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnOccupantChange(object sender, EventArgs e)
         {
             emptyDropdownNetworkVar.Value = (int)SlotModel.OccupantStatus;

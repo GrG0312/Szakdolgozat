@@ -667,7 +667,7 @@ GameObject:
   - component: {fileID: 608274018}
   - component: {fileID: 608274020}
   m_Layer: 5
-  m_Name: Player Name List
+  m_Name: Player List
   m_TagString: HostName
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2549,8 +2549,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   menuParent: {fileID: 1136817462}
   networkManagerPrefab: {fileID: 6592267927107116883, guid: d91b90a49a383c5409f4937b06adbc83, type: 3}
-  playerObjectPrefab: {fileID: 1238872941778597597, guid: 89e1ae8c5a97cdd4f9cde70e98ad7962, type: 3}
-  playerNamesParent: {fileID: 608274016}
+  playerSlotPrefab: {fileID: 1238872941778597597, guid: 89e1ae8c5a97cdd4f9cde70e98ad7962, type: 3}
+  playerSlotsParent: {fileID: 608274016}
   clientViewBlocker: {fileID: 496119946}
   hostNameDisplay: {fileID: 1056959148}
   messageBox: {fileID: 82267576}
