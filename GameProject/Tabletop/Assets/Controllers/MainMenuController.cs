@@ -1,9 +1,8 @@
-﻿using UnityEngine;
+﻿using Controllers.Data;
 using TMPro;
-using Controllers.Objects;
-using Controllers.Data;
-using UnityEngine.SceneManagement;
 using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Controllers
 {

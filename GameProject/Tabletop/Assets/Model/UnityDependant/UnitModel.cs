@@ -16,6 +16,8 @@ namespace Model.UnityDependant
     public class UnitModel : MonoBehaviour, 
         IUnit, ISidedObject, ISelectable<ulong>, IMoveable<Vector3>, IDamageable<Vector3>, IArmored, IUsable, IWeaponUser<Vector3>, IDisposable
     {
+        public const int STOPPING_DISTANCE = 2;
+
         #region Serializations
         [SerializeField] private LayerMask navigableLayer;
         [SerializeField] private LayerMask ignore;
@@ -51,6 +53,19 @@ namespace Model.UnityDependant
                 return UsableWeapons.Any(w => w.IsUsable(where));
             }
             return false;
+        }
+
+        public void ResetUse()
+        {
+            if (UsableWeapons == null)
+            {
+                throw new InvalidOperationException("Usable weapons is null!");
+            }
+            CanMove = true;
+            foreach (UsableWeapon w in UsableWeapons)
+            {
+                w.ResetUse();
+            }
         }
         #endregion
 
@@ -227,18 +242,6 @@ namespace Model.UnityDependant
 
         public UnitConstants? Constants { get; protected set; }
 
-        public void ResetToStartValues()
-        {
-            if (UsableWeapons == null)
-            {
-                throw new InvalidOperationException("Usable weapons is null!");
-            }
-            CanMove = true;
-            foreach (UsableWeapon w in UsableWeapons)
-            {
-                w.CanDamage = true;
-            }
-        }
         #endregion
 
         #region Setup
@@ -262,7 +265,7 @@ namespace Model.UnityDependant
             // Set stopping distance so that the agents wont bash into eachother
             // This might reduce the actual path that they travel a little,
             //  but it will ensure that the agents avoid some unwanted behaviour
-            NavAgent.stoppingDistance = 2;
+            NavAgent.stoppingDistance = STOPPING_DISTANCE;
 
             SetupFinished?.Invoke(this, EventArgs.Empty);
             List<UsableWeapon> ws = new();

@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "Model",
         "Unity.Netcode.Editor",
-        "Unity.Netcode.Runtime"
+        "Unity.Netcode.Runtime",
+        "Unity.AI.Navigation"
     ],
     "includePlatforms": [
         "Editor"

@@ -52,6 +52,8 @@ namespace Controllers.Objects.Game
             SelectedNetworkVar.OnValueChanged += OnSelectedNetworkValueChanged;
             WaypointsNetworkVar.OnListChanged += WaypointsNetworkValueChanged;
             IsDestroyedNetVar.OnValueChanged += IsDestroyedValueChanged;
+
+            OnSelectedNetworkValueChanged(false, SelectedNetworkVar.Value);
         }
 
         #endregion

@@ -386,7 +386,7 @@ namespace Controllers
             {
                 UnitModel m = (gameModel.SelectedUnit as UnitModel)!;
                 SelectedWeaponsNetVar.Clear();
-                foreach (UsableWeapon weapon in m.UsableWeapons)
+                foreach (UsableWeapon weapon in m.UsableWeapons!)
                 {
                     SelectedWeaponsNetVar.Add(new WeaponInfoData((int)weapon.Weapon.Identity, weapon.Weapon.Count, weapon.CanDamage, m.GetInstanceID()));
                 }
@@ -452,7 +452,7 @@ namespace Controllers
                 if (attacked != null)
                 {
                     // Register the defender's stats on the throw sidepanel
-                    throwPanel.RegisterDefender(attacked.Constants.ArmorSave);
+                    throwPanel.RegisterDefender(attacked.Constants!.ArmorSave);
                     // Create the still incomplete AttackCommand
                     gameModel.CreateCommand<AttackCommand<Vector3>>(clientId, attacked);
                     AttackCommand<Vector3> cmd = (gameModel.PendingCommand as AttackCommand<Vector3>)!;
@@ -525,7 +525,7 @@ namespace Controllers
 
             // Refresh the usable weapons' list. (I cant modify a single element so I have to reload the whole list)
             SelectedWeaponsNetVar.Clear();
-            foreach (UsableWeapon weapon in m.UsableWeapons)
+            foreach (UsableWeapon weapon in m.UsableWeapons!)
             {
                 SelectedWeaponsNetVar.Add(new WeaponInfoData((int)weapon.Weapon.Identity, weapon.Weapon.Count, weapon.CanDamage, m.GetInstanceID()));
             }
@@ -790,7 +790,6 @@ namespace Controllers
 
         private void BackToMenu(bool didWin)
         {
-            Debug.Log("Did win invoked!");
             ProfileController.Instance.GameFinished(didWin);
             StartCoroutine(ShutdownRoutine());
         }
@@ -814,6 +813,7 @@ namespace Controllers
         #region Game over
         private void GameModel_GameOver(object sender, Side e)
         {
+            Debug.Log($"Game over: winner: {e}");
             // Server side:
             foreach (KeyValuePair<ulong, GamePlayerData> kvp in gameModel.ConnectedPlayers)
             {
@@ -821,7 +821,8 @@ namespace Controllers
                 {
                     continue;
                 }
-                GameOver_ClientRpc(kvp.Value.Side == e, RpcTarget.Single(kvp.Key, RpcTargetUse.Temp));
+                bool didWin = kvp.Value.Side == e;
+                GameOver_ClientRpc(didWin, RpcTarget.Single(kvp.Key, RpcTargetUse.Temp));
             }
         }
 

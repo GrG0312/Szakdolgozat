@@ -4,8 +4,11 @@ using Model.Units;
 using Model.UnityDependant;
 using Moq;
 using NUnit.Framework;
+using System.Collections;
 using System.Threading.Tasks;
+using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Tests
 {
@@ -13,9 +16,10 @@ namespace Tests
     {
         private UnitModel model;
         private UnitIdentifier id;
+        private GameObject terrainObject;
 
         [SetUp]
-        public void SetupBeforeTest()
+        public void SetupBeforeTests()
         {
             GameObject g = new GameObject("UnitObject", typeof(UnitModel));
             model = g.GetComponent<UnitModel>();
@@ -91,24 +95,6 @@ namespace Tests
             Assert.AreEqual(4, await model.ArmorSave(6, 0, mockedDiceRoller.Object));
             Assert.AreEqual(1, await model.ArmorSave(6, 3, mockedDiceRoller.Object));
             Assert.AreEqual(0, await model.ArmorSave(6, 10, mockedDiceRoller.Object));
-        }
-
-        [Test]
-        public void MoveTest()
-        {
-
-        }
-
-        [Test]
-        public void UsableTest()
-        {
-
-        }
-
-        [Test]
-        public void ResetTest()
-        {
-
         }
     }
 }

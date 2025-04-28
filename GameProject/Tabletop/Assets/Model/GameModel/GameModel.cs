@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Model.GameModel
 {
@@ -310,34 +311,42 @@ namespace Model.GameModel
 
         private bool IsGameOver(out Side winner)
         {
+            Debug.Log("Is game over");
             winner = default;
-            int imp = 0;
-            int chaos = 0;
+            int remainingImp = 0;
+            int remainingChaos = 0;
 
             foreach (GamePlayerData data in ConnectedPlayers.Values)
             {
+                Debug.Log($"Checking: {data.Name}");
+                Debug.Log($"Is defeated: {data.IsDefeated}");
                 if (!data.IsDefeated)
                 {
                     if (data.Side == Side.Imperium)
                     {
-                        imp++;
+                        Debug.Log("+1 to imps defeated");
+                        remainingImp++;
                     } else
                     {
-                        chaos++;
+                        Debug.Log("+1 to chaos defeated");
+                        remainingChaos++;
                     }
                 }
             }
+            Debug.Log($"Results: Imp:{remainingImp} Chaos: {remainingChaos}");
 
-            if (imp == 0)
+            if (remainingImp == 0)
             {
-                winner = Side.Imperium;
-            }
-            else if(chaos == 0)
-            {
+                Debug.Log("Imperium is zero");
                 winner = Side.Chaos;
             }
-
-            return imp == 0 || chaos == 0;
+            else if(remainingChaos == 0)
+            {
+                Debug.Log("Chaos is zero");
+                winner = Side.Imperium;
+            }
+            Debug.Log($"Is game over? {remainingImp == 0 || remainingChaos == 0}");
+            return remainingImp == 0 || remainingChaos == 0;
         }
 
         #endregion

@@ -55,9 +55,9 @@ namespace Model.GameModel
                 if (unit is IDamageable d && !d.Alive)
                 {
                     toBeDestroyed.Add(unit);
-                } else
+                } else if (unit is IUsable u)
                 {
-                    unit.ResetToStartValues();
+                    u.ResetUse();
                 }
             }
             DeleteUnits();

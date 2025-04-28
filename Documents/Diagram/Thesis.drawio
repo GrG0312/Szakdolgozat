@@ -1,16 +1,16 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.2.2 Chrome/134.0.6998.178 Electron/35.1.2 Safari/537.36" version="26.2.2" pages="14">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.2.15 Chrome/134.0.6998.205 Electron/35.2.1 Safari/537.36" version="26.2.15" pages="14">
   <diagram name="Package" id="0dHngJJVYZyibBzDHxPK">
-    <mxGraphModel dx="1060" dy="988" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="983" dy="586" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="6-HtBexL291DEYR0XPAN-2" value="Model" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;" parent="1" vertex="1">
-          <mxGeometry x="170" y="40" width="140" height="460" as="geometry">
+          <mxGeometry x="170" y="40" width="180" height="460" as="geometry">
             <mxRectangle x="344" y="250" width="70" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
         <mxCell id="6-HtBexL291DEYR0XPAN-3" value="+ DeckEntry&lt;div&gt;+ DeckObject&lt;/div&gt;&lt;div&gt;+ AttackCommand&lt;/div&gt;&lt;div&gt;+ MoveCommand&lt;/div&gt;&lt;div&gt;+ ControlPointModel&lt;/div&gt;&lt;div&gt;&lt;/div&gt;+ GameModel&lt;div&gt;+ GamePlayerData&lt;/div&gt;&lt;div&gt;&lt;/div&gt;+ History&lt;div&gt;+ Phase&lt;/div&gt;&lt;div&gt;&lt;/div&gt;+ PlayerPointsChangedEventArgs&lt;div&gt;+ LobbyModel&lt;/div&gt;&lt;div&gt;&lt;/div&gt;+ LobbyPlayerData&lt;div&gt;+ LobbySlot&lt;/div&gt;&lt;div&gt;&lt;/div&gt;+ SlotOccupantStatus&lt;div&gt;+ UnitConstants&lt;/div&gt;&lt;div&gt;&lt;/div&gt;+ UnitIdentifier&lt;div&gt;+ UnitType&lt;/div&gt;&lt;div&gt;&lt;/div&gt;+ DiceRoller&lt;div&gt;+ UnitModel&lt;/div&gt;&lt;div&gt;&lt;/div&gt;+ UnityCommandFactory&lt;div&gt;+ UnityUnitFactory&lt;/div&gt;&lt;div&gt;&lt;/div&gt;+ UnitWeapon&lt;div&gt;+ UsableWeapon&lt;/div&gt;&lt;div&gt;&lt;/div&gt;+ WeaponConstants&lt;div&gt;+ WeaponIdentifier&lt;/div&gt;&lt;div&gt;&lt;/div&gt;+ CollectionHelper&lt;div&gt;+ Defines&lt;/div&gt;&lt;div&gt;&lt;/div&gt;+ Side" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;labelBackgroundColor=none;" parent="6-HtBexL291DEYR0XPAN-2" vertex="1">
-          <mxGeometry y="26" width="140" height="434" as="geometry" />
+          <mxGeometry y="26" width="180" height="434" as="geometry" />
         </mxCell>
         <mxCell id="6-HtBexL291DEYR0XPAN-6" value="View" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;labelBackgroundColor=none;" parent="1" vertex="1">
           <mxGeometry x="170" y="530" width="140" height="90" as="geometry">

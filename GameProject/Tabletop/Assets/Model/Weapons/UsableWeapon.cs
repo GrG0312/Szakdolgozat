@@ -7,7 +7,7 @@ namespace Model.Weapons
 {
     public class UsableWeapon : IDamageDealer, IUsable
     {
-        public bool CanDamage { get; set; }
+        public bool CanDamage { get; private set; }
 
         public UnitWeapon Weapon { get; }
 
@@ -43,6 +43,11 @@ namespace Model.Weapons
                 return CanDamage;
             }
             return false;
+        }
+
+        public void ResetUse()
+        {
+            CanDamage = true;
         }
     }
 }

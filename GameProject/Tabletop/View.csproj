@@ -62,7 +62,8 @@
     <Analyzer Include="D:\Unity\Editor\6000.0.24f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\View\QuickOutline\Scripts\Outline.cs" />
+    <Compile Include="Assets\View\Scripts\ScreenType.cs" />
+    <Compile Include="Assets\View\Scripts\ProfileView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\View\Text\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -71,7 +72,6 @@
     <None Include="Assets\View\Text\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\View\Text\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
     <None Include="Assets\View\Text\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
-    <None Include="Assets\View\QuickOutline\Resources\Shaders\OutlineMask.shader" />
     <None Include="Assets\View\Text\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\View\Text\TextMesh Pro\Shaders\SDFFunctions.hlsl" />
     <None Include="Assets\View\Text\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
@@ -81,14 +81,12 @@
     <None Include="Assets\View\Text\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
     <None Include="Assets\View\Text\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\View\Text\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
-    <None Include="Assets\View\QuickOutline\Readme.txt" />
     <None Include="Assets\View\Text\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\View\Text\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\View\View.asmdef" />
     <None Include="Assets\View\Text\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\View\Text\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
     <None Include="Assets\View\Text\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
-    <None Include="Assets\View\QuickOutline\Resources\Shaders\OutlineFill.shader" />
     <None Include="Assets\View\Text\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
     <None Include="Assets\View\Text\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
     <None Include="Assets\View\Text\TextMesh Pro\Shaders\TMP_Sprite.shader" />
@@ -606,6 +604,14 @@
       <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil\Mono.Cecil.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>Assets\Tests\Plugins\Castle.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>Assets\Tests\Plugins\Moq.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="netstandard">
       <HintPath>D:\Unity\Editor\6000.0.24f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
       <Private>False</Private>
@@ -1112,10 +1118,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Controllers.csproj">
-      <Project>{D0D3B118-9B45-1B8F-446C-21069B9EEAF2}</Project>
-      <Name>Controllers</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

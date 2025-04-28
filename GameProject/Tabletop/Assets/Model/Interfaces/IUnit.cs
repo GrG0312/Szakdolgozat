@@ -16,10 +16,5 @@ namespace Model.Interfaces
         /// Base values of this unit.
         /// </summary>
         public UnitConstants Constants { get; }
-
-        /// <summary>
-        /// Reset the unit's values to their original values at the beginning of a turn.
-        /// </summary>
-        public void ResetToStartValues();
     }
 }

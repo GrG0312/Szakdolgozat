@@ -36,12 +36,15 @@ namespace Tests
         public void ResetUnitsTest()
         {
             Mock<IUnit> mockedUnit1 = new Mock<IUnit>();
+            mockedUnit1.As<IUsable>().Setup(m => m.ResetUse());
             mockedUnit1.As<IDamageable>().Setup(m => m.Alive).Returns(true);
 
             Mock<IUnit> mockedUnit2 = new Mock<IUnit>();
+            mockedUnit2.As<IUsable>().Setup(m => m.ResetUse());
             mockedUnit2.As<IDamageable>().Setup(m => m.Alive).Returns(false);
 
             Mock<IUnit> mockedUnit3 = new Mock<IUnit>();
+            mockedUnit3.As<IUsable>().Setup(m => m.ResetUse());
             mockedUnit3.As<IDamageable>().Setup(m => m.Alive).Returns(true);
 
             data.GetUnit(mockedUnit1.Object);
@@ -52,9 +55,9 @@ namespace Tests
 
             data.ResetUnits();
 
-            mockedUnit1.Verify(m => m.ResetToStartValues(), Times.Once());
-            mockedUnit2.Verify(m => m.ResetToStartValues(), Times.Never());
-            mockedUnit3.Verify(m => m.ResetToStartValues(), Times.Once());
+            mockedUnit1.As<IUsable>().Verify(m => m.ResetUse(), Times.Once());
+            mockedUnit2.As<IUsable>().Verify(m => m.ResetUse(), Times.Never());
+            mockedUnit3.As<IUsable>().Verify(m => m.ResetUse(), Times.Once());
 
             Assert.AreEqual(2, data.UnitsInPlay.Count);
         }

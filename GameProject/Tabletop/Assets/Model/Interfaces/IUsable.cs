@@ -11,5 +11,10 @@ namespace Model.Interfaces
         /// Return if the object is usable in the <paramref name="p"/> Phase
         /// </summary>
         public bool IsUsable(Phase p);
+
+        /// <summary>
+        /// Reset the object's values to their original values at the beginning of a turn.
+        /// </summary>
+        public void ResetUse();
     }
 }
