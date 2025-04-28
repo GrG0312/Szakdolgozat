@@ -176,6 +176,8 @@ namespace Controllers
 
                 cameraObject.NetworkObject.ChangeOwnership(gameModel.ActivePlayerId);
 
+                NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
+
                 gameModel.StartGame();
                 ForceUpdate_ClientRpc(PlayerNameNetVar.Value, TurnCounterNetVar.Value, PhaseNetVar.Value);
             }
@@ -830,6 +832,11 @@ namespace Controllers
         private void GameOver_ClientRpc(bool didWin, RpcParams param)
         {
             BackToMenu(didWin);
+        }
+
+        private void OnClientDisconnect(ulong obj)
+        {
+            gameModel.CheckForGameOver();
         }
         #endregion
     }

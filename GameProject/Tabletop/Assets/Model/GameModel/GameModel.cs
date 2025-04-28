@@ -234,13 +234,8 @@ namespace Model.GameModel
             }
             commandHistory.Flush();
 
-            if (IsGameOver(out Side winner))
+            if (CheckForGameOver())
             {
-                foreach (GamePlayerData data in ConnectedPlayers.Values)
-                {
-                    data.DeleteUnits(true);
-                }
-                GameOver?.Invoke(this, winner);
                 return;
             }
 
@@ -309,6 +304,19 @@ namespace Model.GameModel
             }
         }
 
+        public bool CheckForGameOver()
+        {
+            if (IsGameOver(out Side winner))
+            {
+                foreach (GamePlayerData data in ConnectedPlayers.Values)
+                {
+                    data.DeleteUnits(true);
+                }
+                GameOver?.Invoke(this, winner);
+                return true;
+            }
+            return false;
+        }
         private bool IsGameOver(out Side winner)
         {
             Debug.Log("Is game over");
