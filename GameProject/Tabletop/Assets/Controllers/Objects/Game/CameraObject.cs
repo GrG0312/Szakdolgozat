@@ -21,7 +21,6 @@ namespace Controllers.Objects.Game
 
         #endregion
 
-
         private Vector3 prevPosition;
         public Camera AttachedCamera { get => attachedCamera; }
 

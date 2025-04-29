@@ -23,6 +23,9 @@ namespace Controllers.Objects.Game
             this.gameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// Creates a "circle" gameobject 
+        /// </summary>
         private void CreateRangeCircle(int range)
         {
             // Create the gameobjects for a singe range circle
@@ -40,6 +43,9 @@ namespace Controllers.Objects.Game
             };
         }
 
+        /// <summary>
+        /// Creates and returns a mesh for a circle gameobject with a given <paramref name="radius"/>
+        /// </summary>
         private Mesh CreateSegmentedRangeMesh(float radius)
         {
             Mesh mesh = new Mesh();

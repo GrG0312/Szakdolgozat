@@ -26,7 +26,7 @@ namespace Controllers.Data
 
         public bool Equals(SelectedUnitData other)
         {
-            return InstanceID == other.InstanceID;
+            return InstanceID == other.InstanceID && CanUnitMove == other.CanUnitMove && WoundNow == other.WoundNow;
         }
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter

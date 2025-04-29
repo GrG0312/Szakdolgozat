@@ -35,14 +35,27 @@ namespace Tests
             Assert.AreEqual(-1, controlPoint.Owner);
         }
 
+        [Test]
         public void SingleContesterTest()
+        {
+            UnitIdentifier id = UnitIdentifier.TacticalMarine;
+            Mock<IUnit> mockedUnit = new Mock<IUnit>();
+            mockedUnit.As<ISidedObject>().Setup(m => m.Side).Returns(Side.Imperium);
+            mockedUnit.Setup(m => m.Constants).Returns(Defines.UnitValues[id]);
+
+            controlPoint.ContesterChanged(mockedUnit.Object, true);
+            Assert.AreEqual((int)Side.Imperium, controlPoint.Owner);
+
+            controlPoint.ContesterChanged(mockedUnit.Object, false);
+            Assert.AreEqual((int)Side.Imperium, controlPoint.Owner);
+        }
+
+        [Test]
+        public void MultipleContesterTest()
         {
             Mock<IUnit> mockedUnit = new Mock<IUnit>();
             mockedUnit.As<ISidedObject>().Setup(m => m.Side).Returns(Side.Imperium);
             mockedUnit.Setup(m => m.Constants).Returns(Defines.UnitValues[UnitIdentifier.TacticalMarine]);
-
-            controlPoint.ContesterChanged(mockedUnit.Object, true);
-
         }
     }
 }

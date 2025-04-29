@@ -9,7 +9,6 @@ namespace Controllers.Data
 {
     public struct WeaponInfoData : INetworkSerializable, IEquatable<WeaponInfoData>
     {
-
         public int OwnerInstanceID;
         public int WeaponIdentifier; // constants come from defines
         public int Count;
