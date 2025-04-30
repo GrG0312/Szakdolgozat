@@ -9,11 +9,8 @@ using Model.Weapons;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Security.Principal;
+using System.Threading.Tasks;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
-using static UnityEngine.UI.GridLayoutGroup;
-using UnityEngine.UIElements;
 
 namespace Tests
 {
@@ -25,6 +22,7 @@ namespace Tests
         private Mock<IDiceRoller> mockedDiceRoller;
         private Dictionary<ulong, Mock<GamePlayerData>> mockedPlayerDatas;
         private GameModel<ulong> gameModel;
+        private ControlPointModel cp;
 
         [SetUp] // Runs before EACH testmethod
         public void SetupBeforeTest()
@@ -32,7 +30,7 @@ namespace Tests
             mockedPlayerDatas = new Dictionary<ulong, Mock<GamePlayerData>>()
             {
                 { 0, new Mock<GamePlayerData>("ImperialPlayer", new DeckObject(), Side.Imperium) },
-                { 1, new Mock<GamePlayerData>("ChaosPlayer", new DeckObject(), Side.Chaos) }
+                { 1, new Mock<GamePlayerData>("ChaosPlayer", new DeckObject(), Side.Chaos) },
             };
 
             mockedUnitFactory = new Mock<IUnitFactory<ulong>>();
@@ -41,7 +39,7 @@ namespace Tests
 
             mockedDiceRoller = new Mock<IDiceRoller>();
 
-            ControlPointModel cp = new ControlPointModel();
+            cp = new ControlPointModel();
 
             Dictionary<ulong, GamePlayerData> mockedData = new Dictionary<ulong, GamePlayerData>();
             foreach (var kvp in mockedPlayerDatas)
@@ -273,7 +271,6 @@ namespace Tests
             Assert.IsNull(gameModel.PendingCommand);
         }
 
-
         [Test]
         public void CycleTest()
         {
@@ -330,6 +327,94 @@ namespace Tests
 
             Assert.IsTrue(didUnitCycled);
             Assert.IsNull(gameModel.SelectedUnit);
+        }
+
+        [Test]
+        public void ControlPointChangedTest()
+        {
+            Mock<IUnit> mockedUnit1 = new Mock<IUnit>();
+            mockedUnit1.As<ISidedObject>().Setup(m => m.Side).Returns(Side.Imperium);
+            mockedUnit1.Setup(m => m.Constants).Returns(Defines.UnitValues[UnitIdentifier.TacticalMarine]);
+
+            Mock<IUnit> mockedUnit2 = new Mock<IUnit>();
+            mockedUnit2.As<ISidedObject>().Setup(m => m.Side).Returns(Side.Chaos);
+            mockedUnit2.Setup(m => m.Constants).Returns(Defines.UnitValues[UnitIdentifier.ChaosLegionnaire]);
+
+            Assert.AreEqual(0, mockedPlayerDatas[0].Object.CapturedPoints);
+            cp.ContesterChanged(mockedUnit1.Object, true);
+            Assert.AreEqual(1, mockedPlayerDatas[0].Object.CapturedPoints);
+            cp.ContesterChanged(mockedUnit1.Object, false);
+            Assert.AreEqual(1, mockedPlayerDatas[0].Object.CapturedPoints);
+            cp.ContesterChanged(mockedUnit2.Object, true);
+            Assert.AreEqual(0, mockedPlayerDatas[0].Object.CapturedPoints);
+            Assert.AreEqual(1, mockedPlayerDatas[1].Object.CapturedPoints);
+
+        }
+
+        [Test]
+        public void ForfeitNotActiveTest()
+        {
+            Assert.AreEqual(0, gameModel.ActivePlayerId);
+            gameModel.Forfeit(1);
+            Assert.AreEqual(0, gameModel.ActivePlayerId);
+            Assert.AreEqual(2, gameModel.ConnectedPlayers.Count);
+            Assert.IsFalse(gameModel.ConnectedPlayers[1].IsConnected);
+            Assert.IsTrue(gameModel.ConnectedPlayers[1].IsDefeated);
+        }
+
+        [Test]
+        public void ForfeitActiveTest()
+        {
+            int winner = -1;
+            gameModel.GameOver += (s, e) => winner = (int)e;
+            Assert.AreEqual(0, gameModel.ActivePlayerId);
+            gameModel.Forfeit(0);
+            // 0 because when game is over it wont go to the next player
+            Assert.AreEqual(0, gameModel.ActivePlayerId);
+            Assert.AreEqual((int)Side.Chaos, winner);
+        }
+
+        [Test]
+        public void AbortCommandTest()
+        {
+            Mock<IGameCommand> mockedCommand = new Mock<IGameCommand>();
+            Mock<ISelectable<ulong>> mockedUnit = new Mock<ISelectable<ulong>>();
+
+            mockedCommandFactory.Setup(m => m.Produce<AttackCommand<Vector3>>(It.IsAny<object[]>())).Returns(mockedCommand.Object);
+
+            gameModel.SelectUnit(0, mockedUnit.Object);
+            gameModel.CreateCommand<AttackCommand<Vector3>>(0);
+
+            Assert.IsNotNull(gameModel.PendingCommand);
+            gameModel.AbortCommand();
+            Assert.IsNull(gameModel.PendingCommand);
+        }
+
+        [Test]
+        public async Task UndoCommandTest()
+        {
+            Assert.DoesNotThrow(() => gameModel.UndoCommand(0));
+
+            Mock<IGameCommand> mockedCommand = new Mock<IGameCommand>();
+            mockedCommand.Setup(m => m.CanExecute(It.IsAny<Phase>())).Returns(true);
+            mockedCommand.As<IUndoableCommand>().Setup(m => m.Undo());
+            Mock<ISelectable<ulong>> mockedUnit = new Mock<ISelectable<ulong>>();
+
+            mockedCommandFactory.Setup(m => m.Produce<MoveCommand<Vector3>>(It.IsAny<object[]>())).Returns(mockedCommand.Object);
+
+            gameModel.SelectUnit(0, mockedUnit.Object);
+            gameModel.CreateCommand<MoveCommand<Vector3>>(0);
+            await gameModel.ExecuteCommand();
+
+            Assert.IsNull(gameModel.PendingCommand);
+            mockedCommand.Verify(m => m.Execute(), Times.Once());
+            mockedCommand.As<IUndoableCommand>().Verify(m => m.Undo(), Times.Never());
+            gameModel.UndoCommand(1);
+            mockedCommand.As<IUndoableCommand>().Verify(m => m.Undo(), Times.Never());
+            gameModel.UndoCommand(0);
+            mockedCommand.As<IUndoableCommand>().Verify(m => m.Undo(), Times.Once());
+            gameModel.UndoCommand(0);
+            mockedCommand.As<IUndoableCommand>().Verify(m => m.Undo(), Times.Once());
         }
     }
 }

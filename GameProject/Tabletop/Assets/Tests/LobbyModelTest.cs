@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Model;
 using System.Collections.Generic;
+using Model.Units;
 
 namespace Tests
 {
@@ -117,6 +118,50 @@ namespace Tests
             Assert.IsNull(model.LobbySlots[0].PlayerData);
             Assert.AreEqual(SlotOccupantStatus.Open, model.LobbySlots[0].OccupantStatus);
             Assert.Throws<TabletopException>(() => model.GetSlotOfPlayer(0));
+        }
+
+        [Test]
+        public void CanStartTest()
+        {
+            TabletopException ex;
+            // No clients
+            ex = Assert.Throws<TabletopException>(() => model.CanStart());
+            Assert.AreEqual("There are no connected players", ex.Message);
+
+
+            model.ReserveEmptySlot();
+            model.AddNewPlayer(0, "RandomPlayer", 0);
+
+            // Player is not ready
+            ex = Assert.Throws<TabletopException>(() => model.CanStart());
+            Assert.AreEqual("Not all players are ready", ex.Message);
+
+            model.ConnectedClients[0].IsReady = true;
+            // Deck is empty
+            ex = Assert.Throws<TabletopException>(() => model.CanStart());
+            Assert.AreEqual("Not everyone have units selected in their deck", ex.Message);
+
+            model.ConnectedClients[0].Deck.Add(UnitIdentifier.Kriegsman);
+
+            ex = Assert.Throws<TabletopException>(() => model.CanStart());
+            Assert.AreEqual("The teams are not equal", ex.Message);
+
+
+            model.ReserveEmptySlot();
+            model.AddNewPlayer(1, "RandomPlayer2", 1);
+
+            // Player is not ready
+            ex = Assert.Throws<TabletopException>(() => model.CanStart());
+            Assert.AreEqual("Not all players are ready", ex.Message);
+
+            model.ConnectedClients[1].IsReady = true;
+            // Deck is empty
+            ex = Assert.Throws<TabletopException>(() => model.CanStart());
+            Assert.AreEqual("Not everyone have units selected in their deck", ex.Message);
+
+            model.ConnectedClients[1].Deck.Add(UnitIdentifier.ChaosLegionnaire);
+
+            Assert.IsTrue(model.CanStart());
         }
     }
 }

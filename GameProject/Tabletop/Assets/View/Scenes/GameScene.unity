@@ -4691,8 +4691,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278226385
-  m_fontColor: {r: 0.81960785, g: 0.5529412, b: 0, a: 1}
+    rgba: 4278197076
+  m_fontColor: {r: 0.32941177, g: 0.105882354, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -5968,7 +5968,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4278226385
-  m_fontColor: {r: 0.81960785, g: 0.5529412, b: 0, a: 1}
+  m_fontColor: {r: 0.32941177, g: 0.105882354, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6943,8 +6943,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278226385
-  m_fontColor: {r: 0.81960785, g: 0.5529412, b: 0, a: 1}
+    rgba: 4278197076
+  m_fontColor: {r: 0.32941177, g: 0.105882354, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7248,8 +7248,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278226385
-  m_fontColor: {r: 0.81960785, g: 0.5529412, b: 0, a: 1}
+    rgba: 4278197076
+  m_fontColor: {r: 0.3301887, g: 0.10681044, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7444,8 +7444,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278226385
-  m_fontColor: {r: 0.81960785, g: 0.5529412, b: 0, a: 1}
+    rgba: 4278197076
+  m_fontColor: {r: 0.32941177, g: 0.105882354, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -9749,8 +9749,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278226385
-  m_fontColor: {r: 0.81960785, g: 0.5529412, b: 0, a: 1}
+    rgba: 4278197076
+  m_fontColor: {r: 0.32941177, g: 0.105882354, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -9957,9 +9957,6 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  uiLayer:
-    serializedVersion: 2
-    m_Bits: 32
   inputActionAsset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   selectAction: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
@@ -9970,7 +9967,6 @@ MonoBehaviour:
   selector: {fileID: 1259137961}
   diceRoller: {fileID: 2093534373}
   infopanel: {fileID: 164274053}
-  buttonControlPanel: {fileID: 521312927}
   throwPanel: {fileID: 811112353}
   rangeIndicatorObject: {fileID: 508241211}
 --- !u!1 &6922252805036869085

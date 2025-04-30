@@ -24,6 +24,10 @@ namespace Model.Lobby
 
         public bool CanStart()
         {
+            if (ConnectedClients.Count == 0)
+            {
+                throw new TabletopException("There are no connected players");
+            }
             if (!ConnectedClients.All(kvp => kvp.Value.IsReady))
             {
                 throw new TabletopException("Not all players are ready");

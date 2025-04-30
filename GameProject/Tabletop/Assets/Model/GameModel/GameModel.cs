@@ -498,7 +498,7 @@ namespace Model.GameModel
                     undoable.Undo();
                     commandHistory.Pop();
                 }
-            } catch (IndexOutOfRangeException) { /* No need to do anything, since if the history is empty then there is nothing to undo */ }
+            } catch (ArgumentOutOfRangeException) { /* No need to do anything, since if the history is empty then there is nothing to undo */ }
         }
 
         #endregion

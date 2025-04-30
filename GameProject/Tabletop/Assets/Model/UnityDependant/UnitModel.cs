@@ -33,10 +33,6 @@ namespace Model.UnityDependant
             {
                 return false;
             }
-            if (d is IOwned<ulong> o && o.Owner == this.Owner)
-            {
-                return false;
-            }
             return true;
         }
 

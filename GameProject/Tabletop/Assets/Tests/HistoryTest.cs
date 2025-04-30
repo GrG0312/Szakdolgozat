@@ -11,6 +11,7 @@ namespace Tests
             History<int> h = new History<int>();
             Assert.AreEqual(5, h.Limit);
         }
+
         [Test]
         public void PeekPopTest()
         {
@@ -22,7 +23,10 @@ namespace Tests
             h.Push(5);
             Assert.AreEqual(5, h.Peek());
             Assert.AreEqual(5, h.Pop());
+
+            Assert.AreEqual(4, h.Peek());
         }
+
         [Test]
         public void DroppingOldestTest()
         {

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Children:
   - {fileID: 3}
-  - {fileID: 14}
+  - {fileID: 16}
   m_Position:
     serializedVersion: 2
     x: 0
@@ -24,187 +24,9 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 85028
+  controlID: 1358
   draggingID: 0
 --- !u!114 &2
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 1
-  m_Script: {fileID: 12015, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
-  m_TitleContent:
-    m_Text: Game
-    m_Image: {fileID: -6423792434712278376, guid: 0000000000000000d000000000000000, type: 0}
-    m_Tooltip: 
-    m_TextWithWhitespace: "Game\u200B"
-  m_Pos:
-    serializedVersion: 2
-    x: 305
-    y: 24
-    width: 947
-    height: 508
-  m_SerializedDataModeController:
-    m_DataMode: 0
-    m_PreferredDataMode: 0
-    m_SupportedDataModes: 
-    isAutomatic: 1
-  m_ViewDataDictionary: {fileID: 0}
-  m_OverlayCanvas:
-    m_LastAppliedPresetName: Default
-    m_SaveData: []
-    m_ContainerData: []
-    m_OverlaysVisible: 1
-  m_SerializedViewNames: []
-  m_SerializedViewValues: []
-  m_PlayModeViewName: GameView
-  m_ShowGizmos: 0
-  m_TargetDisplay: 0
-  m_ClearColor: {r: 0, g: 0, b: 0, a: 0}
-  m_TargetSize: {x: 866, y: 487}
-  m_TextureFilterMode: 0
-  m_TextureHideFlags: 61
-  m_RenderIMGUI: 1
-  m_EnterPlayModeBehavior: 1
-  m_UseMipMap: 0
-  m_VSyncEnabled: 0
-  m_Gizmos: 0
-  m_Stats: 0
-  m_SelectedSizes: 01000000000000000000000000000000000000000000000000000000000000000000000000000000
-  m_ZoomArea:
-    m_HRangeLocked: 0
-    m_VRangeLocked: 0
-    hZoomLockedByDefault: 0
-    vZoomLockedByDefault: 0
-    m_HBaseRangeMin: -433
-    m_HBaseRangeMax: 433
-    m_VBaseRangeMin: -243.5
-    m_VBaseRangeMax: 243.5
-    m_HAllowExceedBaseRangeMin: 1
-    m_HAllowExceedBaseRangeMax: 1
-    m_VAllowExceedBaseRangeMin: 1
-    m_VAllowExceedBaseRangeMax: 1
-    m_ScaleWithWindow: 0
-    m_HSlider: 0
-    m_VSlider: 0
-    m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 0
-    m_EnableSliderZoomHorizontal: 0
-    m_EnableSliderZoomVertical: 0
-    m_UniformScale: 1
-    m_UpDirection: 1
-    m_DrawArea:
-      serializedVersion: 2
-      x: 0
-      y: 21
-      width: 947
-      height: 487
-    m_Scale: {x: 1, y: 1}
-    m_Translation: {x: 473.5, y: 243.5}
-    m_MarginLeft: 0
-    m_MarginRight: 0
-    m_MarginTop: 0
-    m_MarginBottom: 0
-    m_LastShownAreaInsideMargins:
-      serializedVersion: 2
-      x: -473.5
-      y: -243.5
-      width: 947
-      height: 487
-    m_MinimalGUI: 1
-  m_defaultScale: 1
-  m_LastWindowPixelSize: {x: 947, y: 508}
-  m_ClearInEditMode: 1
-  m_NoCameraWarning: 1
-  m_LowResolutionForAspectRatios: 01000000000000000000
-  m_XRRenderMode: 0
-  m_RenderTexture: {fileID: 0}
---- !u!114 &3
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 1
-  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Children:
-  - {fileID: 4}
-  - {fileID: 9}
-  m_Position:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1253
-    height: 941
-  m_MinSize: {x: 200, y: 100}
-  m_MaxSize: {x: 16192, y: 16192}
-  vertical: 1
-  controlID: 85029
-  draggingID: 0
---- !u!114 &4
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 1
-  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Children:
-  - {fileID: 5}
-  - {fileID: 7}
-  m_Position:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1253
-    height: 534
-  m_MinSize: {x: 200, y: 50}
-  m_MaxSize: {x: 16192, y: 8096}
-  vertical: 0
-  controlID: 85030
-  draggingID: 0
---- !u!114 &5
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 1
-  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Children: []
-  m_Position:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 304
-    height: 534
-  m_MinSize: {x: 201, y: 226}
-  m_MaxSize: {x: 4001, y: 4026}
-  m_ActualView: {fileID: 6}
-  m_Panes:
-  - {fileID: 6}
-  m_Selected: 0
-  m_LastSelected: 0
---- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -227,8 +49,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 79
-    width: 303
-    height: 508
+    width: 333
+    height: 579
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -245,7 +67,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: de3efdffea3efdff9c47fdff0655fdffc459fdff0c5afdff805cfdffb65cfdff085dfdffea5ffdff9468fdff526dfdff9a6dfdff1270fdff4c70fdffa270fdff4675fdff6475fdff3e7efdff5483fdff9c83fdff6886fdff9e86fdfff086fdffeacefdff04cffdff18cffdff2af2fdff9006feff9206feff9c06feffac0efeffb80efeff6423feff262bfefff445feffdac6fefff0c6feff34c7feff4ec7feff62c7feff3ce4feffda66fffffaebffff7cf8ffff90f8ffff96f8ffffdefaffff12cd00000a630100ec63010000640100
+      m_ExpandedIDs: 3aaeffff18b0ffff64b1ffffdab2fffffcb4fffff4b6ffff80b9ffff6abbffff5cbdffffa8beffff2cc1ffffa0c2ffff7ac5ffff56c7ffffa4c8fffff8c9ffffa2cdffff9ccfffff9ed1ffffa0d3ffff72d5ffff46d7ffff9ed9ffff9adbffff22ddffffc2deffff22e0ffff00e2ffffd8e3ffffb4e5ffffeae7ffff2eeaffff5cecffffbafaffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -270,7 +92,59 @@ MonoBehaviour:
       m_IsLocked: 0
     m_CurrentSortingName: TransformSorting
   m_WindowGUID: 4c969a2b90040154d917609493e03593
---- !u!114 &7
+--- !u!114 &3
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children:
+  - {fileID: 4}
+  - {fileID: 9}
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1396
+    height: 941
+  m_MinSize: {x: 200, y: 100}
+  m_MaxSize: {x: 16192, y: 16192}
+  vertical: 1
+  controlID: 1359
+  draggingID: 0
+--- !u!114 &4
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children:
+  - {fileID: 5}
+  - {fileID: 6}
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1396
+    height: 605
+  m_MinSize: {x: 200, y: 50}
+  m_MaxSize: {x: 16192, y: 8096}
+  vertical: 0
+  controlID: 1360
+  draggingID: 0
+--- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -280,24 +154,50 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: GameView
+  m_Name: 
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 304
+    x: 0
     y: 0
-    width: 949
-    height: 534
-  m_MinSize: {x: 202, y: 226}
-  m_MaxSize: {x: 4002, y: 4026}
+    width: 334
+    height: 605
+  m_MinSize: {x: 201, y: 226}
+  m_MaxSize: {x: 4001, y: 4026}
   m_ActualView: {fileID: 2}
   m_Panes:
-  - {fileID: 8}
   - {fileID: 2}
-  m_Selected: 1
+  m_Selected: 0
   m_LastSelected: 0
---- !u!114 &8
+--- !u!114 &6
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: SceneView
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 334
+    y: 0
+    width: 1062
+    height: 605
+  m_MinSize: {x: 202, y: 226}
+  m_MaxSize: {x: 4002, y: 4026}
+  m_ActualView: {fileID: 7}
+  m_Panes:
+  - {fileID: 7}
+  - {fileID: 8}
+  m_Selected: 0
+  m_LastSelected: 1
+--- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -318,10 +218,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Scene\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 304
+    x: 334
     y: 79
-    width: 947
-    height: 508
+    width: 1060
+    height: 579
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -894,19 +794,19 @@ MonoBehaviour:
       scrollOffset: 0
     m_OverlaysVisible: 1
   m_WindowGUID: cc27987af1a868c49b0894db9c0f5429
-  m_Gizmos: 0
+  m_Gizmos: 1
   m_OverrideSceneCullingMask: 6917529027641081856
   m_SceneIsLit: 1
   m_SceneLighting: 1
-  m_2DMode: 1
+  m_2DMode: 0
   m_isRotationLocked: 0
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 160.31577, y: 353.4498, z: 25158.562}
+    m_Target: {x: 757.2245, y: 402.85886, z: 1102.9939}
     speed: 2
-    m_Value: {x: 160.31577, y: 353.4498, z: 25158.562}
+    m_Value: {x: 757.2245, y: 402.85886, z: 1102.9939}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -952,17 +852,17 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0, y: 0, z: 0, w: 1}
+    m_Target: {x: 0.016806245, y: 0.012641991, z: -0.0006166145, w: 1.0001056}
     speed: 2
-    m_Value: {x: 0, y: 0, z: 0, w: 1}
+    m_Value: {x: -0.016806245, y: -0.012641991, z: 0.0006166145, w: -1.0001056}
   m_Size:
-    m_Target: 190.14125
+    m_Target: 1110.597
     speed: 2
-    m_Value: 190.14125
+    m_Value: 1110.597
   m_Ortho:
-    m_Target: 1
+    m_Target: 0
     speed: 2
-    m_Value: 1
+    m_Value: 0
   m_CameraSettings:
     m_Speed: 1
     m_SpeedNormalized: 0.5
@@ -979,7 +879,7 @@ MonoBehaviour:
   m_LastSceneViewRotation: {x: -0.08717229, y: 0.89959055, z: -0.21045254, w: -0.3726226}
   m_LastSceneViewOrtho: 0
   m_Viewpoint:
-    m_SceneView: {fileID: 8}
+    m_SceneView: {fileID: 7}
     m_CameraOverscanSettings:
       m_Opacity: 50
       m_Scale: 1
@@ -989,6 +889,106 @@ MonoBehaviour:
   m_LastLockedObject: {fileID: 0}
   m_LastDebugDrawMode: 35
   m_ViewIsLockedToObject: 0
+--- !u!114 &8
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12015, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Game
+    m_Image: {fileID: -6423792434712278376, guid: 0000000000000000d000000000000000, type: 0}
+    m_Tooltip: 
+    m_TextWithWhitespace: "Game\u200B"
+  m_Pos:
+    serializedVersion: 2
+    x: 342
+    y: 87
+    width: 1060
+    height: 579
+  m_SerializedDataModeController:
+    m_DataMode: 0
+    m_PreferredDataMode: 0
+    m_SupportedDataModes: 
+    isAutomatic: 1
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+    m_ContainerData: []
+    m_OverlaysVisible: 1
+  m_SerializedViewNames: []
+  m_SerializedViewValues: []
+  m_PlayModeViewName: GameView
+  m_ShowGizmos: 0
+  m_TargetDisplay: 0
+  m_ClearColor: {r: 0, g: 0, b: 0, a: 0}
+  m_TargetSize: {x: 1920, y: 1080}
+  m_TextureFilterMode: 0
+  m_TextureHideFlags: 61
+  m_RenderIMGUI: 1
+  m_EnterPlayModeBehavior: 0
+  m_UseMipMap: 0
+  m_VSyncEnabled: 0
+  m_Gizmos: 0
+  m_Stats: 0
+  m_SelectedSizes: 03000000000000000000000000000000000000000000000000000000000000000000000000000000
+  m_ZoomArea:
+    m_HRangeLocked: 0
+    m_VRangeLocked: 0
+    hZoomLockedByDefault: 0
+    vZoomLockedByDefault: 0
+    m_HBaseRangeMin: -960
+    m_HBaseRangeMax: 960
+    m_VBaseRangeMin: -540
+    m_VBaseRangeMax: 540
+    m_HAllowExceedBaseRangeMin: 1
+    m_HAllowExceedBaseRangeMax: 1
+    m_VAllowExceedBaseRangeMin: 1
+    m_VAllowExceedBaseRangeMax: 1
+    m_ScaleWithWindow: 0
+    m_HSlider: 0
+    m_VSlider: 0
+    m_IgnoreScrollWheelUntilClicked: 0
+    m_EnableMouseInput: 0
+    m_EnableSliderZoomHorizontal: 0
+    m_EnableSliderZoomVertical: 0
+    m_UniformScale: 1
+    m_UpDirection: 1
+    m_DrawArea:
+      serializedVersion: 2
+      x: 0
+      y: 21
+      width: 1060
+      height: 558
+    m_Scale: {x: 0.51666665, y: 0.51666665}
+    m_Translation: {x: 530, y: 279}
+    m_MarginLeft: 0
+    m_MarginRight: 0
+    m_MarginTop: 0
+    m_MarginBottom: 0
+    m_LastShownAreaInsideMargins:
+      serializedVersion: 2
+      x: -1025.8065
+      y: -540
+      width: 2051.613
+      height: 1080
+    m_MinimalGUI: 1
+  m_defaultScale: 0.51666665
+  m_LastWindowPixelSize: {x: 1060, y: 579}
+  m_ClearInEditMode: 1
+  m_NoCameraWarning: 1
+  m_LowResolutionForAspectRatios: 01000000000000000000
+  m_XRRenderMode: 0
+  m_RenderTexture: {fileID: 0}
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -999,25 +999,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: ProjectBrowser
+  m_Name: CodeCoverageWindow
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
     serializedVersion: 2
     x: 0
-    y: 534
-    width: 1253
-    height: 407
-  m_MinSize: {x: 230, y: 250}
-  m_MaxSize: {x: 10000, y: 10000}
-  m_ActualView: {fileID: 10}
+    y: 605
+    width: 1396
+    height: 336
+  m_MinSize: {x: 446, y: 91}
+  m_MaxSize: {x: 4001, y: 4026}
+  m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 10}
   - {fileID: 11}
   - {fileID: 12}
   - {fileID: 13}
-  m_Selected: 0
-  m_LastSelected: 1
+  - {fileID: 14}
+  - {fileID: 15}
+  m_Selected: 5
+  m_LastSelected: 3
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -1039,10 +1041,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Project\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 0
-    y: 613
-    width: 1252
-    height: 381
+    x: 8
+    y: 677
+    width: 1383
+    height: 301
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1065,7 +1067,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/View/Prefabs
+    - Assets/Controllers/Objects/Lobby
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1075,16 +1077,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/View/Prefabs
+  - Assets/Controllers/Objects/Lobby
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\Szakdolgozat\GameProject\Tabletop
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: a6cc0000
-    m_LastClickedID: 52390
-    m_ExpandedIDs: 0000000022cc000024cc000026cc000028cc00008ecc000000ca9a3b
+    scrollPos: {x: 0, y: 79}
+    m_SelectedIDs: d0d30000
+    m_LastClickedID: 54224
+    m_ExpandedIDs: 0000000026d3000028d300002ad300002cd300002ed3000030d3000032d3000034d3000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1113,7 +1115,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000022cc000024cc000026cc000028cc00008ecc000000ca9a3b
+    m_ExpandedIDs: 0000000026d3000028d300002ad300002cd300002ed3000030d3000032d3000034d3000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1139,10 +1141,10 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 4ca20100
-    m_LastClickedInstanceID: 107084
+    m_SelectedInstanceIDs: 
+    m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 0
-    m_ExpandedInstanceIDs: c623000000000000a0020000
+    m_ExpandedInstanceIDs: c623000000000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1192,10 +1194,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Console\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 0
-    y: 613
-    width: 1252
-    height: 381
+    x: 8
+    y: 677
+    width: 1383
+    height: 301
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1228,10 +1230,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Multiplayer Play Mode\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 0
-    y: 613
-    width: 1252
-    height: 381
+    x: 8
+    y: 677
+    width: 1383
+    height: 301
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1266,9 +1268,9 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 613
-    width: 1252
-    height: 381
+    y: 684
+    width: 1395
+    height: 310
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1281,22 +1283,22 @@ MonoBehaviour:
     m_ContainerData: []
     m_OverlaysVisible: 1
   m_Spl:
-    ID: 30496
-    splitterInitialOffset: 0
+    ID: 747
+    splitterInitialOffset: 198
     currentActiveSplitter: -1
     realSizes:
-    - 233
-    - 78
+    - 152
+    - 88
     relativeSizes:
-    - 0.75
-    - 0.25
+    - 0.6329114
+    - 0.36708862
     minSizes:
     - 32
     - 32
     maxSizes:
     - 0
     - 0
-    lastTotalSize: 311
+    lastTotalSize: 240
     splitSize: 6
     xOffset: 0
     m_Version: 1
@@ -1308,7 +1310,7 @@ MonoBehaviour:
   m_TestListGUIs:
   - m_Window: {fileID: 13}
     runProgress:
-      RunGuid: b18ef126-05ff-447b-93c6-fe9869fb07ce
+      RunGuid: b63d79a2-05a6-4289-98de-7985dc11dff1
       ExecutionSettings:
         m_TargetPlatform: 0
         m_HasTargetPlatform: 0
@@ -1335,7 +1337,7 @@ MonoBehaviour:
           disableNestedEnumeratorBugfix: 0
         randomOrderSeed: 0
       HasFinished: 1
-      Progress: 0.9999999
+      Progress: 1.0000001
       CurrentStepName: Unlock Reload Assemblies
       CurrentStageName: 
     m_NewResultList:
@@ -1343,7 +1345,7 @@ MonoBehaviour:
       uniqueId: '[Tabletop][suite]'
       name: Tabletop
       fullName: Tabletop
-      resultStatus: 1
+      resultStatus: 0
       duration: 0
       messages: 
       output: 
@@ -1355,11 +1357,11 @@ MonoBehaviour:
       categories: []
       parentId: 
       parentUniqueId: 
-    - id: 1005
+    - id: 1070
       uniqueId: '[Tests.dll][suite]'
       name: Tests.dll
       fullName: D:/Szakdolgozat/GameProject/Tabletop/Library/ScriptAssemblies/Tests.dll
-      resultStatus: 1
+      resultStatus: 0
       duration: 0
       messages: 
       output: 
@@ -1369,13 +1371,13 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1000
+      parentId: 1077
       parentUniqueId: '[Tabletop][suite]'
-    - id: 1006
+    - id: 1071
       uniqueId: 'Tests.dll/[Tests][suite]'
       name: Tests
       fullName: Tests
-      resultStatus: 1
+      resultStatus: 0
       duration: 0
       messages: 
       output: 
@@ -1385,13 +1387,635 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1005
+      parentId: 1070
       parentUniqueId: '[Tests.dll][suite]'
     - id: 1001
+      uniqueId: 'Tests.dll/Tests/[Tests][Tests.AttackCommandTest][suite]'
+      name: AttackCommandTest
+      fullName: Tests.AttackCommandTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1071
+      parentUniqueId: 'Tests.dll/[Tests][suite]'
+    - id: 1003
+      uniqueId: 'Tests.dll/Tests/AttackCommandTest/[Tests][Tests.AttackCommandTest.ExecuteTest]'
+      name: ExecuteTest
+      fullName: Tests.AttackCommandTest.ExecuteTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1001
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.AttackCommandTest][suite]'
+    - id: 1002
+      uniqueId: 'Tests.dll/Tests/AttackCommandTest/[Tests][Tests.AttackCommandTest.ValidCommandTest]'
+      name: ValidCommandTest
+      fullName: Tests.AttackCommandTest.ValidCommandTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1001
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.AttackCommandTest][suite]'
+    - id: 1004
+      uniqueId: 'Tests.dll/Tests/[Tests][Tests.ControlPointTest][suite]'
+      name: ControlPointTest
+      fullName: Tests.ControlPointTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1071
+      parentUniqueId: 'Tests.dll/[Tests][suite]'
+    - id: 1003
+      uniqueId: 'Tests.dll/Tests/ControlPointTest/[Tests][Tests.ControlPointTest.CalculateTest]'
+      name: CalculateTest
+      fullName: Tests.ControlPointTest.CalculateTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1001
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.ControlPointTest][suite]'
+    - id: 1002
+      uniqueId: 'Tests.dll/Tests/ControlPointTest/[Tests][Tests.ControlPointTest.ConstructorTest]'
+      name: ConstructorTest
+      fullName: Tests.ControlPointTest.ConstructorTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1001
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.ControlPointTest][suite]'
+    - id: 1008
+      uniqueId: 'Tests.dll/Tests/ControlPointTest/[Tests][Tests.ControlPointTest.MultipleContesterTest]'
+      name: MultipleContesterTest
+      fullName: Tests.ControlPointTest.MultipleContesterTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1004
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.ControlPointTest][suite]'
+    - id: 1007
+      uniqueId: 'Tests.dll/Tests/ControlPointTest/[Tests][Tests.ControlPointTest.SingleContesterTest]'
+      name: SingleContesterTest
+      fullName: Tests.ControlPointTest.SingleContesterTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1004
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.ControlPointTest][suite]'
+    - id: 1009
+      uniqueId: 'Tests.dll/Tests/[Tests][Tests.DeckTest][suite]'
+      name: DeckTest
+      fullName: Tests.DeckTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1071
+      parentUniqueId: 'Tests.dll/[Tests][suite]'
+    - id: 1003
+      uniqueId: 'Tests.dll/Tests/DeckTest/[Tests][Tests.DeckTest.AddMultipleTest]'
+      name: AddMultipleTest
+      fullName: Tests.DeckTest.AddMultipleTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1001
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.DeckTest][suite]'
+    - id: 1002
+      uniqueId: 'Tests.dll/Tests/DeckTest/[Tests][Tests.DeckTest.AddSingleTest]'
+      name: AddSingleTest
+      fullName: Tests.DeckTest.AddSingleTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1001
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.DeckTest][suite]'
+    - id: 1003
+      uniqueId: 'Tests.dll/Tests/DeckTest/[Tests][Tests.DeckTest.RemoveTest]'
+      name: RemoveTest
+      fullName: Tests.DeckTest.RemoveTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1001
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.DeckTest][suite]'
+    - id: 1013
+      uniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+      name: GameModelTest
+      fullName: Tests.GameModelTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1071
+      parentUniqueId: 'Tests.dll/[Tests][suite]'
+    - id: 1027
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.AbortCommandTest]'
+      name: AbortCommandTest
+      fullName: Tests.GameModelTest.AbortCommandTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1013
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1006
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.BuyTest]'
+      name: BuyTest
+      fullName: Tests.GameModelTest.BuyTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1003
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1012
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.BuyWithProducing]'
+      name: BuyWithProducing
+      fullName: Tests.GameModelTest.BuyWithProducing
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1005
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1024
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.ControlPointChangedTest]'
+      name: ControlPointChangedTest
+      fullName: Tests.GameModelTest.ControlPointChangedTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1013
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1013
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.CreateCommandTest]'
+      name: CreateCommandTest
+      fullName: Tests.GameModelTest.CreateCommandTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 'You are trying to create a MonoBehaviour using the ''new'' keyword. 
+        This is not allowed.  MonoBehaviours can only be added using AddComponent().
+        Alternatively, your script can inherit from ScriptableObject or no base class
+        at all
+
+        You are trying to create a MonoBehaviour using the ''new''
+        keyword.  This is not allowed.  MonoBehaviours can only be added using AddComponent().
+        Alternatively, your script can inherit from ScriptableObject or no base class
+        at all
+
+'
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1005
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1015
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.CycleTest]'
+      name: CycleTest
+      fullName: Tests.GameModelTest.CycleTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1005
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1014
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.ExecuteCommandTest]'
+      name: ExecuteCommandTest
+      fullName: Tests.GameModelTest.ExecuteCommandTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1005
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1026
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.ForfeitActiveTest]'
+      name: ForfeitActiveTest
+      fullName: Tests.GameModelTest.ForfeitActiveTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1013
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1025
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.ForfeitNotActiveTest]'
+      name: ForfeitNotActiveTest
+      fullName: Tests.GameModelTest.ForfeitNotActiveTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1013
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1010
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.PlayerDoneNextPhaseTest]'
+      name: PlayerDoneNextPhaseTest
+      fullName: Tests.GameModelTest.PlayerDoneNextPhaseTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1005
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1011
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.PlayerDoneNextTurn]'
+      name: PlayerDoneNextTurn
+      fullName: Tests.GameModelTest.PlayerDoneNextTurn
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1005
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1009
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.PlayerDoneTest]'
+      name: PlayerDoneTest
+      fullName: Tests.GameModelTest.PlayerDoneTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1005
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1005
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.SelectTest]'
+      name: SelectTest
+      fullName: Tests.GameModelTest.SelectTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 'You are trying to create a MonoBehaviour using the ''new'' keyword. 
+        This is not allowed.  MonoBehaviours can only be added using AddComponent().
+        Alternatively, your script can inherit from ScriptableObject or no base class
+        at all
+
+'
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1003
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1004
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.StartGameTest]'
+      name: StartGameTest
+      fullName: Tests.GameModelTest.StartGameTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1003
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1028
+      uniqueId: 'Tests.dll/Tests/GameModelTest/[Tests][Tests.GameModelTest.UndoCommandTest]'
+      name: UndoCommandTest
+      fullName: Tests.GameModelTest.UndoCommandTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1013
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GameModelTest][suite]'
+    - id: 1029
+      uniqueId: 'Tests.dll/Tests/[Tests][Tests.GamePlayerDataTest][suite]'
+      name: GamePlayerDataTest
+      fullName: Tests.GamePlayerDataTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1071
+      parentUniqueId: 'Tests.dll/[Tests][suite]'
+    - id: 1023
+      uniqueId: 'Tests.dll/Tests/GamePlayerDataTest/[Tests][Tests.GamePlayerDataTest.BuyUnitTest]'
+      name: BuyUnitTest
+      fullName: Tests.GamePlayerDataTest.BuyUnitTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1016
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GamePlayerDataTest][suite]'
+    - id: 1017
+      uniqueId: 'Tests.dll/Tests/GamePlayerDataTest/[Tests][Tests.GamePlayerDataTest.ContructorTest]'
+      name: ContructorTest
+      fullName: Tests.GamePlayerDataTest.ContructorTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1016
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GamePlayerDataTest][suite]'
+    - id: 1021
+      uniqueId: 'Tests.dll/Tests/GamePlayerDataTest/[Tests][Tests.GamePlayerDataTest.CycleWithStartValueTest]'
+      name: CycleWithStartValueTest
+      fullName: Tests.GamePlayerDataTest.CycleWithStartValueTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1016
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GamePlayerDataTest][suite]'
+    - id: 1019
+      uniqueId: 'Tests.dll/Tests/GamePlayerDataTest/[Tests][Tests.GamePlayerDataTest.ForceDeleteTest]'
+      name: ForceDeleteTest
+      fullName: Tests.GamePlayerDataTest.ForceDeleteTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1016
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GamePlayerDataTest][suite]'
+    - id: 1022
+      uniqueId: 'Tests.dll/Tests/GamePlayerDataTest/[Tests][Tests.GamePlayerDataTest.ForfeitTest]'
+      name: ForfeitTest
+      fullName: Tests.GamePlayerDataTest.ForfeitTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1016
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GamePlayerDataTest][suite]'
+    - id: 1017
+      uniqueId: 'Tests.dll/Tests/GamePlayerDataTest/[Tests][Tests.GamePlayerDataTest.ResetUnitsTest]'
+      name: ResetUnitsTest
+      fullName: Tests.GamePlayerDataTest.ResetUnitsTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1016
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GamePlayerDataTest][suite]'
+    - id: 1020
+      uniqueId: 'Tests.dll/Tests/GamePlayerDataTest/[Tests][Tests.GamePlayerDataTest.SimpleCycleTest]'
+      name: SimpleCycleTest
+      fullName: Tests.GamePlayerDataTest.SimpleCycleTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1016
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.GamePlayerDataTest][suite]'
+    - id: 1037
       uniqueId: 'Tests.dll/Tests/[Tests][Tests.HistoryTest][suite]'
       name: HistoryTest
       fullName: Tests.HistoryTest
-      resultStatus: 1
+      resultStatus: 0
       duration: 0
       messages: 
       output: 
@@ -1401,14 +2025,14 @@ MonoBehaviour:
       description: 
       isSuite: 1
       categories: []
-      parentId: 1006
+      parentId: 1071
       parentUniqueId: 'Tests.dll/[Tests][suite]'
     - id: 1004
       uniqueId: 'Tests.dll/Tests/HistoryTest/[Tests][Tests.HistoryTest.DroppingOldestTest]'
       name: DroppingOldestTest
       fullName: Tests.HistoryTest.DroppingOldestTest
-      resultStatus: 1
-      duration: 0.0355478
+      resultStatus: 0
+      duration: 0
       messages: 
       output: 
       stacktrace: 
@@ -1424,8 +2048,8 @@ MonoBehaviour:
       uniqueId: 'Tests.dll/Tests/HistoryTest/[Tests][Tests.HistoryTest.PeekPopTest]'
       name: PeekPopTest
       fullName: Tests.HistoryTest.PeekPopTest
-      resultStatus: 1
-      duration: 0.0005114
+      resultStatus: 0
+      duration: 0
       messages: 
       output: 
       stacktrace: 
@@ -1441,8 +2065,8 @@ MonoBehaviour:
       uniqueId: 'Tests.dll/Tests/HistoryTest/[Tests][Tests.HistoryTest.SizeTest]'
       name: SizeTest
       fullName: Tests.HistoryTest.SizeTest
-      resultStatus: 1
-      duration: 0.0001179
+      resultStatus: 0
+      duration: 0
       messages: 
       output: 
       stacktrace: 
@@ -1454,13 +2078,500 @@ MonoBehaviour:
       - Uncategorized
       parentId: 1001
       parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.HistoryTest][suite]'
-    m_ResultText: DroppingOldestTest (0,036s)
+    - id: 1041
+      uniqueId: 'Tests.dll/Tests/[Tests][Tests.LobbyModelTest][suite]'
+      name: LobbyModelTest
+      fullName: Tests.LobbyModelTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1071
+      parentUniqueId: 'Tests.dll/[Tests][suite]'
+    - id: 1033
+      uniqueId: 'Tests.dll/Tests/LobbyModelTest/[Tests][Tests.LobbyModelTest.AddPlayerTest]'
+      name: AddPlayerTest
+      fullName: Tests.LobbyModelTest.AddPlayerTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1031
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.LobbyModelTest][suite]'
+    - id: 1044
+      uniqueId: 'Tests.dll/Tests/LobbyModelTest/[Tests][Tests.LobbyModelTest.CanStartTest]'
+      name: CanStartTest
+      fullName: Tests.LobbyModelTest.CanStartTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1036
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.LobbyModelTest][suite]'
+    - id: 1033
+      uniqueId: 'Tests.dll/Tests/LobbyModelTest/[Tests][Tests.LobbyModelTest.ConstructorTest]'
+      name: ConstructorTest
+      fullName: Tests.LobbyModelTest.ConstructorTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1031
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.LobbyModelTest][suite]'
+    - id: 1035
+      uniqueId: 'Tests.dll/Tests/LobbyModelTest/[Tests][Tests.LobbyModelTest.FindReservedTest]'
+      name: FindReservedTest
+      fullName: Tests.LobbyModelTest.FindReservedTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1031
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.LobbyModelTest][suite]'
+    - id: 1037
+      uniqueId: 'Tests.dll/Tests/LobbyModelTest/[Tests][Tests.LobbyModelTest.GetSlotTest]'
+      name: GetSlotTest
+      fullName: Tests.LobbyModelTest.GetSlotTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1031
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.LobbyModelTest][suite]'
+    - id: 1037
+      uniqueId: 'Tests.dll/Tests/LobbyModelTest/[Tests][Tests.LobbyModelTest.ReassignPlayerTest]'
+      name: ReassignPlayerTest
+      fullName: Tests.LobbyModelTest.ReassignPlayerTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1031
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.LobbyModelTest][suite]'
+    - id: 1038
+      uniqueId: 'Tests.dll/Tests/LobbyModelTest/[Tests][Tests.LobbyModelTest.RemovePlayerTest]'
+      name: RemovePlayerTest
+      fullName: Tests.LobbyModelTest.RemovePlayerTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1031
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.LobbyModelTest][suite]'
+    - id: 1034
+      uniqueId: 'Tests.dll/Tests/LobbyModelTest/[Tests][Tests.LobbyModelTest.ReserveSlotTest]'
+      name: ReserveSlotTest
+      fullName: Tests.LobbyModelTest.ReserveSlotTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1031
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.LobbyModelTest][suite]'
+    - id: 1050
+      uniqueId: 'Tests.dll/Tests/[Tests][Tests.LobbySlotTest][suite]'
+      name: LobbySlotTest
+      fullName: Tests.LobbySlotTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1071
+      parentUniqueId: 'Tests.dll/[Tests][suite]'
+    - id: 1041
+      uniqueId: 'Tests.dll/Tests/LobbySlotTest/[Tests][Tests.LobbySlotTest.AssignPlayerTest]'
+      name: AssignPlayerTest
+      fullName: Tests.LobbySlotTest.AssignPlayerTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1039
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.LobbySlotTest][suite]'
+    - id: 1040
+      uniqueId: 'Tests.dll/Tests/LobbySlotTest/[Tests][Tests.LobbySlotTest.ContructorTest]'
+      name: ContructorTest
+      fullName: Tests.LobbySlotTest.ContructorTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1039
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.LobbySlotTest][suite]'
+    - id: 1053
+      uniqueId: 'Tests.dll/Tests/[Tests][Tests.MoveCommandTest][suite]'
+      name: MoveCommandTest
+      fullName: Tests.MoveCommandTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1071
+      parentUniqueId: 'Tests.dll/[Tests][suite]'
+    - id: 1050
+      uniqueId: 'Tests.dll/Tests/MoveCommandTest/[Tests][Tests.MoveCommandTest.CanExecuteTest]'
+      name: CanExecuteTest
+      fullName: Tests.MoveCommandTest.CanExecuteTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1048
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.MoveCommandTest][suite]'
+    - id: 1049
+      uniqueId: 'Tests.dll/Tests/MoveCommandTest/[Tests][Tests.MoveCommandTest.ConstructorTest]'
+      name: ConstructorTest
+      fullName: Tests.MoveCommandTest.ConstructorTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1048
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.MoveCommandTest][suite]'
+    - id: 1051
+      uniqueId: 'Tests.dll/Tests/MoveCommandTest/[Tests][Tests.MoveCommandTest.ExecuteTest]'
+      name: ExecuteTest
+      fullName: Tests.MoveCommandTest.ExecuteTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1048
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.MoveCommandTest][suite]'
+    - id: 1052
+      uniqueId: 'Tests.dll/Tests/MoveCommandTest/[Tests][Tests.MoveCommandTest.UndoTest]'
+      name: UndoTest
+      fullName: Tests.MoveCommandTest.UndoTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1048
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.MoveCommandTest][suite]'
+    - id: 1058
+      uniqueId: 'Tests.dll/Tests/[Tests][Tests.ProfileTest][suite]'
+      name: ProfileTest
+      fullName: Tests.ProfileTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1071
+      parentUniqueId: 'Tests.dll/[Tests][suite]'
+    - id: 1058
+      uniqueId: 'Tests.dll/Tests/ProfileTest/[Tests][Tests.ProfileTest.ChangeNameTest]'
+      name: ChangeNameTest
+      fullName: Tests.ProfileTest.ChangeNameTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1056
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.ProfileTest][suite]'
+    - id: 1057
+      uniqueId: 'Tests.dll/Tests/ProfileTest/[Tests][Tests.ProfileTest.ConstructorTest]'
+      name: ConstructorTest
+      fullName: Tests.ProfileTest.ConstructorTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1056
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.ProfileTest][suite]'
+    - id: 1061
+      uniqueId: 'Tests.dll/Tests/[Tests][Tests.UnitModelTest][suite]'
+      name: UnitModelTest
+      fullName: Tests.UnitModelTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1071
+      parentUniqueId: 'Tests.dll/[Tests][suite]'
+    - id: 1047
+      uniqueId: 'Tests.dll/Tests/UnitModelTest/[Tests][Tests.UnitModelTest.ArmorSaveTest]'
+      name: ArmorSaveTest
+      fullName: Tests.UnitModelTest.ArmorSaveTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1042
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.UnitModelTest][suite]'
+    - id: 1045
+      uniqueId: 'Tests.dll/Tests/UnitModelTest/[Tests][Tests.UnitModelTest.CanTargetTest]'
+      name: CanTargetTest
+      fullName: Tests.UnitModelTest.CanTargetTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1042
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.UnitModelTest][suite]'
+    - id: 1044
+      uniqueId: 'Tests.dll/Tests/UnitModelTest/[Tests][Tests.UnitModelTest.DistanceTest]'
+      name: DistanceTest
+      fullName: Tests.UnitModelTest.DistanceTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1042
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.UnitModelTest][suite]'
+    - id: 1032
+      uniqueId: 'Tests.dll/Tests/UnitModelTest/[Tests][Tests.UnitModelTest.SetupTest]'
+      name: SetupTest
+      fullName: Tests.UnitModelTest.SetupTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1031
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.UnitModelTest][suite]'
+    - id: 1046
+      uniqueId: 'Tests.dll/Tests/UnitModelTest/[Tests][Tests.UnitModelTest.TakeDamageTest]'
+      name: TakeDamageTest
+      fullName: Tests.UnitModelTest.TakeDamageTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1042
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.UnitModelTest][suite]'
+    - id: 1067
+      uniqueId: 'Tests.dll/Tests/[Tests][Tests.WeaponTest][suite]'
+      name: WeaponTest
+      fullName: Tests.WeaponTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1071
+      parentUniqueId: 'Tests.dll/[Tests][suite]'
+    - id: 1034
+      uniqueId: 'Tests.dll/Tests/WeaponTest/[Tests][Tests.WeaponTest.ConstructorTest]'
+      name: ConstructorTest
+      fullName: Tests.WeaponTest.ConstructorTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1033
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.WeaponTest][suite]'
+    - id: 1035
+      uniqueId: 'Tests.dll/Tests/WeaponTest/[Tests][Tests.WeaponTest.DamageTest]'
+      name: DamageTest
+      fullName: Tests.WeaponTest.DamageTest
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 0
+      categories:
+      - Uncategorized
+      parentId: 1033
+      parentUniqueId: 'Tests.dll/Tests/[Tests][Tests.WeaponTest][suite]'
+    m_ResultText: 
     m_ResultStacktrace: 
     m_TestListState:
-      scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 073a20c0
-      m_LastClickedID: -1071629817
-      m_ExpandedIDs: e557abf7f702fd23c6c1aa2e8359db41ffffff7f
+      scrollPos: {x: 0, y: 406}
+      m_SelectedIDs: 9b4efd6a
+      m_LastClickedID: 1794985627
+      m_ExpandedIDs: 635e12b52bac56d1e557abf7f702fd238359db413d19f875ffffff7f
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1490,7 +2601,7 @@ MonoBehaviour:
     m_SelectedOption: 0
   - m_Window: {fileID: 0}
     runProgress:
-      RunGuid: b18ef126-05ff-447b-93c6-fe9869fb07ce
+      RunGuid: b63d79a2-05a6-4289-98de-7985dc11dff1
       ExecutionSettings:
         m_TargetPlatform: 0
         m_HasTargetPlatform: 0
@@ -1517,7 +2628,7 @@ MonoBehaviour:
           disableNestedEnumeratorBugfix: 0
         randomOrderSeed: 0
       HasFinished: 1
-      Progress: 0.9999999
+      Progress: 1.0000001
       CurrentStepName: Unlock Reload Assemblies
       CurrentStageName: 
     m_NewResultList: []
@@ -1556,7 +2667,7 @@ MonoBehaviour:
     m_SelectedOption: 0
   - m_Window: {fileID: 0}
     runProgress:
-      RunGuid: b18ef126-05ff-447b-93c6-fe9869fb07ce
+      RunGuid: b63d79a2-05a6-4289-98de-7985dc11dff1
       ExecutionSettings:
         m_TargetPlatform: 0
         m_HasTargetPlatform: 0
@@ -1583,7 +2694,7 @@ MonoBehaviour:
           disableNestedEnumeratorBugfix: 0
         randomOrderSeed: 0
       HasFinished: 1
-      Progress: 0.9999999
+      Progress: 1.0000001
       CurrentStepName: Unlock Reload Assemblies
       CurrentStageName: 
     m_NewResultList: []
@@ -1628,6 +2739,81 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12071, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 50, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Animation
+    m_Image: {fileID: -8166618308981325432, guid: 0000000000000000d000000000000000, type: 0}
+    m_Tooltip: 
+    m_TextWithWhitespace: "Animation\u200B"
+  m_Pos:
+    serializedVersion: 2
+    x: 0
+    y: 606
+    width: 1252
+    height: 388
+  m_SerializedDataModeController:
+    m_DataMode: 0
+    m_PreferredDataMode: 0
+    m_SupportedDataModes: 
+    isAutomatic: 1
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+    m_ContainerData: []
+    m_OverlaysVisible: 1
+  m_LockTracker:
+    m_IsLocked: 0
+  m_LastSelectedObjectID: 53334
+--- !u!114 &15
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5115ff20f1ea204dac14fa49c0e8f69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 445, y: 65}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Code Coverage
+    m_Image: {fileID: 2800000, guid: 48e45b7f100ee4b48a02e05135e6cece, type: 3}
+    m_Tooltip: 
+    m_TextWithWhitespace: "Code Coverage\u200B"
+  m_Pos:
+    serializedVersion: 2
+    x: 0
+    y: 684
+    width: 1395
+    height: 310
+  m_SerializedDataModeController:
+    m_DataMode: 0
+    m_PreferredDataMode: 0
+    m_SupportedDataModes: 
+    isAutomatic: 1
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+    m_ContainerData: []
+    m_OverlaysVisible: 1
+--- !u!114 &16
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: InspectorWindow
@@ -1635,19 +2821,19 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 1253
+    x: 1396
     y: 0
-    width: 667
+    width: 524
     height: 941
   m_MinSize: {x: 276, y: 76}
   m_MaxSize: {x: 4001, y: 4026}
-  m_ActualView: {fileID: 15}
+  m_ActualView: {fileID: 17}
   m_Panes:
-  - {fileID: 15}
-  - {fileID: 16}
+  - {fileID: 17}
+  - {fileID: 18}
   m_Selected: 0
   m_LastSelected: 1
---- !u!114 &15
+--- !u!114 &17
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1668,9 +2854,9 @@ MonoBehaviour:
     m_TextWithWhitespace: "Inspector\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1253
+    x: 1396
     y: 79
-    width: 666
+    width: 523
     height: 915
   m_SerializedDataModeController:
     m_DataMode: 0
@@ -1689,14 +2875,14 @@ MonoBehaviour:
     m_CachedPref: 160
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
-  m_LastInspectedObjectInstanceID: 107084
+  m_LastInspectedObjectInstanceID: -1
   m_LastVerticalScrollValue: 0
   m_GlobalObjectId: 
   m_InspectorMode: 0
   m_LockTracker:
     m_IsLocked: 0
   m_PreviewWindow: {fileID: 0}
---- !u!114 &16
+--- !u!114 &18
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1717,9 +2903,9 @@ MonoBehaviour:
     m_TextWithWhitespace: "Navigation\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1253
+    x: 1329
     y: 79
-    width: 666
+    width: 590
     height: 915
   m_SerializedDataModeController:
     m_DataMode: 0

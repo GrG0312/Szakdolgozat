@@ -53,9 +53,20 @@ namespace Tests
         [Test]
         public void MultipleContesterTest()
         {
-            Mock<IUnit> mockedUnit = new Mock<IUnit>();
-            mockedUnit.As<ISidedObject>().Setup(m => m.Side).Returns(Side.Imperium);
-            mockedUnit.Setup(m => m.Constants).Returns(Defines.UnitValues[UnitIdentifier.TacticalMarine]);
+            Mock<IUnit> mockedUnit1 = new Mock<IUnit>();
+            mockedUnit1.As<ISidedObject>().Setup(m => m.Side).Returns(Side.Imperium);
+            mockedUnit1.Setup(m => m.Constants).Returns(Defines.UnitValues[UnitIdentifier.TacticalMarine]); // 2
+
+            Mock<IUnit> mockedUnit2 = new Mock<IUnit>();
+            mockedUnit2.As<ISidedObject>().Setup(m => m.Side).Returns(Side.Chaos);
+            mockedUnit2.Setup(m => m.Constants).Returns(Defines.UnitValues[UnitIdentifier.Forgefiend]); // 3
+
+            controlPoint.ContesterChanged(mockedUnit1.Object, true);
+            controlPoint.ContesterChanged(mockedUnit2.Object, true);
+
+            Assert.AreEqual((int)Side.Chaos, controlPoint.Owner);
+            controlPoint.ContesterChanged(mockedUnit1.Object, false);
+            Assert.AreEqual((int)Side.Chaos, controlPoint.Owner);
         }
     }
 }

@@ -66,10 +66,13 @@
     <Compile Include="Assets\Tests\ControlPointTest.cs" />
     <Compile Include="Assets\Tests\DeckTest.cs" />
     <Compile Include="Assets\Tests\HistoryTest.cs" />
+    <Compile Include="Assets\Tests\ProfileTest.cs" />
     <Compile Include="Assets\Tests\GameModelTest.cs" />
     <Compile Include="Assets\Tests\WeaponTest.cs" />
+    <Compile Include="Assets\Tests\MoveCommandTest.cs" />
     <Compile Include="Assets\Tests\LobbyModelTest.cs" />
     <Compile Include="Assets\Tests\LobbySlotTest.cs" />
+    <Compile Include="Assets\Tests\AttackCommandTest.cs" />
     <Compile Include="Assets\Tests\UnitModelTest.cs" />
   </ItemGroup>
   <ItemGroup>

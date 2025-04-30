@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.TestTools;
+using System;
 
 namespace Tests
 {
